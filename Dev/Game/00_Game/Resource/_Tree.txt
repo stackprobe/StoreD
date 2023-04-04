@@ -1,0 +1,4 @@
+﻿General
+	-> Directory
+General\app.ico
+	-> File 2023/04/01 (土) 14:21:04 / 2021/01/23 (土) 00:53:13 / 2,734
