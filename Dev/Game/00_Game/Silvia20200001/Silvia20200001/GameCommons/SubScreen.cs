@@ -20,10 +20,10 @@ namespace Charlotte.GameCommons
 
 		public int W { get; private set; }
 		public int H { get; private set; }
-		public bool AFlag { get; private set; }
-		private int Handle;
 
-		public SubScreen(int w, int h, bool aFlag = false)
+		private int Handle; // -1 == 未ロード
+
+		public SubScreen(int w, int h)
 		{
 			if (w < 1 || SCommon.IMAX < w)
 				throw new Exception("Bad w");
@@ -33,7 +33,6 @@ namespace Charlotte.GameCommons
 
 			this.W = w;
 			this.H = h;
-			this.AFlag = aFlag;
 			this.Handle = -1;
 
 			Instances.Add(this);
@@ -43,7 +42,7 @@ namespace Charlotte.GameCommons
 		{
 			if (this.Handle == -1)
 			{
-				this.Handle = DX.MakeScreen(this.W, this.H, this.AFlag ? 1 : 0);
+				this.Handle = DX.MakeScreen(this.W, this.H, 1); // (幅, 高さ, 画像の透明度を有効にするか/1:有効/0:無効)
 
 				if (this.Handle == -1) // ? 失敗
 					throw new Exception("MakeScreen failed");
@@ -72,6 +71,16 @@ namespace Charlotte.GameCommons
 		{
 			if (DX.SetDrawScreen(DX.DX_SCREEN_BACK) != -1) // ? 失敗
 				throw new Exception("SetDrawScreen failed");
+		}
+
+		private Picture Picture = null;
+
+		public Picture GetPicture()
+		{
+			if (this.Picture == null)
+				this.Picture = new Picture(this.W, this.H, this.GetHandle);
+
+			return this.Picture;
 		}
 	}
 }

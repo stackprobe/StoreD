@@ -74,7 +74,9 @@
     <Compile Include="Drawings\P4Poly.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GameCommons\DD.cs" />
+    <Compile Include="GameCommons\DU.cs" />
     <Compile Include="GameCommons\GameProcMain.cs" />
+    <Compile Include="GameCommons\Picture.cs" />
     <Compile Include="GameCommons\ResourceCluster.cs" />
     <Compile Include="GameCommons\SubScreen.cs" />
     <Compile Include="Ground.cs" />
@@ -86,6 +88,7 @@
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="Pictures.cs" />
     <Compile Include="UserGameMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainWin.resx">

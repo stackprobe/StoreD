@@ -20,6 +20,10 @@ namespace Charlotte
 				// TODO
 				// TODO
 
+				Pictures.Dummy.GetHandle(); // test
+				Pictures.WhiteBox.GetHandle(); // test
+				Pictures.WhiteCircle.GetHandle(); // test
+
 				DD.EachFrame();
 			}
 
