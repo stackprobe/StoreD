@@ -112,7 +112,7 @@ namespace Charlotte.GameCommons
 			DX.SetOutApplicationLogValidFlag(1); // ログを出力/1:する/0:しない
 			DX.SetAlwaysRunFlag(1); // 非アクティブ時に/1:動く/0:止まる
 			DX.SetMainWindowText(title);
-			DX.SetGraphMode(800, 600, 32);
+			DX.SetGraphMode(600, 480, 32); // 幅, 高さ, ビット数(16 or 32)
 			DX.ChangeWindowMode(1); // 1:ウィンドウ/0:フルスクリーン
 			DX.SetWindowIconHandle(icon.Handle);
 

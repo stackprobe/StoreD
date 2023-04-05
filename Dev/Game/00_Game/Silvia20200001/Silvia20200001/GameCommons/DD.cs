@@ -40,6 +40,33 @@ namespace Charlotte.GameCommons
 			return getter;
 		}
 
+		private static Dictionary<string, List<SubScreen>> SubScreenPool = SCommon.CreateDictionary<List<SubScreen>>();
+
+		private static string GetSubScreenPoolKey(int w, int h, bool aFlag)
+		{
+			return string.Join("_", w, h, aFlag);
+		}
+
+		public static SubScreen GetSubScreen(int w, int h, bool aFlag = false)
+		{
+			string key = GetSubScreenPoolKey(w, h, aFlag);
+
+			if (!SubScreenPool.ContainsKey(key))
+				SubScreenPool.Add(key, new List<SubScreen>());
+
+			List<SubScreen> stack = SubScreenPool[key];
+
+			if (stack.Count == 0)
+				stack.Add(new SubScreen(w, h, aFlag));
+
+			return SCommon.UnaddElement(stack);
+		}
+
+		public static void ReturnSubScreen(SubScreen subScreen)
+		{
+			SubScreenPool[GetSubScreenPoolKey(subScreen.W, subScreen.H, subScreen.AFlag)].Add(subScreen);
+		}
+
 		public static void EachFrame()
 		{
 			// TODO
