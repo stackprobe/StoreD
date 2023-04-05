@@ -8,14 +8,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
+using Charlotte.Drawings;
 using Charlotte.GUICommons;
+using Charlotte.GameSettings;
 
 namespace Charlotte.GameCommons
 {
 	public static class GameProcMain
 	{
-		public static List<Action> Finalizers = new List<Action>();
-
 		private static Action GameStarted;
 
 		public static void GameMain(Form mainForm, Action userGameMain)
@@ -59,11 +59,11 @@ namespace Charlotte.GameCommons
 			}
 			finally
 			{
-				while (1 <= Finalizers.Count)
+				while (1 <= DD.Finalizers.Count)
 				{
 					try
 					{
-						SCommon.UnaddElement(Finalizers)();
+						SCommon.UnaddElement(DD.Finalizers)();
 					}
 					catch (Exception ex)
 					{
@@ -96,6 +96,18 @@ namespace Charlotte.GameCommons
 				File.AppendAllText(logFile, "[" + DateTime.Now + "] " + message + "\r\n", Encoding.UTF8);
 			};
 
+			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+
+			if (File.Exists(saveDataFile))
+				GameSetting.Deserialize(File.ReadAllText(saveDataFile, Encoding.ASCII));
+			else
+				GameSetting.Initialize();
+
+			DD.Finalizers.Add(() =>
+			{
+				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
+			});
+
 			string title =
 				Path.GetFileNameWithoutExtension(ProcMain.SelfFile)
 				+ " / "
@@ -108,18 +120,20 @@ namespace Charlotte.GameCommons
 				icon = new Icon(mem);
 			}
 
+			// DXLib 初期化 ここから
+
 			DX.SetApplicationLogSaveDirectory(logSaveDir);
 			DX.SetOutApplicationLogValidFlag(1); // ログを出力/1:する/0:しない
 			DX.SetAlwaysRunFlag(1); // 非アクティブ時に/1:動く/0:止まる
 			DX.SetMainWindowText(title);
-			DX.SetGraphMode(600, 480, 32); // 幅, 高さ, ビット数(16 or 32)
+			DX.SetGraphMode(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H, 32); // 幅, 高さ, ビット数(16 or 32)
 			DX.ChangeWindowMode(1); // 1:ウィンドウ/0:フルスクリーン
 			DX.SetWindowIconHandle(icon.Handle);
 
 			if (DX.DxLib_Init() != 0) // ? 失敗
 				throw new Exception("DxLib_Init failed");
 
-			Finalizers.Add(() =>
+			DD.Finalizers.Add(() =>
 			{
 				if (DX.DxLib_End() != 0) // ? 失敗
 					throw new Exception("DxLib_End failed");
@@ -129,7 +143,27 @@ namespace Charlotte.GameCommons
 			DX.SetMouseDispFlag(1); // マウスカーソルを表示/1:する/0:しない
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 
+			// DXLib 初期化 ここまで
+
+			DD.MainWindowTitle = title;
+			DD.TargetMonitor = DU.GetTargetMonitor_Boot();
+			DD.RealScreenSize = GameSetting.FullScreen ?
+				new I2Size(DD.TargetMonitor.W, DD.TargetMonitor.H) :
+				GameSetting.UserScreenSize;
+			DD.MainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+			DD.KeptMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+
+			SetScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
+
 			GameStarted();
+		}
+
+		public static void SetScreenSize(int w, int h)
+		{
+			// TODO
+			// TODO
+			// TODO
 		}
 	}
 }

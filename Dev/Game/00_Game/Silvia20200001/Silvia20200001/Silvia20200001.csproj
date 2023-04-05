@@ -75,10 +75,13 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="GameCommons\DD.cs" />
     <Compile Include="GameCommons\DU.cs" />
+    <Compile Include="GameCommons\Win32APIWrapper.cs" />
     <Compile Include="GameCommons\GameProcMain.cs" />
     <Compile Include="GameCommons\Picture.cs" />
     <Compile Include="GameCommons\ResourceCluster.cs" />
     <Compile Include="GameCommons\SubScreen.cs" />
+    <Compile Include="GameSettings\GameSetting.cs" />
+    <Compile Include="GameSettings\GameConfig.cs" />
     <Compile Include="Ground.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
     <Compile Include="MainWin.cs">

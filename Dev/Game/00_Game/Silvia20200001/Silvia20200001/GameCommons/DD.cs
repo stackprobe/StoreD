@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using DxLibDLL;
 using Charlotte.Commons;
+using Charlotte.Drawings;
 
 namespace Charlotte.GameCommons
 {
@@ -13,6 +14,18 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public static class DD
 	{
+		public static List<Action> Finalizers = new List<Action>();
+		public static string MainWindowTitle;
+		public static I4Rect TargetMonitor;
+		public static I2Size RealScreenSize;
+		public static SubScreen MainScreen;
+		public static SubScreen LastMainScreen;
+		public static SubScreen KeptMainScreen;
+		public static long FrameStartTime;
+		public static long HzChaserTime;
+		public static int ProcFrame;
+		public static bool WindowIsActive;
+
 		private static Func<string, byte[]> ResFileDataGetter = null;
 
 		public static byte[] GetResFileData(string resPath)
@@ -59,9 +72,5 @@ namespace Charlotte.GameCommons
 			// TODO
 			// TODO
 		}
-
-		// TODO
-		// TODO
-		// TODO
 	}
 }

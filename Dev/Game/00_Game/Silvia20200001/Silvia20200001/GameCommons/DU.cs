@@ -5,16 +5,21 @@ using System.Text;
 using System.Runtime.InteropServices;
 using DxLibDLL;
 using Charlotte.Commons;
+using Charlotte.Drawings;
+using System.Windows.Forms;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// この名前空間内から呼び出される機能群
+	/// </summary>
 	public class DU
 	{
 		public static void Pin<T>(T data)
 		{
 			GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);
 
-			GameProcMain.Finalizers.Add(() =>
+			DD.Finalizers.Add(() =>
 			{
 				h.Free();
 			});
@@ -31,6 +36,98 @@ namespace Charlotte.GameCommons
 			{
 				pinnedData.Free();
 			}
+		}
+
+		private static I2Point GetMousePosition()
+		{
+			return new I2Point(Cursor.Position.X, Cursor.Position.Y);
+		}
+
+		private static I4Rect[] Monitors = null;
+
+		private static I4Rect[] GetAllMonitor()
+		{
+			if (Monitors == null)
+			{
+				Monitors = Screen.AllScreens.Select(screen => new I4Rect(
+					screen.Bounds.Left,
+					screen.Bounds.Top,
+					screen.Bounds.Width,
+					screen.Bounds.Height
+					))
+					.ToArray();
+			}
+			return Monitors;
+		}
+
+		private static I2Point GetMainWindowPosition()
+		{
+			Win32APIWrapper.POINT p;
+
+			p.X = 0;
+			p.Y = 0;
+
+			Win32APIWrapper.W_ClientToScreen(Win32APIWrapper.GetMainWindowHandle(), out p);
+
+			return new I2Point(p.X, p.Y);
+		}
+
+		private static I2Point GetMainWindowCenterPosition()
+		{
+			I2Point p = GetMainWindowPosition();
+
+			p.X += DD.RealScreenSize.W / 2;
+			p.Y += DD.RealScreenSize.H / 2;
+
+			return p;
+		}
+
+		/// <summary>
+		/// 起動時におけるターゲット画面を取得する。
+		/// </summary>
+		/// <returns>画面の領域</returns>
+		public static I4Rect GetTargetMonitor_Boot()
+		{
+			I2Point mousePos = GetMousePosition();
+
+			foreach (I4Rect monitor in GetAllMonitor())
+			{
+				if (
+					monitor.L <= mousePos.X && mousePos.X < monitor.R &&
+					monitor.T <= mousePos.Y && mousePos.Y < monitor.B
+					)
+					return monitor;
+			}
+			return GetAllMonitor()[0];
+		}
+
+		/// <summary>
+		/// 現在のターゲット画面を取得する。
+		/// </summary>
+		/// <returns>画面の領域</returns>
+		public static I4Rect GetTargetMonitor()
+		{
+			I2Point mainWinCenterPt = GetMainWindowCenterPosition();
+
+			foreach (I4Rect monitor in GetAllMonitor())
+			{
+				if (
+					monitor.L <= mainWinCenterPt.X && mainWinCenterPt.X < monitor.R &&
+					monitor.T <= mainWinCenterPt.Y && mainWinCenterPt.Y < monitor.B
+					)
+					return monitor;
+			}
+			return GetAllMonitor()[0];
+		}
+
+		/// <summary>
+		/// コンピュータを起動してから経過した時間を返す。
+		/// 単位：ミリ秒
+		/// </summary>
+		/// <returns>時間(ミリ秒)</returns>
+		public static long GetCurrentTime()
+		{
+			return DX.GetNowHiPerformanceCount() / 1000L;
 		}
 
 		public static Picture.PictureDataInfo GetPictureData(byte[] fileData)
