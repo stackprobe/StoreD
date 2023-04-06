@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.IO;
 using DxLibDLL;
 using Charlotte.Commons;
@@ -21,8 +22,6 @@ namespace Charlotte.GameCommons
 		public static SubScreen MainScreen;
 		public static SubScreen LastMainScreen;
 		public static SubScreen KeptMainScreen;
-		public static long FrameStartTime;
-		public static long HzChaserTime;
 		public static int ProcFrame;
 		public static bool WindowIsActive;
 
@@ -55,11 +54,9 @@ namespace Charlotte.GameCommons
 
 		public static void EachFrame()
 		{
-			// TODO
-			// TODO
-			// TODO
-
 			GC.Collect();
+
+			Keep60Hz();
 
 			DX.ScreenFlip();
 
@@ -68,9 +65,23 @@ namespace Charlotte.GameCommons
 				throw new Exception("ゲーム中断");
 			}
 
-			// TODO
-			// TODO
-			// TODO
+			ProcFrame++;
+		}
+
+		private static long HzChaserTime;
+
+		private static void Keep60Hz()
+		{
+			long currentTime = DU.GetCurrentTime();
+
+			HzChaserTime += 16666L;
+			HzChaserTime = SCommon.ToRange(HzChaserTime, currentTime - 1000000L, currentTime + 1000000L);
+
+			while (currentTime < HzChaserTime)
+			{
+				Thread.Sleep(1);
+				currentTime = DU.GetCurrentTime();
+			}
 		}
 	}
 }
