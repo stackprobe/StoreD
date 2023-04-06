@@ -19,9 +19,6 @@ namespace Charlotte
 			ProcMain.CUIMain(new Program().Main2);
 		}
 
-		// 以下様式統一のため用途別に好きな方を使ってね -- ★要削除
-
-#if true // 主にデバッガで実行するテスト用プログラム -- ★不要なら要削除
 		private void Main2(ArgsReader ar)
 		{
 			if (ProcMain.DEBUG)
@@ -57,61 +54,12 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			new Test0001().Test01();
-			//new Test0002().Test01();
-			//new Test0003().Test01();
-
-			// --
-		}
-#else // 主に実行ファイルにして使う/コマンド引数有り -- ★不要なら要削除
-		private void Main2(ArgsReader ar)
-		{
-			if (ProcMain.DEBUG)
-			{
-				Main3();
-			}
-			else
-			{
-				Main4(ar);
-			}
-			SCommon.OpenOutputDirIfCreated();
-		}
-
-		private void Main3()
-		{
-			// -- choose one --
-
-			Main4(new ArgsReader(new string[] { }));
 			//new Test0001().Test01();
-			//new Test0002().Test01();
-			//new Test0003().Test01();
+			//new Test0001().Test02();
+			//new Test0001().Test03();
+			new Test0001().Test04();
 
 			// --
-
-			SCommon.Pause();
 		}
-
-		private void Main4(ArgsReader ar)
-		{
-			try
-			{
-				Main5(ar);
-			}
-			catch (Exception ex)
-			{
-				ProcMain.WriteLog(ex);
-
-				//MessageBox.Show("" + ex, Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-				//Console.WriteLine("Press ENTER key. (エラーによりプログラムを終了します)");
-				//Console.ReadLine();
-			}
-		}
-
-		private void Main5(ArgsReader ar)
-		{
-			// TODO
-		}
-#endif
 	}
 }
