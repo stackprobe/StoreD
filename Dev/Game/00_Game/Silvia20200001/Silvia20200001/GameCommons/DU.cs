@@ -98,7 +98,7 @@ namespace Charlotte.GameCommons
 					)
 					return monitor;
 			}
-			return GetAllMonitor()[0];
+			return GetAllMonitor()[0]; // 何故か見つからない -> 適当な画面を返す。
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Charlotte.GameCommons
 					)
 					return monitor;
 			}
-			return GetAllMonitor()[0];
+			return GetAllMonitor()[0]; // 何故か見つからない -> 適当な画面を返す。
 		}
 
 		/// <summary>
