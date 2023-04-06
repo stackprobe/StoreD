@@ -74,8 +74,8 @@ namespace Charlotte.GameCommons
 		{
 			long currentTime = DU.GetCurrentTime();
 
-			HzChaserTime += 16666L;
-			HzChaserTime = SCommon.ToRange(HzChaserTime, currentTime - 1000000L, currentTime + 1000000L);
+			HzChaserTime += 16L;
+			HzChaserTime = SCommon.ToRange(HzChaserTime, currentTime - 100L, currentTime + 100L);
 
 			while (currentTime < HzChaserTime)
 			{

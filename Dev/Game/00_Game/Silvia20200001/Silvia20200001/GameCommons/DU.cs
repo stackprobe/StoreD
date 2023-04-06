@@ -134,12 +134,12 @@ namespace Charlotte.GameCommons
 
 		/// <summary>
 		/// コンピュータを起動してから経過した時間を返す。
-		/// 単位：ナノ秒
+		/// 単位：ミリ秒
 		/// </summary>
-		/// <returns>時間(ナノ秒)</returns>
+		/// <returns>時間(ミリ秒)</returns>
 		public static long GetCurrentTime()
 		{
-			return DX.GetNowHiPerformanceCount();
+			return DX.GetNowHiPerformanceCount() / 1000L;
 		}
 
 		public static Picture.PictureDataInfo GetPictureData(byte[] fileData)
