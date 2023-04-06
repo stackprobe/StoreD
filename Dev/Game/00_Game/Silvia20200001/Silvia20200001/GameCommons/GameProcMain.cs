@@ -96,18 +96,6 @@ namespace Charlotte.GameCommons
 				File.AppendAllText(logFile, "[" + DateTime.Now + "] " + message + "\r\n", Encoding.UTF8);
 			};
 
-			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
-
-			if (File.Exists(saveDataFile))
-				GameSetting.Deserialize(File.ReadAllText(saveDataFile, Encoding.ASCII));
-			else
-				GameSetting.Initialize();
-
-			DD.Finalizers.Add(() =>
-			{
-				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
-			});
-
 			string title =
 				Path.GetFileNameWithoutExtension(ProcMain.SelfFile)
 				+ " / "
@@ -139,11 +127,24 @@ namespace Charlotte.GameCommons
 					throw new Exception("DxLib_End failed");
 			});
 
+			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0); // ウィンドウの右下をドラッグでサイズ変更/1:する/0:しない
 			DX.SetMouseDispFlag(1); // マウスカーソルを表示/1:する/0:しない
-			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 
 			// DXLib 初期化 ここまで
+
+			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+
+			if (File.Exists(saveDataFile))
+				GameSetting.Deserialize(File.ReadAllText(saveDataFile, Encoding.ASCII));
+			else
+				GameSetting.Initialize();
+
+			DD.Finalizers.Add(() =>
+			{
+				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
+			});
 
 			DD.MainWindowTitle = title;
 			DD.TargetMonitor = DU.GetTargetMonitor_Boot();
@@ -154,16 +155,34 @@ namespace Charlotte.GameCommons
 			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.KeptMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
-			SetScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
+			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
 
 			GameStarted();
 		}
 
-		public static void SetScreenSize(int w, int h)
+		public static void SetRealScreenSize(int w, int h)
 		{
+			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+
+			Picture.UnloadAll();
+			SubScreen.UnloadAll();
 			// TODO
 			// TODO
 			// TODO
+
+			DX.SetGraphMode(w, h, 32);
+			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
+			DX.SetWindowSizeChangeEnableFlag(0);
+			DX.SetMouseDispFlag(1);
+
+			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
+			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;
+
+			DU.SetMainWindowPosition(l, t);
+
+			DD.RealScreenSize.W = w;
+			DD.RealScreenSize.H = h;
 		}
 	}
 }

@@ -120,6 +120,18 @@ namespace Charlotte.GameCommons
 			return GetAllMonitor()[0]; // 何故か見つからない -> 適当な画面を返す。
 		}
 
+		public static void SetMainWindowPosition(int l, int t)
+		{
+			DX.SetWindowPosition(l, t);
+
+			I2Point p = DU.GetMainWindowPosition();
+
+			l += l - p.X;
+			t += t - p.Y;
+
+			DX.SetWindowPosition(l, t);
+		}
+
 		/// <summary>
 		/// コンピュータを起動してから経過した時間を返す。
 		/// 単位：ミリ秒
