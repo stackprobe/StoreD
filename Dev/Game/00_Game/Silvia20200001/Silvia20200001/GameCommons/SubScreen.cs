@@ -63,13 +63,13 @@ namespace Charlotte.GameCommons
 
 		public void ChangeDrawScreenToThis()
 		{
-			if (DX.SetDrawScreen(this.GetHandle()) != -1) // ? 失敗
+			if (DX.SetDrawScreen(this.GetHandle()) != 0) // ? 失敗
 				throw new Exception("SetDrawScreen failed");
 		}
 
 		public static void ChangeDrawScreenToBack()
 		{
-			if (DX.SetDrawScreen(DX.DX_SCREEN_BACK) != -1) // ? 失敗
+			if (DX.SetDrawScreen(DX.DX_SCREEN_BACK) != 0) // ? 失敗
 				throw new Exception("SetDrawScreen failed");
 		}
 

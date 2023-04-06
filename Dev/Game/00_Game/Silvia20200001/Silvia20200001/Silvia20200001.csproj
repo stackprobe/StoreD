@@ -75,6 +75,8 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="GameCommons\DD.cs" />
     <Compile Include="GameCommons\DU.cs" />
+    <Compile Include="GameCommons\Music.cs" />
+    <Compile Include="GameCommons\SoundEffect.cs" />
     <Compile Include="GameCommons\Win32APIWrapper.cs" />
     <Compile Include="GameCommons\GameProcMain.cs" />
     <Compile Include="GameCommons\Picture.cs" />
@@ -90,8 +92,10 @@
     <Compile Include="MainWin.Designer.cs">
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Musics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Pictures.cs" />
+    <Compile Include="SoundEffects.cs" />
     <Compile Include="UserGameMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainWin.resx">

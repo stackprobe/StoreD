@@ -54,6 +54,12 @@ namespace Charlotte.GameCommons
 
 		public static void EachFrame()
 		{
+			Music.EachFrame();
+			SoundEffect.EachFrame();
+
+			SubScreen.ChangeDrawScreenToBack();
+			// TODO 描画
+
 			GC.Collect();
 
 			Keep60Hz();
@@ -65,7 +71,11 @@ namespace Charlotte.GameCommons
 				throw new Exception("ゲーム中断");
 			}
 
+			SCommon.Swap(ref DD.MainScreen, ref DD.LastMainScreen);
+			DD.MainScreen.ChangeDrawScreenToThis();
+
 			ProcFrame++;
+			WindowIsActive = DX.GetActiveFlag() != 0;
 		}
 
 		private static long HzChaserTime;
@@ -81,6 +91,32 @@ namespace Charlotte.GameCommons
 			{
 				Thread.Sleep(1);
 				currentTime = DU.GetCurrentTime();
+			}
+		}
+
+		public class Scene
+		{
+			public int Numer;
+			public int Denom;
+
+			public double Rate
+			{
+				get
+				{
+					return (double)this.Numer / this.Denom;
+				}
+			}
+		}
+
+		public static IEnumerable<Scene> CreateScene(int denom)
+		{
+			for (int numer = 0; numer <= denom; numer++)
+			{
+				yield return new Scene()
+				{
+					Numer = numer,
+					Denom = denom,
+				};
 			}
 		}
 	}

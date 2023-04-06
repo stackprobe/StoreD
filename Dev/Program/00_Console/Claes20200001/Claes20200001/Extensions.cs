@@ -7,16 +7,6 @@ namespace Charlotte
 {
 	public static class Extensions
 	{
-		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> src, Action<T> action)
-		{
-			List<T> list = src.ToList();
-
-			foreach (T element in list)
-				action(element);
-
-			return list;
-		}
-
 		public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> src, Comparison<T> comp)
 		{
 			List<T> list = src.ToList();

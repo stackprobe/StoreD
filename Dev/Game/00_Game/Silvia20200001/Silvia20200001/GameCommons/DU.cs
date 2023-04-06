@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using System.Windows.Forms;
 
 namespace Charlotte.GameCommons
 {
@@ -144,17 +144,17 @@ namespace Charlotte.GameCommons
 
 		public static Picture.PictureDataInfo GetPictureData(byte[] fileData)
 		{
-			int siHandle = -1;
+			int softImage = -1;
 
-			DU.PinOn(fileData, p => siHandle = DX.LoadSoftImageToMem(p, fileData.Length));
+			DU.PinOn(fileData, p => softImage = DX.LoadSoftImageToMem(p, fileData.Length));
 
-			if (siHandle == -1)
+			if (softImage == -1)
 				throw new Exception("LoadSoftImageToMem failed");
 
 			int w;
 			int h;
 
-			if (DX.GetSoftImageSize(siHandle, out w, out h) != 0) // ? 失敗
+			if (DX.GetSoftImageSize(softImage, out w, out h) != 0) // ? 失敗
 				throw new Exception("GetSoftImageSize failed");
 
 			if (w < 1 || SCommon.IMAX < w)
@@ -165,26 +165,26 @@ namespace Charlotte.GameCommons
 
 			// RGB -> RGBA
 			{
-				int newSIHandle = DX.MakeARGB8ColorSoftImage(w, h);
+				int newSoftImage = DX.MakeARGB8ColorSoftImage(w, h);
 
-				if (newSIHandle == -1) // ? 失敗
+				if (newSoftImage == -1) // ? 失敗
 					throw new Exception("MakeARGB8ColorSoftImage failed");
 
-				if (DX.BltSoftImage(0, 0, w, h, siHandle, 0, 0, newSIHandle) != 0) // ? 失敗
+				if (DX.BltSoftImage(0, 0, w, h, softImage, 0, 0, newSoftImage) != 0) // ? 失敗
 					throw new Exception("BltSoftImage failed");
 
-				if (DX.DeleteSoftImage(siHandle) != 0) // ? 失敗
+				if (DX.DeleteSoftImage(softImage) != 0) // ? 失敗
 					throw new Exception("DeleteSoftImage failed");
 
-				siHandle = newSIHandle;
+				softImage = newSoftImage;
 			}
 
-			int handle = DX.CreateGraphFromSoftImage(siHandle);
+			int handle = DX.CreateGraphFromSoftImage(softImage);
 
 			if (handle == -1) // ? 失敗
 				throw new Exception("CreateGraphFromSoftImage failed");
 
-			if (DX.DeleteSoftImage(siHandle) != 0) // ? 失敗
+			if (DX.DeleteSoftImage(softImage) != 0) // ? 失敗
 				throw new Exception("DeleteSoftImage failed");
 
 			return new Picture.PictureDataInfo()
@@ -193,6 +193,14 @@ namespace Charlotte.GameCommons
 				H = h,
 				Handle = handle,
 			};
+		}
+
+		public static IEnumerable<T> Reverse<T>(IList<T> list)
+		{
+			for (int index = list.Count - 1; 0 <= index; index--)
+			{
+				yield return list[index];
+			}
 		}
 	}
 }

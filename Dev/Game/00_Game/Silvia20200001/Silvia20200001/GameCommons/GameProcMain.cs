@@ -166,9 +166,9 @@ namespace Charlotte.GameCommons
 
 			Picture.UnloadAll();
 			SubScreen.UnloadAll();
-			// TODO
-			// TODO
-			// TODO
+			// TODO フォント
+			//Music.UnloadAll(); // 不要
+			//SoundEffect.UnloadAll(); // 不要
 
 			DX.SetGraphMode(w, h, 32);
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
