@@ -36,7 +36,7 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { "A" }));
+			Main4(new ArgsReader(new string[] { "D" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -99,6 +99,9 @@ namespace Charlotte
 			string projectDirLocalName = Path.GetFileName(projectDir);
 
 			if (projectDirLocalName[0] == '.') // ? ".metadata" はプロジェクトじゃないので除外
+				return;
+
+			if (SCommon.EqualsIgnoreCase(projectDirLocalName, "Servers")) // 除外
 				return;
 
 			ProcMain.WriteLog("< " + projectDir);
