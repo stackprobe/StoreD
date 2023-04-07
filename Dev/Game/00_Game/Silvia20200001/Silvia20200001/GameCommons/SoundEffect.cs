@@ -12,6 +12,9 @@ namespace Charlotte.GameCommons
 	{
 		private static List<SoundEffect> Instances = new List<SoundEffect>();
 
+		/// <summary>
+		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
+		/// </summary>
 		public static void UnloadAll()
 		{
 			foreach (SoundEffect instance in Instances)
@@ -20,9 +23,19 @@ namespace Charlotte.GameCommons
 
 		private Func<byte[]> FileDataGetter;
 
-		private List<int> Handles; // null == 未ロード
-		private int HandleIndex;
-		private int LastVolume;
+		private class HandleInfo
+		{
+			public int Value;
+			public int LastVolume = -1;
+
+			public HandleInfo(int value)
+			{
+				this.Value = value;
+			}
+		}
+
+		private List<HandleInfo> Handles; // null == 未ロード
+		private int LastIndex;
 
 		public SoundEffect(string resPath)
 		{
@@ -44,21 +57,21 @@ namespace Charlotte.GameCommons
 				if (handle == -1) // ? 失敗
 					throw new Exception("LoadSoundMemByMemImage failed");
 
-				this.Handles = new List<int>();
-				this.Handles.Add(handle);
-				this.HandleIndex = 0;
-				this.LastVolume = -1;
+				this.Handles = new List<HandleInfo>();
+				this.Handles.Add(new HandleInfo(handle));
+				this.LastIndex = 0;
 			}
 		}
 
+		/// <summary>
+		/// このメソッド実行時、再生終了(未再生・停止)していること。
+		/// </summary>
 		public void Unload()
 		{
 			if (this.Handles != null)
 			{
-				// HACK: 再生中にアンロードされることを想定していない。
-
-				foreach (int handle in DU.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
-					if (DX.DeleteSoundMem(handle) != 0) // ? 失敗
+				foreach (HandleInfo handle in DU.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
+					if (DX.DeleteSoundMem(handle.Value) != 0) // ? 失敗
 						throw new Exception("DeleteSoundMem failed");
 
 				this.Handles = null;
@@ -93,12 +106,12 @@ namespace Charlotte.GameCommons
 		{
 			this.LoadIfNeeded();
 
-			this.HandleIndex++;
-			this.HandleIndex %= this.Handles.Count;
+			this.LastIndex++;
+			this.LastIndex %= this.Handles.Count;
 
-			if (IsPlaying(this.Handles[this.HandleIndex]))
+			if (IsPlaying(this.Handles[this.LastIndex].Value))
 			{
-				int index = SCommon.IndexOf(this.Handles, v => !IsPlaying(v));
+				int index = SCommon.IndexOf(this.Handles, v => !IsPlaying(v.Value));
 
 				if (index == -1)
 				{
@@ -107,14 +120,12 @@ namespace Charlotte.GameCommons
 				}
 				else
 				{
-					this.ChangeVolumeIfNeeded();
 					PlayByHandle(this.Handles[index]);
 				}
 			}
 			else
 			{
-				this.ChangeVolumeIfNeeded();
-				PlayByHandle(this.Handles[this.HandleIndex]);
+				PlayByHandle(this.Handles[this.LastIndex]);
 			}
 		}
 
@@ -136,45 +147,35 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static void PlayByHandle(int handle)
+		private static void PlayByHandle(HandleInfo handle)
 		{
-			if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.SEVolume * 255.0), handle) != 0) // ? 失敗
-				throw new Exception("ChangeVolumeSoundMem failed");
+			ChangeVolumeIfNeeded(handle);
 
-			if (DX.PlaySoundMem(handle, DX.DX_PLAYTYPE_BACK, 1) != 0) // ? 失敗
+			if (DX.PlaySoundMem(handle.Value, DX.DX_PLAYTYPE_BACK, 1) != 0) // ? 失敗
 				throw new Exception("PlaySoundMem failed");
+		}
+
+		private static void ChangeVolumeIfNeeded(HandleInfo handle)
+		{
+			int volume = SCommon.ToInt(GameSetting.SEVolume * 255.0);
+
+			if (handle.LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
+			{
+				if (DX.ChangeVolumeSoundMem(volume, handle.Value) != 0) // ? 失敗
+					throw new Exception("ChangeVolumeSoundMem failed");
+
+				handle.LastVolume = volume;
+			}
 		}
 
 		private void Extend()
 		{
-			this.LoadIfNeeded();
-
-			int handle = DX.DuplicateSoundMem(this.Handles[0]);
+			int handle = DX.DuplicateSoundMem(this.Handles[0].Value);
 
 			if (handle == -1) // ? 失敗
 				throw new Exception("DuplicateSoundMem failed");
 
-			if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.SEVolume * 255.0), handle) != 0) // ? 失敗
-				throw new Exception("ChangeVolumeSoundMem failed");
-
-			this.Handles.Add(handle);
-		}
-
-		private void ChangeVolumeIfNeeded()
-		{
-			if (this.Handles != null) // ? ロードされている。
-			{
-				int volume = SCommon.ToInt(GameSetting.SEVolume * 255.0);
-
-				if (this.LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を全てのハンドルに適用する。
-				{
-					foreach (int handle in this.Handles)
-						if (DX.ChangeVolumeSoundMem(volume, handle) != 0) // ? 失敗
-							throw new Exception("ChangeVolumeSoundMem failed");
-
-					this.LastVolume = volume;
-				}
-			}
+			this.Handles.Add(new HandleInfo(handle));
 		}
 	}
 }

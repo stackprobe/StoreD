@@ -202,5 +202,11 @@ namespace Charlotte.GameCommons
 				yield return list[index];
 			}
 		}
+
+		public class SoundHandleInfo
+		{
+			public int Handle;
+			public int LastVolume;
+		}
 	}
 }

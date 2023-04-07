@@ -12,6 +12,9 @@ namespace Charlotte.GameCommons
 	{
 		private static List<Music> Instances = new List<Music>();
 
+		/// <summary>
+		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
+		/// </summary>
 		public static void UnloadAll()
 		{
 			foreach (Music instance in Instances)
@@ -19,6 +22,7 @@ namespace Charlotte.GameCommons
 		}
 
 		private Func<byte[]> FileDataGetter;
+		private long[] LoopRange = null;
 
 		private int Handle; // -1 == 未ロード
 
@@ -30,9 +34,14 @@ namespace Charlotte.GameCommons
 			Instances.Add(this);
 		}
 
-		public Music(string resPath, int loopStartPosition, int loopLength)
+		public Music(string resPath, long loopStartPosition, long loopLength)
+			: this(resPath)
 		{
-			throw null; // TODO
+			this.LoopRange = new long[]
+			{
+				loopStartPosition,
+				loopStartPosition + loopLength,
+			};
 		}
 
 		public int GetHandle()
@@ -47,17 +56,23 @@ namespace Charlotte.GameCommons
 				if (handle == -1) // ? 失敗
 					throw new Exception("LoadSoundMemByMemImage failed");
 
+				if (this.LoopRange != null)
+				{
+					DX.SetLoopSamplePosSoundMem(this.LoopRange[0], handle); // ループ開始位置
+					DX.SetLoopStartSamplePosSoundMem(this.LoopRange[1], handle); // ループ終了位置
+				}
 				this.Handle = handle;
 			}
 			return this.Handle;
 		}
 
+		/// <summary>
+		/// このメソッド実行時、再生終了(未再生・停止)していること。
+		/// </summary>
 		public void Unload()
 		{
 			if (this.Handle != -1)
 			{
-				// HACK: 再生中にアンロードされることを想定していない。
-
 				if (DX.DeleteSoundMem(this.Handle) != 0) // ? 失敗
 					throw new Exception("DeleteSoundMem failed");
 
@@ -65,13 +80,29 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static List<Func<bool>> Tasks = new List<Func<bool>>();
+		private static List<Func<bool>> TaskList = new List<Func<bool>>();
+		private static int LastVolume = -1;
 
 		public static void EachFrame()
 		{
-			if (1 <= Tasks.Count && !Tasks[0]())
+			if (1 <= TaskList.Count && !TaskList[0]()) // Busy
 			{
-				Tasks.RemoveAt(0);
+				TaskList.RemoveAt(0);
+			}
+			else // Idle
+			{
+				if (Playing != null) // ? 再生中
+				{
+					int volume = SCommon.ToInt(GameSetting.MusicVolume * 255.0);
+
+					if (LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
+					{
+						if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.MusicVolume * 255.0), Playing.GetHandle()) != 0) // ? 失敗
+							throw new Exception("ChangeVolumeSoundMem failed");
+
+						LastVolume = volume;
+					}
+				}
 			}
 		}
 
@@ -82,7 +113,7 @@ namespace Charlotte.GameCommons
 			if (Playing != this)
 			{
 				Fadeout();
-				Tasks.Add(SCommon.Supplier(this.E_Play()));
+				TaskList.Add(SCommon.Supplier(this.E_Play()));
 				Playing = this;
 			}
 		}
@@ -91,7 +122,7 @@ namespace Charlotte.GameCommons
 		{
 			if (Playing != null)
 			{
-				Tasks.Add(SCommon.Supplier(Playing.E_Fadeout()));
+				TaskList.Add(SCommon.Supplier(Playing.E_Fadeout()));
 				Playing = null;
 			}
 		}
