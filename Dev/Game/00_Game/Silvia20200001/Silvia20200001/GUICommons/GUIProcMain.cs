@@ -64,7 +64,7 @@ namespace Charlotte.GUICommons
 
 			Mutex procMutex = new Mutex(
 				false,
-				"{62f72aca-dc8c-432e-b00d-e589dc2bf9fa}_" + peTimeDateStamp
+				"Silvia20200001_ProcMutex_{62f72aca-dc8c-432e-b00d-e589dc2bf9fa}_" + peTimeDateStamp
 				);
 
 			if (procMutex.WaitOne(0))
@@ -83,7 +83,7 @@ namespace Charlotte.GUICommons
 				bool createdNew;
 				Mutex globalProcMutex = new Mutex(
 					false,
-					@"Global\{ffdbdfa1-6ba8-4ec5-899c-9b361bbb6a15}_" + peTimeDateStamp,
+					@"Global\Silvia20200001_GlobalProcMutex_{ffdbdfa1-6ba8-4ec5-899c-9b361bbb6a15}_" + peTimeDateStamp,
 					out createdNew,
 					security
 					);

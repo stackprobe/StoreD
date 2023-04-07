@@ -204,6 +204,17 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="picture">画像</param>
 		/// <param name="rect">描画する領域</param>
+		public static void Draw(Picture picture, I4Rect rect)
+		{
+			Draw(picture, rect.ToD4Rect());
+		}
+
+		/// <summary>
+		/// 描画する。
+		/// 描画設定の回転・拡大率は適用されない。
+		/// </summary>
+		/// <param name="picture">画像</param>
+		/// <param name="rect">描画する領域</param>
 		public static void Draw(Picture picture, D4Rect rect)
 		{
 			Draw(picture, rect.Poly);
@@ -278,12 +289,13 @@ namespace Charlotte.GameCommons
 
 		public static void EachFrame()
 		{
+			DD.Curtain.EachFrame();
 			Music.EachFrame();
 			SoundEffect.EachFrame();
 
 			SubScreen.ChangeDrawScreenToBack();
 
-			DD.SetBright(new D3Color(0.0, 0.0, 0.0));
+			DD.SetBright(new I3Color(0, 0, 0));
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H));
 
 			D4Rect mainScreenDrawRect = DD.EnlargeFullInterior(
@@ -331,6 +343,50 @@ namespace Charlotte.GameCommons
 			{
 				Thread.Sleep(1);
 				currentTime = DU.GetCurrentTime();
+			}
+		}
+
+		public static void DrawCurtain(double whiteLevel)
+		{
+			if (whiteLevel == 0.0)
+				return;
+
+			whiteLevel = SCommon.ToRange(whiteLevel, -1.0, 1.0);
+
+			if (whiteLevel < 0.0)
+			{
+				DD.SetAlpha(-whiteLevel);
+				DD.SetBright(new I3Color(0, 0, 0));
+			}
+			else
+			{
+				DD.SetAlpha(whiteLevel);
+			}
+			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H));
+		}
+
+		public static void SetCurtain(double destWhiteLevel)
+		{
+			Curtain.NextWhiteLevels.Clear();
+
+			foreach (DD.Scene scene in DD.CreateScene(30))
+			{
+				Curtain.NextWhiteLevels.Enqueue(DD.AToBRate(Curtain.CurrWhiteLevel, destWhiteLevel, scene.Rate));
+			}
+		}
+
+		private static class Curtain
+		{
+			public static double CurrWhiteLevel = 0.0;
+			public static Queue<double> NextWhiteLevels = new Queue<double>();
+
+			public static void EachFrame()
+			{
+				if (1 <= NextWhiteLevels.Count)
+				{
+					CurrWhiteLevel = NextWhiteLevels.Dequeue();
+				}
+				DD.DrawCurtain(CurrWhiteLevel);
 			}
 		}
 
@@ -459,8 +515,8 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// S字曲線
 		/// (0, 0), (0.5, 0.5), (1, 1) を通る曲線
-		/// 0.5 &gt;= x の区間は加速(等加速)する。
-		/// x &gt;= 0.5 の区間は減速(等加速)する。
+		/// x &lt;= 0.5 の区間は加速(等加速)する。
+		/// 0.5 &lt;= x の区間は減速(等加速)する。
 		/// </summary>
 		/// <param name="x">X軸の値</param>
 		/// <returns>Y軸の値</returns>
@@ -470,6 +526,42 @@ namespace Charlotte.GameCommons
 				return (1.0 - Parabola(x + 0.5)) * 0.5;
 			else
 				return (1.0 + Parabola(x - 0.5)) * 0.5;
+		}
+
+		/// <summary>
+		/// 始点から終点までの間の指定レートの位置の値を返す。
+		/// </summary>
+		/// <param name="a">始点</param>
+		/// <param name="b">終点</param>
+		/// <param name="rate">レート</param>
+		/// <returns>レートの値</returns>
+		public static double AToBRate(double a, double b, double rate)
+		{
+			return a + (b - a) * rate;
+		}
+
+		/// <summary>
+		/// 始点から終点までの間の指定レートの位置を返す。
+		/// </summary>
+		/// <param name="a">始点</param>
+		/// <param name="b">終点</param>
+		/// <param name="rate">レート</param>
+		/// <returns>レートの位置</returns>
+		public static D2Point AToBRate(D2Point a, D2Point b, double rate)
+		{
+			return a + (b - a) * rate;
+		}
+
+		/// <summary>
+		/// 始点から終点までの間の位置をレートに変換する。
+		/// </summary>
+		/// <param name="a">始点</param>
+		/// <param name="b">終点</param>
+		/// <param name="value">位置</param>
+		/// <returns>レート</returns>
+		public static double RateAToB(double a, double b, double value)
+		{
+			return (value - a) / (b - a);
 		}
 
 		/// <summary>

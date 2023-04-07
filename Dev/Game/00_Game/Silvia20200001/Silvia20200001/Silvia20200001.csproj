@@ -73,6 +73,7 @@
     <Compile Include="Drawings\I4Rect.cs" />
     <Compile Include="Drawings\P4Poly.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GameCommons\Crash.cs" />
     <Compile Include="GameCommons\DD.cs" />
     <Compile Include="GameCommons\DU.cs" />
     <Compile Include="GameCommons\Music.cs" />
