@@ -22,7 +22,7 @@ namespace Charlotte.GameCommons
 		}
 
 		private Func<byte[]> FileDataGetter;
-		private long[] LoopRange = null;
+		private Action<Music> PostLoaded = instance => { };
 
 		private int Handle; // -1 == 未ロード
 
@@ -37,10 +37,15 @@ namespace Charlotte.GameCommons
 		public Music(string resPath, long loopStartPosition, long loopLength)
 			: this(resPath)
 		{
-			this.LoopRange = new long[]
+			long loopEndPosition = loopStartPosition + loopLength;
+
+			this.PostLoaded = instance =>
 			{
-				loopStartPosition,
-				loopStartPosition + loopLength,
+				if (DX.SetLoopSamplePosSoundMem(loopStartPosition, this.Handle) != 0) // ? 失敗 // ループ開始位置
+					throw new Exception("SetLoopSamplePosSoundMem failed");
+
+				if (DX.SetLoopStartSamplePosSoundMem(loopEndPosition, this.Handle) != 0) // ? 失敗 // ループ終了位置
+					throw new Exception("SetLoopStartSamplePosSoundMem failed");
 			};
 		}
 
@@ -56,12 +61,8 @@ namespace Charlotte.GameCommons
 				if (handle == -1) // ? 失敗
 					throw new Exception("LoadSoundMemByMemImage failed");
 
-				if (this.LoopRange != null)
-				{
-					DX.SetLoopSamplePosSoundMem(this.LoopRange[0], handle); // ループ開始位置
-					DX.SetLoopStartSamplePosSoundMem(this.LoopRange[1], handle); // ループ終了位置
-				}
 				this.Handle = handle;
+				this.PostLoaded(this);
 			}
 			return this.Handle;
 		}
@@ -93,11 +94,11 @@ namespace Charlotte.GameCommons
 			{
 				if (Playing != null) // ? 再生中
 				{
-					int volume = SCommon.ToInt(GameSetting.MusicVolume * 255.0);
+					int volume = DU.RateToByte(GameSetting.MusicVolume);
 
 					if (LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
 					{
-						if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.MusicVolume * 255.0), Playing.GetHandle()) != 0) // ? 失敗
+						if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume), Playing.GetHandle()) != 0) // ? 失敗
 							throw new Exception("ChangeVolumeSoundMem failed");
 
 						LastVolume = volume;
@@ -141,7 +142,7 @@ namespace Charlotte.GameCommons
 			yield return true;
 			yield return true;
 
-			if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.MusicVolume * 255.0), this.GetHandle()) != 0) // ? 失敗
+			if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume), this.GetHandle()) != 0) // ? 失敗
 				throw new Exception("ChangeVolumeSoundMem failed");
 		}
 
@@ -149,7 +150,7 @@ namespace Charlotte.GameCommons
 		{
 			foreach (DD.Scene scene in DD.CreateScene(30))
 			{
-				if (DX.ChangeVolumeSoundMem(SCommon.ToInt(GameSetting.MusicVolume * 255.0 * (1.0 - scene.Rate)), this.GetHandle()) != 0) // ? 失敗
+				if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume * (1.0 - scene.Rate)), this.GetHandle()) != 0) // ? 失敗
 					throw new Exception("ChangeVolumeSoundMem failed");
 
 				yield return true;

@@ -203,10 +203,44 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public class SoundHandleInfo
+		/// <summary>
+		/// レートを十億分率に変換する。
+		/// </summary>
+		/// <param name="rate">レート</param>
+		/// <returns>十億分率</returns>
+		public static int RateToPPB(double rate)
 		{
-			public int Handle;
-			public int LastVolume;
+			return SCommon.ToRange(SCommon.ToInt(rate * SCommon.IMAX), 0, SCommon.IMAX);
+		}
+
+		/// <summary>
+		/// 十億分率をレートに変換する。
+		/// </summary>
+		/// <param name="ppb">十億分率</param>
+		/// <returns>レート</returns>
+		public static double PPBToRate(int ppb)
+		{
+			return SCommon.ToRange((double)ppb / SCommon.IMAX, 0.0, 1.0);
+		}
+
+		/// <summary>
+		/// レートをバイト値(0～255)に変換する。
+		/// </summary>
+		/// <param name="rate">レート</param>
+		/// <returns>バイト値</returns>
+		public static int RateToByte(double rate)
+		{
+			return SCommon.ToRange(SCommon.ToInt(rate * 255.0), 0, 255);
+		}
+
+		/// <summary>
+		/// バイト値(0～255)をレートに変換する。
+		/// </summary>
+		/// <param name="value">バイト値</param>
+		/// <returns>レート</returns>
+		public static double ByteToRate(int value)
+		{
+			return SCommon.ToRange((double)value / 255.0, 0.0, 1.0);
 		}
 	}
 }

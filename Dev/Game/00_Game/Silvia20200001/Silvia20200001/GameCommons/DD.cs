@@ -52,6 +52,56 @@ namespace Charlotte.GameCommons
 			return getter;
 		}
 
+		#region Draw
+
+		public static void SetIgnoreDrawError()
+		{
+		}
+
+		/// <summary>
+		/// 描画設定：
+		/// -- アンチエイリアシングを行わない。
+		/// </summary>
+		public static void SetMosaic()
+		{
+		}
+
+		public static void SetBright(D3Color color)
+		{
+
+		}
+
+		public static void SetAlpha(double a)
+		{
+		}
+
+		public static void SetZoom(double zoom)
+		{
+			SetZoom(zoom, zoom);
+		}
+
+		public static void SetZoom(double xZoom, double yZoom)
+		{
+		}
+
+		public static void Draw(Picture picture, double x, double y)
+		{
+		}
+
+		public static void Draw(Picture picture, D2Point pt)
+		{
+		}
+
+		public static void Draw(Picture picture, D4Rect rect)
+		{
+		}
+
+		public static void Draw(Picture picture, P4Poly poly)
+		{
+		}
+
+		#endregion
+
 		public static void EachFrame()
 		{
 			Music.EachFrame();

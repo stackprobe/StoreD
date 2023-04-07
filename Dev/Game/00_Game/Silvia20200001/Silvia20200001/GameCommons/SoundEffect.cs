@@ -157,7 +157,7 @@ namespace Charlotte.GameCommons
 
 		private static void ChangeVolumeIfNeeded(HandleInfo handle)
 		{
-			int volume = SCommon.ToInt(GameSetting.SEVolume * 255.0);
+			int volume = DU.RateToByte(GameSetting.SEVolume);
 
 			if (handle.LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
 			{
