@@ -74,6 +74,8 @@ namespace Charlotte.GameCommons
 		{
 			if (this.Handle != -1)
 			{
+				// HACK: 再生中にアンロードされることを想定していない。
+
 				if (DX.DeleteSoundMem(this.Handle) != 0) // ? 失敗
 					throw new Exception("DeleteSoundMem failed");
 

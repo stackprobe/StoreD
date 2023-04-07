@@ -70,6 +70,8 @@ namespace Charlotte.GameCommons
 		{
 			if (this.Handles != null)
 			{
+				// HACK: 再生中にアンロードされることを想定していない。
+
 				foreach (HandleInfo handle in DU.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
 					if (DX.DeleteSoundMem(handle.Value) != 0) // ? 失敗
 						throw new Exception("DeleteSoundMem failed");

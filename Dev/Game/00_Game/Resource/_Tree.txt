@@ -2,6 +2,26 @@
 	-> Directory
 General\Dummy.png
 	-> File 2023/04/05 (水) 13:19:23 / 2021/01/13 (水) 13:32:40 / 188
+General\Font
+	-> Directory
+General\Font\K Gothic
+	-> Directory
+General\Font\K Gothic\K Gothic.ttf
+	-> File 2023/04/08 (土) 01:34:57 / 2023/01/01 (日) 14:19:32 / 9,673,764
+General\Font\K Gothic\_source.txt
+	-> File 2023/04/08 (土) 01:36:33 / 2023/04/08 (土) 01:45:55 / 45
+General\Font\K Gothic\はじめにお読みください.txt
+	-> File 2023/04/08 (土) 01:34:57 / 2023/01/01 (日) 17:48:16 / 2,741
+General\Font\木漏れ日ゴシック
+	-> Directory
+General\Font\木漏れ日ゴシック\_source.txt
+	-> File 2023/04/08 (土) 01:45:27 / 2023/04/08 (土) 01:45:51 / 56
+General\Font\木漏れ日ゴシック\komorebi-gothic-P.ttf
+	-> File 2023/04/08 (土) 01:45:01 / 2018/05/01 (火) 19:58:32 / 4,346,028
+General\Font\木漏れ日ゴシック\komorebi-gothic.ttf
+	-> File 2023/04/08 (土) 01:45:01 / 2018/05/01 (火) 19:58:40 / 4,309,524
+General\Font\木漏れ日ゴシック\readme.txt
+	-> File 2023/04/08 (土) 01:45:01 / 2018/05/01 (火) 19:53:16 / 1,242
 General\WhiteBox.png
 	-> File 2023/04/05 (水) 13:17:39 / 2021/01/13 (水) 13:32:40 / 124
 General\WhiteCircle.png
