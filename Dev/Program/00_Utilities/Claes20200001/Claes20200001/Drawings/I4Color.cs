@@ -25,6 +25,14 @@ namespace Charlotte.Drawings
 			this.A = a;
 		}
 
+		public I4Color(Color color)
+		{
+			this.R = color.R;
+			this.G = color.G;
+			this.B = color.B;
+			this.A = color.A;
+		}
+
 		public override string ToString()
 		{
 			return string.Format("{0:x2}{1:x2}{2:x2}{3:x2}", this.R, this.G, this.B, this.A);

@@ -83,6 +83,14 @@ namespace Charlotte.Drawings
 			}
 		}
 
+		public D2Point XY
+		{
+			get
+			{
+				return new D2Point(this.L + this.W / 2.0, this.T + this.H / 2.0);
+			}
+		}
+
 		public P4Poly Poly
 		{
 			get

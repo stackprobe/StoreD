@@ -82,6 +82,14 @@ namespace Charlotte.Drawings
 			}
 		}
 
+		public I2Point XY
+		{
+			get
+			{
+				return new I2Point(this.L + this.W / 2, this.T + this.H / 2);
+			}
+		}
+
 		public I2Size Size
 		{
 			get

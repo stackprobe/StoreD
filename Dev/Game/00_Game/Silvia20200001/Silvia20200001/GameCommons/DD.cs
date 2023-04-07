@@ -53,11 +53,6 @@ namespace Charlotte.GameCommons
 			return getter;
 		}
 
-		public static void KeepLastMainScreen()
-		{
-			SCommon.Swap(ref LastMainScreen, ref KeptMainScreen);
-		}
-
 		#region Draw
 
 		/// <summary>
@@ -98,6 +93,16 @@ namespace Charlotte.GameCommons
 		public static void SetMosaic()
 		{
 			DrawSetting.MosaicFlag = true;
+		}
+
+		/// <summary>
+		/// 描画設定：
+		/// -- 明度をセットする。
+		/// </summary>
+		/// <param name="color">明度</param>
+		public static void SetBright(I3Color color)
+		{
+			SetBright(color.ToD3Color());
 		}
 
 		/// <summary>
@@ -278,19 +283,17 @@ namespace Charlotte.GameCommons
 
 			SubScreen.ChangeDrawScreenToBack();
 
-			//DD.SetBright(new I3Color(0, 255, 0).ToD3Color());
-			DD.SetBright(new I3Color(255, 0, 255).ToD3Color());
-			//DD.SetBright(new I3Color(0, 0, 0).ToD3Color());
+			DD.SetBright(new D3Color(0.0, 0.0, 0.0));
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H));
 
-			D4Rect drawRect = DD.EnlargeFullInterior(
+			D4Rect mainScreenDrawRect = DD.EnlargeFullInterior(
 				GameConfig.ScreenSize.ToD2Size(),
 				new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H)
 				)
 				.ToI4Rect()
 				.ToD4Rect();
 
-			DD.Draw(DD.MainScreen.GetPicture(), drawRect);
+			DD.Draw(DD.MainScreen.GetPicture(), mainScreenDrawRect);
 
 			GC.Collect();
 
@@ -308,6 +311,11 @@ namespace Charlotte.GameCommons
 
 			ProcFrame++;
 			WindowIsActive = DX.GetActiveFlag() != 0;
+		}
+
+		public static void KeepLastMainScreen()
+		{
+			SCommon.Swap(ref DD.LastMainScreen, ref DD.KeptMainScreen);
 		}
 
 		private static long HzChaserTime;
