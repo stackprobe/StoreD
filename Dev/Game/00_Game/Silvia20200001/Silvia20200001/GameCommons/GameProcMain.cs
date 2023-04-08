@@ -20,6 +20,17 @@ namespace Charlotte.GameCommons
 
 		public static void GameMain(Form mainForm, Action userGameMain)
 		{
+			DD.RunOnUIThread = routine =>
+			{
+				mainForm.BeginInvoke((MethodInvoker)delegate
+				{
+					routine();
+				});
+			};
+
+			DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // リボンの表示に必要なので、先行してセットする。
+			DD.SetLibbon("ゲームを起動しています...");
+
 			Thread th = new Thread(() =>
 			{
 				bool aliving = true;
@@ -31,6 +42,8 @@ namespace Charlotte.GameCommons
 						if (aliving)
 							mainForm.Visible = false;
 					});
+
+					DD.SetLibbon(null);
 
 					userGameMain();
 				};
@@ -151,7 +164,7 @@ namespace Charlotte.GameCommons
 			});
 
 			DD.MainWindowTitle = title;
-			DD.TargetMonitor = DU.GetTargetMonitor_Boot();
+			//DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // 先行してセットされる。
 			DD.RealScreenSize = GameSetting.FullScreen ?
 				new I2Size(DD.TargetMonitor.W, DD.TargetMonitor.H) :
 				GameSetting.UserScreenSize;
@@ -163,12 +176,27 @@ namespace Charlotte.GameCommons
 			foreach (string resPath in GameConfig.FontFileResPaths)
 				DU.AddFontFile(resPath);
 
-			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
+			RealScreenSizeChanged();
 
 			GameStarted();
 		}
 
 		public static void SetRealScreenSize(int w, int h)
+		{
+			if (DD.RealScreenSize.W != w || DD.RealScreenSize.H != h)
+			{
+				DD.RealScreenSize.W = w;
+				DD.RealScreenSize.H = h;
+
+				DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
+
+				RealScreenSizeChanged();
+
+				DD.SetLibbon(null);
+			}
+		}
+
+		private static void RealScreenSizeChanged()
 		{
 			DD.TargetMonitor = DU.GetTargetMonitor();
 
@@ -180,19 +208,16 @@ namespace Charlotte.GameCommons
 			//Music.UnloadAll(); // アンロード不要
 			//SoundEffect.UnloadAll(); // アンロード不要
 
-			DX.SetGraphMode(w, h, 32);
+			DX.SetGraphMode(DD.RealScreenSize.W, DD.RealScreenSize.H, 32);
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0);
 			DX.SetMouseDispFlag(1);
 
-			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
-			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;
+			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - DD.RealScreenSize.W) / 2;
+			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - DD.RealScreenSize.H) / 2;
 
 			DU.SetMainWindowPosition(l, t);
-
-			DD.RealScreenSize.W = w;
-			DD.RealScreenSize.H = h;
 
 			DD.MainScreenDrawRect = DD.EnlargeFullInterior(
 				GameConfig.ScreenSize.ToD2Size(),

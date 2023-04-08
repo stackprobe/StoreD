@@ -16,6 +16,7 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public static class DD
 	{
+		public static Action<Action> RunOnUIThread;
 		public static List<Action> Finalizers = new List<Action>();
 		public static string MainWindowTitle;
 		public static I4Rect TargetMonitor;
@@ -54,6 +55,33 @@ namespace Charlotte.GameCommons
 			}
 			return getter;
 		}
+
+		#region Libbon
+
+		private static LibbonDialog P_LibbonDialog = null;
+
+		public static void SetLibbon(string message)
+		{
+			I4Rect targetMonitor = DD.TargetMonitor;
+
+			DD.RunOnUIThread(() =>
+			{
+				if (P_LibbonDialog != null)
+				{
+					P_LibbonDialog.P_Message = null;
+					P_LibbonDialog = null;
+				}
+				if (!string.IsNullOrEmpty(message))
+				{
+					P_LibbonDialog = new LibbonDialog();
+					P_LibbonDialog.P_TargetMonitor = targetMonitor;
+					P_LibbonDialog.P_Message = message;
+					P_LibbonDialog.Show();
+				}
+			});
+		}
+
+		#endregion
 
 		#region Draw
 

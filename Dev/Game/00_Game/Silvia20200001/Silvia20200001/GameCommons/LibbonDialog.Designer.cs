@@ -1,6 +1,6 @@
-﻿namespace Charlotte
+﻿namespace Charlotte.GameCommons
 {
-	partial class MainWin
+	partial class LibbonDialog
 	{
 		/// <summary>
 		/// 必要なデザイナー変数です。
@@ -28,30 +28,42 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWin));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LibbonDialog));
+			this.Message = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// MainWin
+			// Message
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+			this.Message.AutoSize = true;
+			this.Message.Location = new System.Drawing.Point(12, 9);
+			this.Message.Name = "Message";
+			this.Message.Size = new System.Drawing.Size(23, 12);
+			this.Message.TabIndex = 0;
+			this.Message.Text = "---";
+			// 
+			// LibbonDialog
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 261);
-			this.Font = new System.Drawing.Font("メイリオ", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.Controls.Add(this.Message);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Location = new System.Drawing.Point(-400, -400);
-			this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			this.Name = "MainWin";
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "LibbonDialog";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "Gattonero20230405_Main";
-			this.Load += new System.EventHandler(this.MainWin_Load);
-			this.Shown += new System.EventHandler(this.MainWin_Shown);
+			this.Text = "Gattonero20230405_Libbon";
+			this.TopMost = true;
+			this.Load += new System.EventHandler(this.LibbonDialog_Load);
+			this.Shown += new System.EventHandler(this.LibbonDialog_Shown);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
+		private System.Windows.Forms.Label Message;
 	}
 }
-

@@ -78,6 +78,12 @@
     <Compile Include="GameCommons\DU.cs" />
     <Compile Include="GameCommons\Input.cs" />
     <Compile Include="GameCommons\Keyboard.cs" />
+    <Compile Include="GameCommons\LibbonDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GameCommons\LibbonDialog.Designer.cs">
+      <DependentUpon>LibbonDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameCommons\Mouse.cs" />
     <Compile Include="GameCommons\Music.cs" />
     <Compile Include="GameCommons\Pad.cs" />
@@ -104,6 +110,9 @@
     <Compile Include="SoundEffects.cs" />
     <Compile Include="UserGameMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="GameCommons\LibbonDialog.resx">
+      <DependentUpon>LibbonDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainWin.resx">
       <DependentUpon>MainWin.cs</DependentUpon>
     </EmbeddedResource>
