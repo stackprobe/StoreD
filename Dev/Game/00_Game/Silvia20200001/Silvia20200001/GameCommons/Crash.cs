@@ -7,6 +7,9 @@ using Charlotte.Drawings;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
 	public class Crash
 	{
 		private enum Kind_e
@@ -24,6 +27,10 @@ namespace Charlotte.GameCommons
 		private D4Rect Rect;
 		private Crash[] Crashes;
 
+		/// <summary>
+		/// 何にも当たらないクラッシュ判定を作成する。
+		/// </summary>
+		/// <returns>クラッシュ判定</returns>
 		public static Crash CreateNone()
 		{
 			return new Crash()
@@ -32,6 +39,11 @@ namespace Charlotte.GameCommons
 			};
 		}
 
+		/// <summary>
+		/// 点のクラッシュ判定を作成する。
+		/// </summary>
+		/// <param name="pt">点の座標</param>
+		/// <returns>クラッシュ判定</returns>
 		public static Crash CreatePoint(D2Point pt)
 		{
 			return new Crash()
@@ -41,6 +53,12 @@ namespace Charlotte.GameCommons
 			};
 		}
 
+		/// <summary>
+		/// 円のクラッシュ判定を作成する。
+		/// </summary>
+		/// <param name="pt">円の中心座標</param>
+		/// <param name="r">円の半径</param>
+		/// <returns>クラッシュ判定</returns>
 		public static Crash CreateCircle(D2Point pt, double r)
 		{
 			return new Crash()
@@ -51,6 +69,11 @@ namespace Charlotte.GameCommons
 			};
 		}
 
+		/// <summary>
+		/// 矩形領域のクラッシュ判定を作成する。
+		/// </summary>
+		/// <param name="rect">矩形領域</param>
+		/// <returns>クラッシュ判定</returns>
 		public static Crash CreateRect(D4Rect rect)
 		{
 			return new Crash()
@@ -60,6 +83,11 @@ namespace Charlotte.GameCommons
 			};
 		}
 
+		/// <summary>
+		/// 子クラッシュ判定をまとめたクラッシュ判定を作成する。
+		/// </summary>
+		/// <param name="crashes">子クラッシュ判定の配列</param>
+		/// <returns>クラッシュ判定</returns>
 		public static Crash CreateMulti(params Crash[] crashes)
 		{
 			return new Crash()
@@ -72,6 +100,12 @@ namespace Charlotte.GameCommons
 		private Crash()
 		{ }
 
+		/// <summary>
+		/// 当たり判定を行う。
+		/// </summary>
+		/// <param name="a">クラッシュ判定(A)</param>
+		/// <param name="b">クラッシュ判定(B)</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed(Crash a, Crash b)
 		{
 			if ((int)b.Kind < (int)a.Kind)
@@ -86,7 +120,7 @@ namespace Charlotte.GameCommons
 			if (a.Kind == Kind_e.POINT)
 			{
 				if (b.Kind == Kind_e.POINT)
-					return false;
+					return IsCrashed_Point_Point(a.Pt, b.Pt);
 
 				if (b.Kind == Kind_e.CIRCLE)
 					return IsCrashed_Circle_Point(b.Pt, b.R, a.Pt);
@@ -132,16 +166,49 @@ namespace Charlotte.GameCommons
 			return false;
 		}
 
+		/// <summary>
+		/// 点と点の当たり判定を行う。
+		/// </summary>
+		/// <param name="aPt">点(A)</param>
+		/// <param name="bPt">点(B)</param>
+		/// <returns>当たっているか</returns>
+		public static bool IsCrashed_Point_Point(D2Point aPt, D2Point bPt)
+		{
+			return DD.GetDistance(aPt, bPt) < SCommon.MICRO;
+		}
+
+		/// <summary>
+		/// 円と点の当たり判定を行う。
+		/// </summary>
+		/// <param name="aPt">円(A)の中心座標</param>
+		/// <param name="aR">円(A)の半径</param>
+		/// <param name="bPt">点(B)の座標</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed_Circle_Point(D2Point aPt, double aR, D2Point bPt)
 		{
 			return DD.GetDistance(aPt, bPt) < aR;
 		}
 
+		/// <summary>
+		/// 円と円の当たり判定を行う。
+		/// </summary>
+		/// <param name="aPt">円(A)の中心座標</param>
+		/// <param name="aR">円(A)の半径</param>
+		/// <param name="bPt">円(B)の中心座標</param>
+		/// <param name="bR">円(B)の半径</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed_Circle_Circle(D2Point aPt, double aR, D2Point bPt, double bR)
 		{
 			return DD.GetDistance(aPt, bPt) < aR + bR;
 		}
 
+		/// <summary>
+		/// 円と矩形領域の当たり判定を行う。
+		/// </summary>
+		/// <param name="aPt">円(A)の中心座標</param>
+		/// <param name="aR">円(A)の半径</param>
+		/// <param name="bRect">矩形領域(B)</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed_Circle_Rect(D2Point aPt, double aR, D4Rect bRect)
 		{
 			if (aPt.X < bRect.L) // 左
@@ -180,6 +247,12 @@ namespace Charlotte.GameCommons
 			}
 		}
 
+		/// <summary>
+		/// 矩形領域と点の当たり判定を行う。
+		/// </summary>
+		/// <param name="aRect">矩形領域(A)</param>
+		/// <param name="bPt">点(B)</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed_Rect_Point(D4Rect aRect, D2Point bPt)
 		{
 			return
@@ -187,6 +260,12 @@ namespace Charlotte.GameCommons
 				aRect.T < bPt.Y && bPt.Y < aRect.B;
 		}
 
+		/// <summary>
+		/// 矩形領域と矩形領域の当たり判定を行う。
+		/// </summary>
+		/// <param name="aRect">矩形領域(A)</param>
+		/// <param name="bRect">矩形領域(B)</param>
+		/// <returns>当たっているか</returns>
 		public static bool IsCrashed_Rect_Rect(D4Rect aRect, D4Rect bRect)
 		{
 			return

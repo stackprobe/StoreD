@@ -6,6 +6,9 @@ using Charlotte.Drawings;
 
 namespace Charlotte.GameSettings
 {
+	/// <summary>
+	/// 変更不可能な設定群
+	/// </summary>
 	public static class GameConfig
 	{
 		public static I2Size ScreenSize = new I2Size(960, 540);

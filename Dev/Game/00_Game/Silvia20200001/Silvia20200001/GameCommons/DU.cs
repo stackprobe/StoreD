@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using System.IO;
 
 namespace Charlotte.GameCommons
 {
@@ -338,6 +338,48 @@ namespace Charlotte.GameCommons
 		public static uint ToDXColor(I3Color color)
 		{
 			return DX.GetColor(color.R, color.G, color.B);
+		}
+
+		public static void UpdateButtonCounter(ref int counter, bool status)
+		{
+			if (1 <= counter) // ? 前回は押していた。
+			{
+				if (status) // ? 今回も押している。
+				{
+					counter++; // 押している。
+				}
+				else // ? 今回は離している。
+				{
+					counter = -1; // 離し始めた。
+				}
+			}
+			else // ? 前回は離していた。
+			{
+				if (status) // ? 今回は押している。
+				{
+					counter = 1; // 押し始めた。
+				}
+				else // ? 今回も離している。
+				{
+					counter = 0; // 離している。
+				}
+			}
+		}
+
+		public static void Countdown(ref int counter)
+		{
+			if (0 < counter)
+				counter--;
+			else if (counter < 0)
+				counter++;
+		}
+
+		private const int POUND_FIRST_DELAY = 17;
+		private const int POUND_DELAY = 4;
+
+		public static bool IsPound(int count)
+		{
+			return count == 1 || POUND_FIRST_DELAY < count && (count - POUND_FIRST_DELAY) % POUND_DELAY == 1;
 		}
 	}
 }

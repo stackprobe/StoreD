@@ -8,6 +8,9 @@ using Charlotte.GameCommons;
 
 namespace Charlotte.GameSettings
 {
+	/// <summary>
+	/// 変更可能な設定群
+	/// </summary>
 	public static class GameSetting
 	{
 		public static I2Size UserScreenSize;

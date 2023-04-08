@@ -15,8 +15,6 @@ namespace Charlotte
 		{
 			for (; ; )
 			{
-				DX.ClearDrawScreen();
-
 				DD.SetRotate(DD.ProcFrame / 10.0);
 				DD.Draw(Pictures.Dummy, GameConfig.ScreenSize.W / 2.0, GameConfig.ScreenSize.H / 2.0);
 

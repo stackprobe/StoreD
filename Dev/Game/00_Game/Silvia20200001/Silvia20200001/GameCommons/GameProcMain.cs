@@ -96,6 +96,8 @@ namespace Charlotte.GameCommons
 				File.AppendAllText(logFile, "[" + DateTime.Now + "] " + message + "\r\n", Encoding.UTF8);
 			};
 
+			Keyboard.Initialize();
+
 			string title =
 				Path.GetFileNameWithoutExtension(ProcMain.SelfFile)
 				+ " / "
@@ -165,13 +167,15 @@ namespace Charlotte.GameCommons
 
 		public static void SetRealScreenSize(int w, int h)
 		{
+			DD.TargetMonitor = DU.GetTargetMonitor();
+
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 
 			Picture.UnloadAll();
 			SubScreen.UnloadAll();
 			DU.UnloadAllFontHandle();
-			//Music.UnloadAll(); // 不要
-			//SoundEffect.UnloadAll(); // 不要
+			//Music.UnloadAll(); // アンロード不要
+			//SoundEffect.UnloadAll(); // アンロード不要
 
 			DX.SetGraphMode(w, h, 32);
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);

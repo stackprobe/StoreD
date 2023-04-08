@@ -37,6 +37,10 @@ namespace Charlotte.GameCommons
 		private List<HandleInfo> Handles; // null == 未ロード
 		private int LastIndex;
 
+		/// <summary>
+		/// リソースから効果音をロードする。
+		/// </summary>
+		/// <param name="resPath">リソースのパス</param>
 		public SoundEffect(string resPath)
 		{
 			this.FileDataGetter = () => DD.GetResFileData(resPath);

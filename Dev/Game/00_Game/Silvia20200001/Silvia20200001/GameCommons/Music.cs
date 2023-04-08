@@ -26,6 +26,10 @@ namespace Charlotte.GameCommons
 
 		private int Handle; // -1 == 未ロード
 
+		/// <summary>
+		/// リソースから音楽をロードする。
+		/// </summary>
+		/// <param name="resPath">リソースのパス</param>
 		public Music(string resPath)
 		{
 			this.FileDataGetter = () => DD.GetResFileData(resPath);
@@ -34,6 +38,12 @@ namespace Charlotte.GameCommons
 			Instances.Add(this);
 		}
 
+		/// <summary>
+		/// リソースからループありの音楽をロードする。
+		/// </summary>
+		/// <param name="resPath">リソースのパス</param>
+		/// <param name="loopStartPosition">ループ開始位置</param>
+		/// <param name="loopLength">ループの長さ</param>
 		public Music(string resPath, long loopStartPosition, long loopLength)
 			: this(resPath)
 		{

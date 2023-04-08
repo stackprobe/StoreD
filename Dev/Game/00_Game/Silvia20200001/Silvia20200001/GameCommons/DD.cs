@@ -24,6 +24,7 @@ namespace Charlotte.GameCommons
 		public static SubScreen LastMainScreen;
 		public static SubScreen KeptMainScreen;
 		public static int ProcFrame;
+		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
 
 		private static Func<string, byte[]> ResFileDataGetter = null;
@@ -289,6 +290,14 @@ namespace Charlotte.GameCommons
 
 		#region Print
 
+		/// <summary>
+		/// 文字列の描画を初期化する。
+		/// </summary>
+		/// <param name="l">左座標</param>
+		/// <param name="t">上座標</param>
+		/// <param name="yStep">行間ステップ</param>
+		/// <param name="fontName">フォント名</param>
+		/// <param name="fontSize">フォントサイズ</param>
 		public static void SetPrint(int l, int t, int yStep, string fontName = null, int fontSize = -1)
 		{
 			if (
@@ -324,12 +333,25 @@ namespace Charlotte.GameCommons
 			Prints.BorderSize = 0;
 		}
 
+		/// <summary>
+		/// 文字列の描画の設定：
+		/// 文字の色を設定する。
+		/// 次の文字列の描画の初期化(SetPrint)でリセットされる。
+		/// </summary>
+		/// <param name="color"></param>
 		public static void SetPrintColor(I3Color color)
 		{
 			Prints.P_Color = color;
 		}
 
-		public static void SetPrintBorderColor(I3Color color, int size)
+		/// <summary>
+		/// 文字列の描画の設定：
+		/// 文字の輪郭を設定する。
+		/// 次の文字列の描画の初期化(SetPrint)でリセットされる。
+		/// </summary>
+		/// <param name="color">輪郭の色</param>
+		/// <param name="size">輪郭の幅</param>
+		public static void SetPrintBorder(I3Color color, int size)
 		{
 			if (size < 1 || SCommon.IMAX < size)
 				throw new Exception("Bad size");
@@ -372,7 +394,7 @@ namespace Charlotte.GameCommons
 			public static int FontSize = -1; // -1 == デフォルトのフォントを使用する。
 			public static I3Color P_Color = DEFAULT_COLOR;
 			public static I3Color BorderColor = DEFAULT_BORDER_COLOR;
-			public static int BorderSize = 0; // 0 == 文字の外周を描画しない。
+			public static int BorderSize = 0; // 0 == 文字の輪郭を描画しない。
 
 			public static void Print(string line)
 			{
@@ -441,7 +463,7 @@ namespace Charlotte.GameCommons
 			int mag = mainScreenDrawRect.W / GameConfig.ScreenSize.W;
 
 			if (
-				2 <= mag &&
+				1 <= mag &&
 				mainScreenDrawRect.W == GameConfig.ScreenSize.W * mag &&
 				mainScreenDrawRect.H == GameConfig.ScreenSize.H * mag
 				)
@@ -460,39 +482,38 @@ namespace Charlotte.GameCommons
 				throw new Exception("ゲーム中断");
 			}
 
-			// TODO
-			// TODO
-			// TODO
-			/*
-			if ((1 <= DDKey.GetInput(DX.KEY_INPUT_LALT) || 1 <= DDKey.GetInput(DX.KEY_INPUT_RALT)) && DDKey.GetInput(DX.KEY_INPUT_RETURN) == 1)
+			// ALT + ENTER -> フルスクリーンの切り替え
+			//
+			if ((1 <= Keyboard.GetInput(DX.KEY_INPUT_LALT) || 1 <= Keyboard.GetInput(DX.KEY_INPUT_RALT)) && Keyboard.GetInput(DX.KEY_INPUT_RETURN) == 1)
 			{
 				// ? 現在フルスクリーン -> フルスクリーン解除
 				if (
-					DDGround.RealScreen_W == DDGround.MonitorRect.W &&
-					DDGround.RealScreen_H == DDGround.MonitorRect.H
+					DD.RealScreenSize.W == DD.TargetMonitor.W &&
+					DD.RealScreenSize.H == DD.TargetMonitor.H
 					)
 				{
-					DDMain.SetScreenSize(DDGround.UnfullScreen_W, DDGround.UnfullScreen_H);
+					GameProcMain.SetRealScreenSize(GameSetting.UserScreenSize.W, GameSetting.UserScreenSize.H);
+					GameSetting.FullScreen = false;
 				}
 				else // ? 現在フルスクリーンではない -> フルスクリーンにする
 				{
-					DDGround.UnfullScreen_W = DDGround.RealScreen_W;
-					DDGround.UnfullScreen_H = DDGround.RealScreen_H;
-
-					DDMain.SetFullScreen();
+					GameProcMain.SetRealScreenSize(DD.TargetMonitor.W, DD.TargetMonitor.H);
+					GameSetting.FullScreen = true;
 				}
-				DDEngine.FreezeInput(30); // エンターキー押下がゲームに影響しないように
+				DD.FreezeInput(30); // エンターキー押下がゲームに影響しないように
 			}
-			 * */
 
 			SCommon.Swap(ref DD.MainScreen, ref DD.LastMainScreen);
 			DD.MainScreen.ChangeDrawScreenToThis();
 
 			ProcFrame++;
+			DU.Countdown(ref FreezeInputFrame);
 			WindowIsActive = DX.GetActiveFlag() != 0;
 
 			if (SCommon.IMAX < ProcFrame) // 192.9 days limit
 				throw new Exception("ProcFrame counter has exceeded the limit");
+
+			Keyboard.EachFrame();
 
 			DX.ClearDrawScreen();
 		}
@@ -516,6 +537,14 @@ namespace Charlotte.GameCommons
 				Thread.Sleep(1);
 				currentTime = DU.GetCurrentTime();
 			}
+		}
+
+		public static void FreezeInput(int frame = 1)
+		{
+			if (frame < 1 || SCommon.IMAX < frame)
+				throw new Exception("Bad frame");
+
+			FreezeInputFrame = frame;
 		}
 
 		public static void DrawCurtain(double whiteLevel)
