@@ -136,6 +136,8 @@ namespace Charlotte.GameCommons
 
 			// DXLib 初期化 ここまで
 
+			Pad.Initialize();
+
 			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
 
 			if (File.Exists(saveDataFile))

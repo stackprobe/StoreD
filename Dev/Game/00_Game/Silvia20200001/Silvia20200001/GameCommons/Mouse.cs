@@ -71,6 +71,11 @@ namespace Charlotte.GameCommons
 			Y /= DD.MainScreenDrawRect.H;
 		}
 
+		/// <summary>
+		/// マウスカーソルの位置を強制的に移動する。
+		/// </summary>
+		/// <param name="x">X座標</param>
+		/// <param name="y">Y座標</param>
 		public static void SetMousePosition(int x, int y)
 		{
 			x = SCommon.ToRange(x, 0, GameConfig.ScreenSize.W - 1);

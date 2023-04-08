@@ -510,6 +510,7 @@ namespace Charlotte.GameCommons
 
 			Keyboard.EachFrame();
 			Mouse.EachFrame();
+			Pad.EachFrame();
 
 			DX.ClearDrawScreen();
 		}
