@@ -153,6 +153,7 @@ namespace Charlotte.GameCommons
 			DD.RealScreenSize = GameSetting.FullScreen ?
 				new I2Size(DD.TargetMonitor.W, DD.TargetMonitor.H) :
 				GameSetting.UserScreenSize;
+			DD.MainScreenDrawRect = new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H); // 不適切な領域 -- 後でちゃんとした領域をセットする。
 			DD.MainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.KeptMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
@@ -190,6 +191,12 @@ namespace Charlotte.GameCommons
 
 			DD.RealScreenSize.W = w;
 			DD.RealScreenSize.H = h;
+
+			DD.MainScreenDrawRect = DD.EnlargeFullInterior(
+				GameConfig.ScreenSize.ToD2Size(),
+				new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H).ToD4Rect()
+				)
+				.ToI4Rect();
 		}
 	}
 }

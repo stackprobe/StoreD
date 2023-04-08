@@ -6,7 +6,7 @@ using DxLibDLL;
 
 namespace Charlotte.GameCommons
 {
-	public class Keyboard
+	public static class Keyboard
 	{
 		private const int KEY_MAX = 256;
 
@@ -34,6 +34,8 @@ namespace Charlotte.GameCommons
 					DU.UpdateButtonCounter(ref Counters[index], false);
 			}
 		}
+
+		// MEMO: ボタン・キー押下は 1 マウス押下は -1 で判定する。
 
 		private const int _DUMMY_キーのフィールド名を探すためにF12で飛んで行く用 = DX.KEY_INPUT_0;
 

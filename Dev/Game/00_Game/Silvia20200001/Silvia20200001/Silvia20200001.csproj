@@ -77,6 +77,7 @@
     <Compile Include="GameCommons\DD.cs" />
     <Compile Include="GameCommons\DU.cs" />
     <Compile Include="GameCommons\Keyboard.cs" />
+    <Compile Include="GameCommons\Mouse.cs" />
     <Compile Include="GameCommons\Music.cs" />
     <Compile Include="GameCommons\SoundEffect.cs" />
     <Compile Include="GameCommons\Win32APIWrapper.cs" />

@@ -20,6 +20,7 @@ namespace Charlotte.GameCommons
 		public static string MainWindowTitle;
 		public static I4Rect TargetMonitor;
 		public static I2Size RealScreenSize;
+		public static I4Rect MainScreenDrawRect;
 		public static SubScreen MainScreen;
 		public static SubScreen LastMainScreen;
 		public static SubScreen KeptMainScreen;
@@ -454,22 +455,16 @@ namespace Charlotte.GameCommons
 			DD.SetBright(new I3Color(0, 0, 0));
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H));
 
-			I4Rect mainScreenDrawRect = DD.EnlargeFullInterior(
-				GameConfig.ScreenSize.ToD2Size(),
-				new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H)
-				)
-				.ToI4Rect();
-
-			int mag = mainScreenDrawRect.W / GameConfig.ScreenSize.W;
+			int mag = DD.MainScreenDrawRect.W / GameConfig.ScreenSize.W;
 
 			if (
 				1 <= mag &&
-				mainScreenDrawRect.W == GameConfig.ScreenSize.W * mag &&
-				mainScreenDrawRect.H == GameConfig.ScreenSize.H * mag
+				DD.MainScreenDrawRect.W == GameConfig.ScreenSize.W * mag &&
+				DD.MainScreenDrawRect.H == GameConfig.ScreenSize.H * mag
 				)
 				DD.SetMosaic();
 
-			DD.Draw(DD.MainScreen.GetPicture(), mainScreenDrawRect.ToD4Rect());
+			DD.Draw(DD.MainScreen.GetPicture(), DD.MainScreenDrawRect.ToD4Rect());
 
 			GC.Collect();
 
@@ -514,6 +509,7 @@ namespace Charlotte.GameCommons
 				throw new Exception("ProcFrame counter has exceeded the limit");
 
 			Keyboard.EachFrame();
+			Mouse.EachFrame();
 
 			DX.ClearDrawScreen();
 		}
