@@ -13,8 +13,18 @@ namespace Charlotte.GameCommons
 
 		public Input(int key, int button, string description)
 		{
+			if (key < 0 || Keyboard.KEY_MAX <= key)
+				throw new Exception("Bad key");
+
+			if (button < 0 || Pad.BUTTON_MAX <= button)
+				throw new Exception("Bad button");
+
+			if (string.IsNullOrEmpty(description))
+				throw new Exception("Bad description");
+
 			this.Key = key;
 			this.Button = button;
+			this.Description = description;
 		}
 
 		// MEMO: ボタン・キー押下は 1 マウス押下は -1 で判定する。

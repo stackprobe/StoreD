@@ -8,8 +8,8 @@ namespace Charlotte.GameCommons
 {
 	public static class Pad
 	{
-		private const int PAD_MAX = 16;
-		private const int BUTTON_MAX = 32;
+		public const int PAD_MAX = 16;
+		public const int BUTTON_MAX = 32;
 
 		private static int PadCount;
 		private static int[,] Counters = new int[PAD_MAX, BUTTON_MAX];

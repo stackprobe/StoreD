@@ -8,7 +8,7 @@ namespace Charlotte.GameCommons
 {
 	public static class Keyboard
 	{
-		private const int KEY_MAX = 256;
+		public const int KEY_MAX = 256;
 
 		private static int[] Counters = new int[KEY_MAX];
 		private static byte[] Statuses = new byte[KEY_MAX];

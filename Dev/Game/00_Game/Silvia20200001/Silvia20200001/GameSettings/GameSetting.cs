@@ -29,7 +29,7 @@ namespace Charlotte.GameSettings
 		{
 			List<object> dest = new List<object>();
 
-			// ----
+			// ---- このクラス内の項目ここから ----
 
 			dest.Add(UserScreenSize.W);
 			dest.Add(UserScreenSize.H);
@@ -37,7 +37,13 @@ namespace Charlotte.GameSettings
 			dest.Add(DU.RateToPPB(MusicVolume));
 			dest.Add(DU.RateToPPB(SEVolume));
 
-			// ----
+			// ---- このクラス内の項目ここまで ----
+
+			foreach (Input input in Inputs.GetAllInput())
+			{
+				dest.Add(input.Key);
+				dest.Add(input.Button);
+			}
 
 			return SCommon.Serializer.I.Join(dest.Select(v => v.ToString()).ToArray());
 		}
@@ -47,7 +53,7 @@ namespace Charlotte.GameSettings
 			string[] src = SCommon.Serializer.I.Split(serializedString);
 			int c = 0;
 
-			// ----
+			// ---- このクラス内の項目ここから ----
 
 			UserScreenSize.W = SCommon.ToRange(int.Parse(src[c++]), 1, SCommon.IMAX);
 			UserScreenSize.H = SCommon.ToRange(int.Parse(src[c++]), 1, SCommon.IMAX);
@@ -55,7 +61,13 @@ namespace Charlotte.GameSettings
 			MusicVolume = DU.PPBToRate(int.Parse(src[c++]));
 			SEVolume = DU.PPBToRate(int.Parse(src[c++]));
 
-			// ----
+			// ---- このクラス内の項目ここまで ----
+
+			foreach (Input input in Inputs.GetAllInput())
+			{
+				input.Key = SCommon.ToRange(int.Parse(src[c++]), 0, Keyboard.KEY_MAX - 1);
+				input.Button = SCommon.ToRange(int.Parse(src[c++]), 0, Pad.BUTTON_MAX - 1);
+			}
 
 			if (c != src.Length)
 				throw new Exception("Bad Length");
