@@ -76,6 +76,7 @@
     <Compile Include="GameCommons\Crash.cs" />
     <Compile Include="GameCommons\DD.cs" />
     <Compile Include="GameCommons\DU.cs" />
+    <Compile Include="GameCommons\Input.cs" />
     <Compile Include="GameCommons\Keyboard.cs" />
     <Compile Include="GameCommons\Mouse.cs" />
     <Compile Include="GameCommons\Music.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="GameSettings\GameConfig.cs" />
     <Compile Include="Ground.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
+    <Compile Include="Inputs.cs" />
     <Compile Include="MainWin.cs">
       <SubType>Form</SubType>
     </Compile>
