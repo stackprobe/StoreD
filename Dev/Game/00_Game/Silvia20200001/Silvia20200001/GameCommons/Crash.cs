@@ -132,17 +132,17 @@ namespace Charlotte.GameCommons
 			return false;
 		}
 
-		private static bool IsCrashed_Circle_Point(D2Point aPt, double aR, D2Point bPt)
+		public static bool IsCrashed_Circle_Point(D2Point aPt, double aR, D2Point bPt)
 		{
 			return DD.GetDistance(aPt, bPt) < aR;
 		}
 
-		private static bool IsCrashed_Circle_Circle(D2Point aPt, double aR, D2Point bPt, double bR)
+		public static bool IsCrashed_Circle_Circle(D2Point aPt, double aR, D2Point bPt, double bR)
 		{
 			return DD.GetDistance(aPt, bPt) < aR + bR;
 		}
 
-		private static bool IsCrashed_Circle_Rect(D2Point aPt, double aR, D4Rect bRect)
+		public static bool IsCrashed_Circle_Rect(D2Point aPt, double aR, D4Rect bRect)
 		{
 			if (aPt.X < bRect.L) // 左
 			{
@@ -180,14 +180,14 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static bool IsCrashed_Rect_Point(D4Rect aRect, D2Point bPt)
+		public static bool IsCrashed_Rect_Point(D4Rect aRect, D2Point bPt)
 		{
 			return
 				aRect.L < bPt.X && bPt.X < aRect.R &&
 				aRect.T < bPt.Y && bPt.Y < aRect.B;
 		}
 
-		private static bool IsCrashed_Rect_Rect(D4Rect aRect, D4Rect bRect)
+		public static bool IsCrashed_Rect_Rect(D4Rect aRect, D4Rect bRect)
 		{
 			return
 				aRect.L < bRect.R && bRect.L < aRect.R &&

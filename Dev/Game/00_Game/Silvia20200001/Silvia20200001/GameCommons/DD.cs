@@ -53,6 +53,34 @@ namespace Charlotte.GameCommons
 			return getter;
 		}
 
+		/// <summary>
+		/// このプロセスにフォントを追加する。
+		/// </summary>
+		/// <param name="resPath">フォントファイルのリソースパス</param>
+		public static void AddFontFile(string resPath)
+		{
+			string file = new WorkingDir().GetPath(Path.GetFileName(resPath));
+			byte[] fileData = DD.GetResFileData(resPath);
+
+			File.WriteAllBytes(file, fileData);
+
+			P_AddFontFile(file);
+
+			DD.Finalizers.Add(() => P_RemoveFontFile(file));
+		}
+
+		private static void P_AddFontFile(string file)
+		{
+			if (Win32APIWrapper.W_AddFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
+				throw new Exception("W_AddFontResourceEx failed");
+		}
+
+		private static void P_RemoveFontFile(string file)
+		{
+			if (Win32APIWrapper.W_RemoveFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
+				throw new Exception("W_RemoveFontResourceEx failed");
+		}
+
 		#region Draw
 
 		/// <summary>
