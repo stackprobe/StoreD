@@ -155,8 +155,8 @@ namespace Charlotte.GameCommons
 			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.KeptMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
-			DD.AddFontFile(@"General\Font\K Gothic\K Gothic.ttf");
-			DD.AddFontFile(@"General\Font\木漏れ日ゴシック\komorebi-gothic.ttf");
+			foreach (string resPath in GameConfig.FontFileResPaths)
+				DU.AddFontFile(resPath);
 
 			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
 
@@ -169,7 +169,7 @@ namespace Charlotte.GameCommons
 
 			Picture.UnloadAll();
 			SubScreen.UnloadAll();
-			// TODO フォント
+			DU.UnloadAllFontHandle();
 			//Music.UnloadAll(); // 不要
 			//SoundEffect.UnloadAll(); // 不要
 

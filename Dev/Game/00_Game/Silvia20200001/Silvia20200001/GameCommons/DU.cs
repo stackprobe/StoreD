@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
+using System.IO;
 
 namespace Charlotte.GameCommons
 {
@@ -195,6 +196,97 @@ namespace Charlotte.GameCommons
 			};
 		}
 
+		public static void AddFontFile(string resPath)
+		{
+			string file = new WorkingDir().GetPath(Path.GetFileName(resPath));
+			byte[] fileData = DD.GetResFileData(resPath);
+
+			File.WriteAllBytes(file, fileData);
+
+			P_AddFontFile(file);
+
+			DD.Finalizers.Add(() => P_RemoveFontFile(file));
+		}
+
+		private static void P_AddFontFile(string file)
+		{
+			if (Win32APIWrapper.W_AddFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
+				throw new Exception("W_AddFontResourceEx failed");
+		}
+
+		private static void P_RemoveFontFile(string file)
+		{
+			if (Win32APIWrapper.W_RemoveFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
+				throw new Exception("W_RemoveFontResourceEx failed");
+		}
+
+		public static int GetFontHandle(string fontName, int fontSize)
+		{
+			if (string.IsNullOrEmpty(fontName))
+				throw new Exception("Bad fontName");
+
+			if (fontSize < 1 || SCommon.IMAX < fontSize)
+				throw new Exception("Bad fontSize");
+
+			return Fonts.GetHandle(fontName, fontSize);
+		}
+
+		public static void UnloadAllFontHandle()
+		{
+			Fonts.UnloadAll();
+		}
+
+		private static class Fonts
+		{
+			private static Dictionary<string, int> Handles = SCommon.CreateDictionary<int>();
+
+			private static string GetKey(string fontName, int fontSize)
+			{
+				return string.Join("_", fontName, fontSize);
+			}
+
+			public static int GetHandle(string fontName, int fontSize)
+			{
+				string key = GetKey(fontName, fontSize);
+
+				if (!Handles.ContainsKey(key))
+					Handles.Add(key, CreateHandle(fontName, fontSize));
+
+				return Handles[key];
+			}
+
+			public static void UnloadAll()
+			{
+				foreach (int handle in Handles.Values)
+					ReleaseHandle(handle);
+
+				Handles.Clear();
+			}
+
+			private static int CreateHandle(string fontName, int fontSize)
+			{
+				int handle = DX.CreateFontToHandle(
+					fontName,
+					fontSize,
+					6,
+					DX.DX_FONTTYPE_ANTIALIASING_8X8,
+					-1,
+					0
+					);
+
+				if (handle == -1) // ? 失敗
+					throw new Exception("CreateFontToHandle failed");
+
+				return handle;
+			}
+
+			private static void ReleaseHandle(int handle)
+			{
+				if (DX.DeleteFontToHandle(handle) != 0) // ? 失敗
+					throw new Exception("DeleteFontToHandle failed");
+			}
+		}
+
 		public static IEnumerable<T> Reverse<T>(IList<T> list)
 		{
 			for (int index = list.Count - 1; 0 <= index; index--)
@@ -241,6 +333,11 @@ namespace Charlotte.GameCommons
 		public static double ByteToRate(int value)
 		{
 			return SCommon.ToRange((double)value / 255.0, 0.0, 1.0);
+		}
+
+		public static uint ToDXColor(I3Color color)
+		{
+			return DX.GetColor(color.R, color.G, color.B);
 		}
 	}
 }

@@ -53,34 +53,6 @@ namespace Charlotte.GameCommons
 			return getter;
 		}
 
-		/// <summary>
-		/// このプロセスにフォントを追加する。
-		/// </summary>
-		/// <param name="resPath">フォントファイルのリソースパス</param>
-		public static void AddFontFile(string resPath)
-		{
-			string file = new WorkingDir().GetPath(Path.GetFileName(resPath));
-			byte[] fileData = DD.GetResFileData(resPath);
-
-			File.WriteAllBytes(file, fileData);
-
-			P_AddFontFile(file);
-
-			DD.Finalizers.Add(() => P_RemoveFontFile(file));
-		}
-
-		private static void P_AddFontFile(string file)
-		{
-			if (Win32APIWrapper.W_AddFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
-				throw new Exception("W_AddFontResourceEx failed");
-		}
-
-		private static void P_RemoveFontFile(string file)
-		{
-			if (Win32APIWrapper.W_RemoveFontResourceEx(file, Win32APIWrapper.FR_PRIVATE, IntPtr.Zero) == 0) // ? 失敗
-				throw new Exception("W_RemoveFontResourceEx failed");
-		}
-
 		#region Draw
 
 		/// <summary>
@@ -315,6 +287,140 @@ namespace Charlotte.GameCommons
 
 		#endregion
 
+		#region Print
+
+		public static void SetPrint(int l, int t, int yStep, string fontName = null, int fontSize = -1)
+		{
+			if (
+				l < 0 || SCommon.IMAX < l ||
+				t < 0 || SCommon.IMAX < t ||
+				yStep < 0 || SCommon.IMAX < yStep
+				)
+				throw new Exception("Bad params");
+
+			Prints.L = l;
+			Prints.T = t;
+			Prints.YStep = yStep;
+			Prints.X = 0;
+			Prints.Y = 0;
+
+			if (fontName == null && fontSize == -1) // ? デフォルトのフォントを使用する。
+			{
+				// none
+			}
+			else if (!string.IsNullOrEmpty(fontName) && SCommon.IsRange(fontSize, 1, SCommon.IMAX)) // ? フォント指定
+			{
+				// none
+			}
+			else
+			{
+				throw new Exception("Bad font params");
+			}
+			Prints.FontName = fontName;
+			Prints.FontSize = fontSize;
+
+			Prints.P_Color = Prints.DEFAULT_COLOR;
+			Prints.BorderColor = Prints.DEFAULT_BORDER_COLOR;
+			Prints.BorderSize = 0;
+		}
+
+		public static void SetPrintColor(I3Color color)
+		{
+			Prints.P_Color = color;
+		}
+
+		public static void SetPrintBorderColor(I3Color color, int size)
+		{
+			if (size < 1 || SCommon.IMAX < size)
+				throw new Exception("Bad size");
+
+			Prints.BorderColor = color;
+			Prints.BorderSize = size;
+		}
+
+		public static void Print(string line)
+		{
+			if (line == null)
+				throw new Exception("Bad line");
+
+			Prints.Print(line);
+		}
+
+		public static void PrintRet()
+		{
+			Prints.X = 0;
+			Prints.Y += Prints.YStep;
+		}
+
+		public static void PrintLine(string line)
+		{
+			Print(line);
+			PrintRet();
+		}
+
+		private static class Prints
+		{
+			public static readonly I3Color DEFAULT_COLOR = new I3Color(255, 255, 255);
+			public static readonly I3Color DEFAULT_BORDER_COLOR = new I3Color(64, 64, 64);
+
+			public static int L = 0;
+			public static int T = 0;
+			public static int YStep = 20;
+			public static int X = 0;
+			public static int Y = 0;
+			public static string FontName = null;
+			public static int FontSize = -1; // -1 == デフォルトのフォントを使用する。
+			public static I3Color P_Color = DEFAULT_COLOR;
+			public static I3Color BorderColor = DEFAULT_BORDER_COLOR;
+			public static int BorderSize = 0; // 0 == 文字の外周を描画しない。
+
+			public static void Print(string line)
+			{
+				int x = L + X;
+				int y = T + Y;
+
+				DrawString(line, x, y);
+
+				x += GetWidth(line);
+			}
+
+			private static void DrawString(string line, int x, int y)
+			{
+				if (BorderSize != 0)
+					for (int xc = -1; xc <= 1; xc++)
+						for (int yc = -1; yc <= 1; yc++)
+							if (xc != 0 || yc != 0)
+								DrawString_Main(line, x + xc * BorderSize, y + yc * BorderSize, BorderColor);
+
+				DrawString_Main(line, x, y, P_Color);
+			}
+
+			private static void DrawString_Main(string line, int x, int y, I3Color color)
+			{
+				if (FontSize == -1)
+					DX.DrawString(x, y, line, DU.ToDXColor(color));
+				else
+					DX.DrawStringToHandle(x, y, line, DU.ToDXColor(color), DU.GetFontHandle(FontName, FontSize), 0u, 0);
+			}
+
+			private static int GetWidth(string line)
+			{
+				int w;
+
+				if (FontSize == -1)
+					w = DX.GetDrawStringWidth(line, SCommon.ENCODING_SJIS.GetByteCount(line));
+				else
+					w = DX.GetDrawStringWidthToHandle(line, SCommon.ENCODING_SJIS.GetByteCount(line), DU.GetFontHandle(FontName, FontSize), 0);
+
+				if (w < 0 || SCommon.IMAX < w)
+					throw new Exception("GetDrawStringWidth or GetDrawStringWidthToHandle failed");
+
+				return w;
+			}
+		}
+
+		#endregion
+
 		public static void EachFrame()
 		{
 			DD.Curtain.EachFrame();
@@ -326,14 +432,22 @@ namespace Charlotte.GameCommons
 			DD.SetBright(new I3Color(0, 0, 0));
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H));
 
-			D4Rect mainScreenDrawRect = DD.EnlargeFullInterior(
+			I4Rect mainScreenDrawRect = DD.EnlargeFullInterior(
 				GameConfig.ScreenSize.ToD2Size(),
 				new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H)
 				)
-				.ToI4Rect()
-				.ToD4Rect();
+				.ToI4Rect();
 
-			DD.Draw(DD.MainScreen.GetPicture(), mainScreenDrawRect);
+			int mag = mainScreenDrawRect.W / GameConfig.ScreenSize.W;
+
+			if (
+				2 <= mag &&
+				mainScreenDrawRect.W == GameConfig.ScreenSize.W * mag &&
+				mainScreenDrawRect.H == GameConfig.ScreenSize.H * mag
+				)
+				DD.SetMosaic();
+
+			DD.Draw(DD.MainScreen.GetPicture(), mainScreenDrawRect.ToD4Rect());
 
 			GC.Collect();
 
@@ -346,11 +460,41 @@ namespace Charlotte.GameCommons
 				throw new Exception("ゲーム中断");
 			}
 
+			// TODO
+			// TODO
+			// TODO
+			/*
+			if ((1 <= DDKey.GetInput(DX.KEY_INPUT_LALT) || 1 <= DDKey.GetInput(DX.KEY_INPUT_RALT)) && DDKey.GetInput(DX.KEY_INPUT_RETURN) == 1)
+			{
+				// ? 現在フルスクリーン -> フルスクリーン解除
+				if (
+					DDGround.RealScreen_W == DDGround.MonitorRect.W &&
+					DDGround.RealScreen_H == DDGround.MonitorRect.H
+					)
+				{
+					DDMain.SetScreenSize(DDGround.UnfullScreen_W, DDGround.UnfullScreen_H);
+				}
+				else // ? 現在フルスクリーンではない -> フルスクリーンにする
+				{
+					DDGround.UnfullScreen_W = DDGround.RealScreen_W;
+					DDGround.UnfullScreen_H = DDGround.RealScreen_H;
+
+					DDMain.SetFullScreen();
+				}
+				DDEngine.FreezeInput(30); // エンターキー押下がゲームに影響しないように
+			}
+			 * */
+
 			SCommon.Swap(ref DD.MainScreen, ref DD.LastMainScreen);
 			DD.MainScreen.ChangeDrawScreenToThis();
 
 			ProcFrame++;
 			WindowIsActive = DX.GetActiveFlag() != 0;
+
+			if (SCommon.IMAX < ProcFrame) // 192.9 days limit
+				throw new Exception("ProcFrame counter has exceeded the limit");
+
+			DX.ClearDrawScreen();
 		}
 
 		public static void KeepLastMainScreen()
