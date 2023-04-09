@@ -575,7 +575,7 @@ namespace Charlotte.GameCommons
 
 		public static void SetRealScreenSize(int w, int h)
 		{
-			GameProcMain.H_SetRealScreenSize(w, h, true);
+			GameProcMain.SetRealScreenSize(w, h, true);
 		}
 
 		public static void DrawCurtain(double whiteLevel)

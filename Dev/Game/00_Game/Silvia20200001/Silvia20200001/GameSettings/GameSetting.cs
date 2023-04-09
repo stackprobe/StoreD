@@ -9,7 +9,8 @@ using Charlotte.GameCommons;
 namespace Charlotte.GameSettings
 {
 	/// <summary>
-	/// 変更可能な設定群
+	/// リリース後に変更可能な設定
+	/// アプリケーション固有の項目を追加しても良い。
 	/// </summary>
 	public static class GameSetting
 	{
@@ -39,11 +40,17 @@ namespace Charlotte.GameSettings
 
 			// ---- このクラス内の項目ここまで ----
 
+			// ---- 他クラスの情報ここから ----
+
 			foreach (Input input in Inputs.GetAllInput())
 			{
 				dest.Add(input.Key);
 				dest.Add(input.Button);
 			}
+
+			// ---- 他クラスの情報ここまで ----
+
+			dest.Insert(0, dest.Count + 1);
 
 			return SCommon.Serializer.I.Join(dest.Select(v => v.ToString()).ToArray());
 		}
@@ -52,6 +59,9 @@ namespace Charlotte.GameSettings
 		{
 			string[] src = SCommon.Serializer.I.Split(serializedString);
 			int c = 0;
+
+			if (int.Parse(src[c++]) != src.Length)
+				throw new Exception("Bad Length");
 
 			// ---- このクラス内の項目ここから ----
 
@@ -63,14 +73,18 @@ namespace Charlotte.GameSettings
 
 			// ---- このクラス内の項目ここまで ----
 
+			// ---- 他クラスの情報ここから ----
+
 			foreach (Input input in Inputs.GetAllInput())
 			{
 				input.Key = SCommon.ToRange(int.Parse(src[c++]), 0, Keyboard.KEY_MAX - 1);
 				input.Button = SCommon.ToRange(int.Parse(src[c++]), 0, Pad.BUTTON_MAX - 1);
 			}
 
+			// ---- 他クラスの情報ここまで ----
+
 			if (c != src.Length)
-				throw new Exception("Bad Length");
+				throw new Exception("Length error");
 		}
 	}
 }

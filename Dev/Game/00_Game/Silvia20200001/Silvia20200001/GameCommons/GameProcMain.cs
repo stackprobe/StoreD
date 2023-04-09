@@ -97,6 +97,10 @@ namespace Charlotte.GameCommons
 			catch (Exception e)
 			{
 				ProcMain.WriteLog(e);
+
+				// TODO: リボンの制御はゲームスレッド側で行うべき。
+				DD.SetLibbon(null);
+				Thread.Sleep(1000);
 			}
 			finally
 			{
@@ -209,7 +213,7 @@ namespace Charlotte.GameCommons
 			foreach (string resPath in GameConfig.FontFileResPaths)
 				DU.AddFontFile(resPath);
 
-			H_SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H, false);
+			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H, false);
 
 			GameStarted();
 		}
@@ -222,7 +226,7 @@ namespace Charlotte.GameCommons
 		/// <param name="w">幅</param>
 		/// <param name="h">高さ</param>
 		/// <param name="showLibbon">リボンを表示するか</param>
-		public static void H_SetRealScreenSize(int w, int h, bool showLibbon)
+		public static void SetRealScreenSize(int w, int h, bool showLibbon)
 		{
 			DD.TargetMonitor = DU.GetTargetMonitor();
 

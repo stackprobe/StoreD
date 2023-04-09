@@ -7,7 +7,7 @@ using Charlotte.Drawings;
 namespace Charlotte.GameSettings
 {
 	/// <summary>
-	/// 変更不可能な設定群
+	/// リリース後に変更不可能な設定
 	/// </summary>
 	public static class GameConfig
 	{
