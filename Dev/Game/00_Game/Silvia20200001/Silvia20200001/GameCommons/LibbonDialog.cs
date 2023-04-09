@@ -15,6 +15,12 @@ using Charlotte.GameCommons;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// リボン
+	/// ゲーム画面より前面にリボン(横長の矩形領域)を表示してメッセージを表示する。
+	/// 以下から表示・非表示の制御を行うこと。
+	/// -- DD.SetLibbon()
+	/// </summary>
 	public partial class LibbonDialog : Form
 	{
 		#region WndProc
@@ -36,6 +42,8 @@ namespace Charlotte.GameCommons
 		public I4Rect P_TargetMonitor;
 		public string P_Message;
 
+		public bool P_CloseFlag = false;
+
 		public LibbonDialog()
 		{
 			InitializeComponent();
@@ -50,13 +58,14 @@ namespace Charlotte.GameCommons
 		{
 			float fontSize;
 
+			// ? 開発環境のモニタよりも小さい
 			if (
 				this.P_TargetMonitor.W < 1920 ||
 				this.P_TargetMonitor.H < 1080
 				)
-				fontSize = 24f;
+				fontSize = 24f; // 画面からはみ出ないように小さくする。
 			else
-				fontSize = 48f;
+				fontSize = 48f; // 想定フォントサイズ
 
 			this.BackColor = Color.FromArgb(0, 64, 64);
 			this.FormBorderStyle = FormBorderStyle.None;
@@ -73,10 +82,10 @@ namespace Charlotte.GameCommons
 			this.Message.Left = (this.Width - this.Message.Width) / 2;
 			this.Message.Top = MARGIN;
 
-			this.P_Timer(500);
+			this.WaitAndClose(500);
 		}
 
-		private void P_Timer(int millis)
+		private void WaitAndClose(int millis)
 		{
 			Thread th = new Thread(() =>
 			{
@@ -84,13 +93,13 @@ namespace Charlotte.GameCommons
 
 				DD.RunOnUIThread(() =>
 				{
-					if (string.IsNullOrEmpty(this.P_Message))
+					if (this.P_CloseFlag)
 					{
 						this.Close();
 					}
 					else
 					{
-						this.P_Timer(100); // HACK: このスレッドの終了を待たない。
+						this.WaitAndClose(100); // HACK: 上位のスレッド(th)の終了を待たない。
 					}
 				});
 			});

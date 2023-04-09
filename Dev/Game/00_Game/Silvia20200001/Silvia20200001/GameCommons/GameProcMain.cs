@@ -20,13 +20,7 @@ namespace Charlotte.GameCommons
 
 		public static void GameMain(Form mainForm, Action userGameMain)
 		{
-			DD.RunOnUIThread = routine =>
-			{
-				mainForm.BeginInvoke((MethodInvoker)delegate
-				{
-					routine();
-				});
-			};
+			DD.RunOnUIThread = GetRunOnUIThread(mainForm);
 
 			DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // リボンの表示に必要なので、先行してセットする。
 			DD.SetLibbon("ゲームを起動しています...");
@@ -58,6 +52,40 @@ namespace Charlotte.GameCommons
 			});
 
 			th.Start();
+		}
+
+		/// <summary>
+		/// メインスレッドで実行される処理を登録する処理を返す。
+		/// 戻り値の処理は以下を満たす。
+		/// -- スレッドセーフ
+		/// -- 登録された処理は登録された順で実行される。
+		/// </summary>
+		/// <param name="mainForm">メインフォーム</param>
+		/// <returns>処理</returns>
+		private static Action<Action> GetRunOnUIThread(Form mainForm)
+		{
+			Queue<Action> q = new Queue<Action>();
+			object SYNCROOT = new object();
+
+			return routine =>
+			{
+				lock (SYNCROOT)
+				{
+					q.Enqueue(routine);
+
+					mainForm.BeginInvoke((MethodInvoker)delegate
+					{
+						Action firstRoutine;
+
+						lock (SYNCROOT)
+						{
+							firstRoutine = q.Dequeue();
+						}
+
+						firstRoutine();
+					});
+				}
+			};
 		}
 
 		private static void Main2()
@@ -158,9 +186,14 @@ namespace Charlotte.GameCommons
 			else
 				GameSetting.Initialize();
 
-			DD.Finalizers.Add(() =>
+			DD.Save = () =>
 			{
 				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
+			};
+
+			DD.Finalizers.Add(() =>
+			{
+				DD.Save();
 			});
 
 			DD.MainWindowTitle = title;
@@ -176,29 +209,25 @@ namespace Charlotte.GameCommons
 			foreach (string resPath in GameConfig.FontFileResPaths)
 				DU.AddFontFile(resPath);
 
-			RealScreenSizeChanged();
+			H_SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H, false);
 
 			GameStarted();
 		}
 
-		public static void SetRealScreenSize(int w, int h)
-		{
-			if (DD.RealScreenSize.W != w || DD.RealScreenSize.H != h)
-			{
-				DD.RealScreenSize.W = w;
-				DD.RealScreenSize.H = h;
-
-				DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
-
-				RealScreenSizeChanged();
-
-				DD.SetLibbon(null);
-			}
-		}
-
-		private static void RealScreenSizeChanged()
+		/// <summary>
+		/// ゲーム画面サイズを変更する。
+		/// 以下を経由して呼び出すこと。
+		/// -- DD.SetRealScreenSize()
+		/// </summary>
+		/// <param name="w">幅</param>
+		/// <param name="h">高さ</param>
+		/// <param name="showLibbon">リボンを表示するか</param>
+		public static void H_SetRealScreenSize(int w, int h, bool showLibbon)
 		{
 			DD.TargetMonitor = DU.GetTargetMonitor();
+
+			if (showLibbon)
+				DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
 
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 
@@ -208,22 +237,28 @@ namespace Charlotte.GameCommons
 			//Music.UnloadAll(); // アンロード不要
 			//SoundEffect.UnloadAll(); // アンロード不要
 
-			DX.SetGraphMode(DD.RealScreenSize.W, DD.RealScreenSize.H, 32);
+			DX.SetGraphMode(w, h, 32);
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0);
 			DX.SetMouseDispFlag(1);
 
-			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - DD.RealScreenSize.W) / 2;
-			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - DD.RealScreenSize.H) / 2;
+			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
+			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;
 
 			DU.SetMainWindowPosition(l, t);
 
 			DD.MainScreenDrawRect = DD.EnlargeFullInterior(
 				GameConfig.ScreenSize.ToD2Size(),
-				new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H).ToD4Rect()
+				new I4Rect(0, 0, w, h).ToD4Rect()
 				)
 				.ToI4Rect();
+
+			if (showLibbon)
+				DD.SetLibbon(null);
+
+			DD.RealScreenSize.W = w;
+			DD.RealScreenSize.H = h;
 		}
 	}
 }

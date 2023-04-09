@@ -18,6 +18,7 @@ namespace Charlotte.GameCommons
 	{
 		public static Action<Action> RunOnUIThread;
 		public static List<Action> Finalizers = new List<Action>();
+		public static Action Save;
 		public static string MainWindowTitle;
 		public static I4Rect TargetMonitor;
 		public static I2Size RealScreenSize;
@@ -62,13 +63,13 @@ namespace Charlotte.GameCommons
 
 		public static void SetLibbon(string message)
 		{
-			I4Rect targetMonitor = DD.TargetMonitor;
+			I4Rect targetMonitor = DD.TargetMonitor; // memo: 別スレッドなのでローカル変数に退避して参照する。
 
 			DD.RunOnUIThread(() =>
 			{
 				if (P_LibbonDialog != null)
 				{
-					P_LibbonDialog.P_Message = null;
+					P_LibbonDialog.P_CloseFlag = true;
 					P_LibbonDialog = null;
 				}
 				if (!string.IsNullOrEmpty(message))
@@ -515,12 +516,12 @@ namespace Charlotte.GameCommons
 					DD.RealScreenSize.H == DD.TargetMonitor.H
 					)
 				{
-					GameProcMain.SetRealScreenSize(GameSetting.UserScreenSize.W, GameSetting.UserScreenSize.H);
+					DD.SetRealScreenSize(GameSetting.UserScreenSize.W, GameSetting.UserScreenSize.H);
 					GameSetting.FullScreen = false;
 				}
 				else // ? 現在フルスクリーンではない -> フルスクリーンにする
 				{
-					GameProcMain.SetRealScreenSize(DD.TargetMonitor.W, DD.TargetMonitor.H);
+					DD.SetRealScreenSize(DD.TargetMonitor.W, DD.TargetMonitor.H);
 					GameSetting.FullScreen = true;
 				}
 				DD.FreezeInput(30); // エンターキー押下がゲームに影響しないように
@@ -570,6 +571,11 @@ namespace Charlotte.GameCommons
 				throw new Exception("Bad frame");
 
 			FreezeInputFrame = frame;
+		}
+
+		public static void SetRealScreenSize(int w, int h)
+		{
+			GameProcMain.H_SetRealScreenSize(w, h, true);
 		}
 
 		public static void DrawCurtain(double whiteLevel)

@@ -11,7 +11,8 @@ namespace Charlotte.GameCommons
 		public const int PAD_MAX = 16;
 		public const int BUTTON_MAX = 32;
 
-		private static int PadCount;
+		public static int PadCount { get; private set; }
+
 		private static int[,] Counters = new int[PAD_MAX, BUTTON_MAX];
 		private static uint[] Statuses = new uint[PAD_MAX];
 
