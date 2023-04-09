@@ -387,5 +387,39 @@ namespace Charlotte.GameCommons
 			else if (counter < 0)
 				counter++;
 		}
+
+		/// <summary>
+		/// タスクリストを実行する。
+		/// </summary>
+		/// <param name="tasks">タスクリスト</param>
+		public static void ExecuteTasks(List<Func<bool>> tasks)
+		{
+			for (int index = 0; index < tasks.Count; )
+			{
+				if (!tasks[index]())
+				{
+					tasks[index] = null;
+				}
+			}
+			tasks.RemoveAll(v => v == null);
+		}
+
+		/// <summary>
+		/// タスクシーケンスを実行する。
+		/// </summary>
+		/// <param name="tasks">タスクシーケンス</param>
+		/// <returns>ビジー状態か(タスクを実行したか)</returns>
+		public static bool ExecuteTaskSequence(List<Func<bool>> tasks)
+		{
+			if (1 <= tasks.Count)
+			{
+				if (!tasks[0]())
+				{
+					tasks.RemoveAt(0); // HACK: ボトルネックになるかも。
+				}
+				return true;
+			}
+			return false;
+		}
 	}
 }

@@ -39,10 +39,10 @@ namespace Charlotte.GameCommons
 
 		#endregion
 
-		public I4Rect P_TargetMonitor;
+		public I4Rect TargetMonitor;
 		public string P_Message;
 
-		public bool P_CloseFlag = false;
+		public bool CloseFlag = false;
 
 		public LibbonDialog()
 		{
@@ -60,8 +60,8 @@ namespace Charlotte.GameCommons
 
 			// ? 開発環境のモニタよりも小さい
 			if (
-				this.P_TargetMonitor.W < 1920 ||
-				this.P_TargetMonitor.H < 1080
+				this.TargetMonitor.W < 1920 ||
+				this.TargetMonitor.H < 1080
 				)
 				fontSize = 24f; // 画面からはみ出ないように小さくする。
 			else
@@ -75,10 +75,10 @@ namespace Charlotte.GameCommons
 
 			const int MARGIN = 30;
 
-			this.Width = this.P_TargetMonitor.W;
+			this.Width = this.TargetMonitor.W;
 			this.Height = MARGIN + this.Message.Height + MARGIN;
-			this.Left = this.P_TargetMonitor.L;
-			this.Top = (this.P_TargetMonitor.H - this.Height) / 2;
+			this.Left = this.TargetMonitor.L;
+			this.Top = (this.TargetMonitor.H - this.Height) / 2;
 			this.Message.Left = (this.Width - this.Message.Width) / 2;
 			this.Message.Top = MARGIN;
 
@@ -93,7 +93,7 @@ namespace Charlotte.GameCommons
 
 				DD.RunOnUIThread(() =>
 				{
-					if (this.P_CloseFlag)
+					if (this.CloseFlag)
 					{
 						this.Close();
 					}

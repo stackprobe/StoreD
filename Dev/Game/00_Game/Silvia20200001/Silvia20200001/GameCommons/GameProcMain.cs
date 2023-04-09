@@ -22,9 +22,6 @@ namespace Charlotte.GameCommons
 		{
 			DD.RunOnUIThread = GetRunOnUIThread(mainForm);
 
-			DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // リボンの表示に必要なので、先行してセットする。
-			DD.SetLibbon("ゲームを起動しています...");
-
 			Thread th = new Thread(() =>
 			{
 				bool aliving = true;
@@ -36,8 +33,6 @@ namespace Charlotte.GameCommons
 						if (aliving)
 							mainForm.Visible = false;
 					});
-
-					DD.SetLibbon(null);
 
 					userGameMain();
 				};
@@ -97,10 +92,6 @@ namespace Charlotte.GameCommons
 			catch (Exception e)
 			{
 				ProcMain.WriteLog(e);
-
-				// TODO: リボンの制御はゲームスレッド側で行うべき。
-				DD.SetLibbon(null);
-				Thread.Sleep(1000);
 			}
 			finally
 			{
@@ -140,6 +131,15 @@ namespace Charlotte.GameCommons
 			{
 				File.AppendAllText(logFile, "[" + DateTime.Now + "] " + message + "\r\n", Encoding.UTF8);
 			};
+
+			DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // リボンの表示に必要なので、先行してセットする。
+			DD.SetLibbon("ゲームを起動しています...");
+
+			DD.Finalizers.Add(() =>
+			{
+				DD.SetLibbon(null);
+				Thread.Sleep(1000); // HACK: XXX
+			});
 
 			Keyboard.Initialize();
 
@@ -214,6 +214,8 @@ namespace Charlotte.GameCommons
 				DU.AddFontFile(resPath);
 
 			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H, false);
+
+			DD.SetLibbon(null);
 
 			GameStarted();
 		}

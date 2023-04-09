@@ -29,6 +29,8 @@ namespace Charlotte.GameCommons
 		public static int ProcFrame;
 		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
+		public static List<Func<bool>> EL; // エフェクト -- 勝手にクリアしても良い。
+		public static List<Func<bool>> TL; // タスク処理 -- クリア禁止
 
 		private static Func<string, byte[]> ResFileDataGetter = null;
 
@@ -69,13 +71,13 @@ namespace Charlotte.GameCommons
 			{
 				if (P_LibbonDialog != null)
 				{
-					P_LibbonDialog.P_CloseFlag = true;
+					P_LibbonDialog.CloseFlag = true;
 					P_LibbonDialog = null;
 				}
 				if (!string.IsNullOrEmpty(message))
 				{
 					P_LibbonDialog = new LibbonDialog();
-					P_LibbonDialog.P_TargetMonitor = targetMonitor;
+					P_LibbonDialog.TargetMonitor = targetMonitor;
 					P_LibbonDialog.P_Message = message;
 					P_LibbonDialog.Show();
 				}
@@ -475,6 +477,9 @@ namespace Charlotte.GameCommons
 
 		public static void EachFrame()
 		{
+			DU.ExecuteTasks(DD.EL);
+			DU.ExecuteTasks(DD.TL);
+
 			DD.Curtain.EachFrame();
 			Music.EachFrame();
 			SoundEffect.EachFrame();

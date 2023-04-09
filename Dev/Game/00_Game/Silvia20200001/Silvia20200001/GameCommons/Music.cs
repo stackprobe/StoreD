@@ -93,28 +93,21 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static List<Func<bool>> TaskList = new List<Func<bool>>();
+		private static List<Func<bool>> TaskSequence = new List<Func<bool>>();
 		private static int LastVolume = -1;
 
 		public static void EachFrame()
 		{
-			if (1 <= TaskList.Count && !TaskList[0]()) // Busy
+			if (!DU.ExecuteTaskSequence(TaskSequence) && Playing != null) // ? アイドル状態 && 再生中
 			{
-				TaskList.RemoveAt(0);
-			}
-			else // Idle
-			{
-				if (Playing != null) // ? 再生中
+				int volume = DU.RateToByte(GameSetting.MusicVolume);
+
+				if (LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
 				{
-					int volume = DU.RateToByte(GameSetting.MusicVolume);
+					if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume), Playing.GetHandle()) != 0) // ? 失敗
+						throw new Exception("ChangeVolumeSoundMem failed");
 
-					if (LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
-					{
-						if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume), Playing.GetHandle()) != 0) // ? 失敗
-							throw new Exception("ChangeVolumeSoundMem failed");
-
-						LastVolume = volume;
-					}
+					LastVolume = volume;
 				}
 			}
 		}
@@ -126,7 +119,7 @@ namespace Charlotte.GameCommons
 			if (Playing != this)
 			{
 				Fadeout();
-				TaskList.Add(SCommon.Supplier(this.E_Play()));
+				TaskSequence.Add(SCommon.Supplier(this.E_Play()));
 				Playing = this;
 			}
 		}
@@ -135,7 +128,7 @@ namespace Charlotte.GameCommons
 		{
 			if (Playing != null)
 			{
-				TaskList.Add(SCommon.Supplier(Playing.E_Fadeout()));
+				TaskSequence.Add(SCommon.Supplier(Playing.E_Fadeout()));
 				Playing = null;
 			}
 		}
