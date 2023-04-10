@@ -75,6 +75,10 @@ namespace Charlotte.GameCommons
 					{
 						ChangeFlag = false;
 
+						// メインスレッドで参照されるので、ローカル変数に退避する。
+						I4Rect targetMonitor = P_TargetMonitor;
+						string message = P_Message;
+
 						DD.RunOnUIThread(() =>
 						{
 							P_Hide();
@@ -82,8 +86,8 @@ namespace Charlotte.GameCommons
 							if (!string.IsNullOrEmpty(P_Message))
 							{
 								Instance = new LibbonDialog();
-								Instance.TargetMonitor = P_TargetMonitor;
-								Instance.Message = P_Message;
+								Instance.TargetMonitor = targetMonitor;
+								Instance.Message = message;
 								Instance.Show();
 							}
 						});
