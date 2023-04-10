@@ -5,14 +5,18 @@ using System.Text;
 using DxLibDLL;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
-using Charlotte.GameSettings;
+using Charlotte.GameConfigs;
 
-namespace Charlotte
+namespace Charlotte.Games
 {
-	public static class UserGameMain
+	public static class Logo
 	{
-		public static void GameMain()
+		public static void Run()
 		{
+			// TODO
+			// TODO
+			// TODO
+
 			Musics.RemotestLibrary.Play();
 
 			for (; ; )

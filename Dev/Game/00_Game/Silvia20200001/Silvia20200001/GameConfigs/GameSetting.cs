@@ -6,7 +6,7 @@ using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
 
-namespace Charlotte.GameSettings
+namespace Charlotte.GameConfigs
 {
 	/// <summary>
 	/// リリース後に変更可能な設定

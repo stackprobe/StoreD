@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using DxLibDLL;
 using Charlotte.Commons;
-using Charlotte.GameSettings;
+using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {

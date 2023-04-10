@@ -71,32 +71,34 @@ namespace Charlotte.GameCommons
 			{
 				if (ChangeFlag)
 				{
+					I4Rect targetMonitor;
+					string message;
+
 					lock (SYNCROOT)
 					{
 						ChangeFlag = false;
-
-						// メインスレッドで参照されるので、ローカル変数に退避する。
-						I4Rect targetMonitor = P_TargetMonitor;
-						string message = P_Message;
-
-						DD.RunOnUIThread(() =>
-						{
-							P_Hide();
-
-							if (!string.IsNullOrEmpty(P_Message))
-							{
-								Instance = new LibbonDialog();
-								Instance.TargetMonitor = targetMonitor;
-								Instance.Message = message;
-								Instance.Show();
-							}
-						});
+						targetMonitor = P_TargetMonitor;
+						message = P_Message;
 					}
+
+					DD.RunOnUIThread(() =>
+					{
+						P_Hide();
+
+						if (!string.IsNullOrEmpty(message))
+						{
+							Instance = new LibbonDialog();
+							Instance.TargetMonitor = targetMonitor;
+							Instance.Message = message;
+							Instance.Show();
+						}
+					});
+
 					Thread.Sleep(500); // リボンの最短表示時間待ち
 				}
 				else
 				{
-					Thread.Sleep(100); // ループ待機待ち
+					Thread.Sleep(100); // ループ待機待ち // HACK: Wait/Pulse -- 要検討
 				}
 			}
 

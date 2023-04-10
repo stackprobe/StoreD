@@ -93,8 +93,10 @@
     <Compile Include="GameCommons\Picture.cs" />
     <Compile Include="GameCommons\ResourceCluster.cs" />
     <Compile Include="GameCommons\SubScreen.cs" />
-    <Compile Include="GameSettings\GameSetting.cs" />
-    <Compile Include="GameSettings\GameConfig.cs" />
+    <Compile Include="GameConfigs\GameSetting.cs" />
+    <Compile Include="GameConfigs\GameConfig.cs" />
+    <Compile Include="Games\SimpleMenu.cs" />
+    <Compile Include="Games\TitleMenu.cs" />
     <Compile Include="Ground.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
     <Compile Include="Inputs.cs" />
@@ -108,8 +110,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Pictures.cs" />
     <Compile Include="SoundEffects.cs" />
-    <Compile Include="UserGameMain.cs" />
+    <Compile Include="Games\Logo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TarutoGameMain.cs" />
     <EmbeddedResource Include="GameCommons\LibbonDialog.resx">
       <DependentUpon>LibbonDialog.cs</DependentUpon>
     </EmbeddedResource>

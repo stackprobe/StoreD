@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Charlotte.Drawings;
 
-namespace Charlotte.GameSettings
+namespace Charlotte.GameConfigs
 {
 	/// <summary>
 	/// リリース後に変更不可能な設定

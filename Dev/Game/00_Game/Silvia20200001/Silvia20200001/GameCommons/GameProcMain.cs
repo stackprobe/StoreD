@@ -10,7 +10,7 @@ using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GUICommons;
-using Charlotte.GameSettings;
+using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {
@@ -18,7 +18,7 @@ namespace Charlotte.GameCommons
 	{
 		private static Action GameStarted;
 
-		public static void GameMain(Form mainForm, Action userGameMain)
+		public static void GameMain(Form mainForm, Action tarutoGameMain)
 		{
 			DD.RunOnUIThread = GetRunOnUIThread(mainForm);
 
@@ -34,7 +34,7 @@ namespace Charlotte.GameCommons
 							mainForm.Visible = false;
 					});
 
-					userGameMain();
+					tarutoGameMain();
 				};
 
 				Main2();
