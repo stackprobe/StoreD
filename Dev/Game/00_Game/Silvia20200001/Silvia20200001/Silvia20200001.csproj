@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DxLibDotNet">
-      <HintPath>C:\Berry\Dat\DxLibDotNet\DxLibDotNet3_24b\DxLibDotNet.dll</HintPath>
+      <HintPath>C:\Dat\DxLibDotNet\DxLibDotNet3_24b\DxLibDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -142,7 +142,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY C:\Berry\Dat\DxLibDotNet\DxLibDotNet3_24b\DxLib.dll $(TargetDir).</PostBuildEvent>
+    <PostBuildEvent>COPY C:\Dat\DxLibDotNet\DxLibDotNet3_24b\DxLib.dll $(TargetDir).</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
