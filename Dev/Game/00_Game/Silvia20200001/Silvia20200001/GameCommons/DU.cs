@@ -16,6 +16,9 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public class DU
 	{
+		public class CoffeeBreak : Exception
+		{ }
+
 		public static void Pin<T>(T data)
 		{
 			GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);

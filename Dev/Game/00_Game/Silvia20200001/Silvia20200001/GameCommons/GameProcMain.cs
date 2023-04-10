@@ -89,6 +89,10 @@ namespace Charlotte.GameCommons
 			{
 				Main3();
 			}
+			catch (DU.CoffeeBreak)
+			{
+				// noop
+			}
 			catch (Exception e)
 			{
 				ProcMain.WriteLog(e);
@@ -169,7 +173,6 @@ namespace Charlotte.GameCommons
 				+ GUIProcMain.BuiltDateTime.ToString("yyyy-MM-dd-HH-mm-ss");
 
 			DD.TargetMonitor = DU.GetTargetMonitor_Boot();
-
 			DD.SetLibbon("ゲームを起動しています...");
 
 			Icon icon;
@@ -220,7 +223,7 @@ namespace Charlotte.GameCommons
 			foreach (string resPath in GameConfig.FontFileResPaths)
 				DU.AddFontFile(resPath);
 
-			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H, false);
+			SetRealScreenSize(DD.RealScreenSize.W, DD.RealScreenSize.H);
 
 			DD.SetLibbon(null);
 
@@ -234,14 +237,9 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="w">幅</param>
 		/// <param name="h">高さ</param>
-		/// <param name="showLibbon">リボンを表示するか</param>
-		public static void SetRealScreenSize(int w, int h, bool showLibbon)
+		/// <param name="onBoot">リボンを表示するか</param>
+		public static void SetRealScreenSize(int w, int h)
 		{
-			DD.TargetMonitor = DU.GetTargetMonitor();
-
-			if (showLibbon)
-				DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
-
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 
 			Picture.UnloadAll();
@@ -266,9 +264,6 @@ namespace Charlotte.GameCommons
 				new I4Rect(0, 0, w, h).ToD4Rect()
 				)
 				.ToI4Rect();
-
-			if (showLibbon)
-				DD.SetLibbon(null);
 
 			DD.RealScreenSize.W = w;
 			DD.RealScreenSize.H = h;

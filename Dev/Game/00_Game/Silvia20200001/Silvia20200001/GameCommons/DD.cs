@@ -484,7 +484,7 @@ namespace Charlotte.GameCommons
 
 			if (DX.CheckHitKey(DX.KEY_INPUT_ESCAPE) == 1 || DX.ProcessMessage() == -1)
 			{
-				throw new Exception("ゲーム中断");
+				throw new DU.CoffeeBreak();
 			}
 
 			// ALT + ENTER -> フルスクリーンの切り替え
@@ -556,7 +556,12 @@ namespace Charlotte.GameCommons
 
 		public static void SetRealScreenSize(int w, int h)
 		{
-			GameProcMain.SetRealScreenSize(w, h, true);
+			DD.TargetMonitor = DU.GetTargetMonitor();
+			DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
+
+			GameProcMain.SetRealScreenSize(w, h);
+
+			DD.SetLibbon(null);
 		}
 
 		public static void DrawCurtain(double whiteLevel)
