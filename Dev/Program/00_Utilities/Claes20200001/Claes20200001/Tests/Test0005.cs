@@ -59,7 +59,7 @@ namespace Charlotte.Tests
 
 			// サーバーの設定ここまで
 
-			hs.Perform();
+			hs.Run();
 		}
 
 		public void Test02()
@@ -73,7 +73,7 @@ namespace Charlotte.Tests
 				},
 			};
 
-			hs.Perform();
+			hs.Run();
 		}
 
 		private IEnumerable<byte[]> E_TextBody()
@@ -126,7 +126,7 @@ namespace Charlotte.Tests
 				},
 			};
 
-			hs.Perform();
+			hs.Run();
 		}
 	}
 }

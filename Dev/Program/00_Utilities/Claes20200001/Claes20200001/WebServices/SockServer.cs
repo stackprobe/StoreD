@@ -56,7 +56,7 @@ namespace Charlotte.WebServices
 			}
 		}
 
-		public void Perform()
+		public void Run()
 		{
 			SockCommon.WriteLog(SockCommon.ErrorLevel_e.INFO, "サーバーを開始しています...");
 
