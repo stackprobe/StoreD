@@ -111,6 +111,21 @@ namespace Charlotte.GameCommons
 
 		private static void Main3()
 		{
+			LibbonDialog.Th = new Thread(LibbonDialog.MainTh);
+			LibbonDialog.Th.Start();
+			try
+			{
+				Main4();
+			}
+			finally
+			{
+				LibbonDialog.AliveFlag = false;
+				LibbonDialog.Th.Join();
+			}
+		}
+
+		private static void Main4()
+		{
 			string logSaveDir;
 			string logFile;
 
@@ -132,21 +147,30 @@ namespace Charlotte.GameCommons
 				File.AppendAllText(logFile, "[" + DateTime.Now + "] " + message + "\r\n", Encoding.UTF8);
 			};
 
-			DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // リボンの表示に必要なので、先行してセットする。
-			DD.SetLibbon("ゲームを起動しています...");
-
-			DD.Finalizers.Add(() =>
-			{
-				DD.SetLibbon(null);
-				Thread.Sleep(1000); // HACK: XXX
-			});
-
 			Keyboard.Initialize();
 
-			string title =
+			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+
+			if (File.Exists(saveDataFile))
+				GameSetting.Deserialize(File.ReadAllText(saveDataFile, Encoding.ASCII));
+			else
+				GameSetting.Initialize();
+
+			DD.Save = () =>
+			{
+				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
+			};
+
+			DD.Finalizers.Add(DD.Save);
+
+			DD.MainWindowTitle =
 				Path.GetFileNameWithoutExtension(ProcMain.SelfFile)
 				+ " / "
 				+ GUIProcMain.BuiltDateTime.ToString("yyyy-MM-dd-HH-mm-ss");
+
+			DD.TargetMonitor = DU.GetTargetMonitor_Boot();
+
+			DD.SetLibbon("ゲームを起動しています...");
 
 			Icon icon;
 
@@ -160,7 +184,7 @@ namespace Charlotte.GameCommons
 			DX.SetApplicationLogSaveDirectory(logSaveDir);
 			DX.SetOutApplicationLogValidFlag(1); // ログを出力/1:する/0:しない
 			DX.SetAlwaysRunFlag(1); // 非アクティブ時に/1:動く/0:止まる
-			DX.SetMainWindowText(title);
+			DX.SetMainWindowText(DD.MainWindowTitle);
 			DX.SetGraphMode(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H, 32); // 幅, 高さ, ビット数(16 or 32)
 			DX.ChangeWindowMode(1); // 1:ウィンドウ/0:フルスクリーン
 			DX.SetWindowIconHandle(icon.Handle);
@@ -183,29 +207,12 @@ namespace Charlotte.GameCommons
 
 			Pad.Initialize();
 
-			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
-
-			if (File.Exists(saveDataFile))
-				GameSetting.Deserialize(File.ReadAllText(saveDataFile, Encoding.ASCII));
+			if (GameSetting.FullScreen)
+				DD.RealScreenSize = new I2Size(DD.TargetMonitor.W, DD.TargetMonitor.H);
 			else
-				GameSetting.Initialize();
+				DD.RealScreenSize = GameSetting.UserScreenSize;
 
-			DD.Save = () =>
-			{
-				File.WriteAllText(saveDataFile, GameSetting.Serialize(), Encoding.ASCII);
-			};
-
-			DD.Finalizers.Add(() =>
-			{
-				DD.Save();
-			});
-
-			DD.MainWindowTitle = title;
-			//DD.TargetMonitor = DU.GetTargetMonitor_Boot(); // 先行してセットされる。
-			DD.RealScreenSize = GameSetting.FullScreen ?
-				new I2Size(DD.TargetMonitor.W, DD.TargetMonitor.H) :
-				GameSetting.UserScreenSize;
-			DD.MainScreenDrawRect = new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H); // 不適切な領域 -- 後でちゃんとした領域をセットする。
+			DD.MainScreenDrawRect = new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H);
 			DD.MainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 			DD.KeptMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);

@@ -93,7 +93,7 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static List<Func<bool>> TaskSequence = new List<Func<bool>>();
+		private static LinkedList<Func<bool>> TaskSequence = new LinkedList<Func<bool>>();
 		private static int LastVolume = -1;
 
 		public static void EachFrame()
@@ -119,7 +119,7 @@ namespace Charlotte.GameCommons
 			if (Playing != this)
 			{
 				Fadeout();
-				TaskSequence.Add(SCommon.Supplier(this.E_Play()));
+				TaskSequence.AddLast(SCommon.Supplier(this.E_Play()));
 				Playing = this;
 			}
 		}
@@ -128,7 +128,7 @@ namespace Charlotte.GameCommons
 		{
 			if (Playing != null)
 			{
-				TaskSequence.Add(SCommon.Supplier(Playing.E_Fadeout()));
+				TaskSequence.AddLast(SCommon.Supplier(Playing.E_Fadeout()));
 				Playing = null;
 			}
 		}

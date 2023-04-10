@@ -29,25 +29,26 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LibbonDialog));
-			this.Message = new System.Windows.Forms.Label();
+			this.MessageLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// Message
+			// MessageLabel
 			// 
-			this.Message.AutoSize = true;
-			this.Message.Location = new System.Drawing.Point(12, 9);
-			this.Message.Name = "Message";
-			this.Message.Size = new System.Drawing.Size(23, 12);
-			this.Message.TabIndex = 0;
-			this.Message.Text = "---";
+			this.MessageLabel.AutoSize = true;
+			this.MessageLabel.Location = new System.Drawing.Point(12, 9);
+			this.MessageLabel.Name = "MessageLabel";
+			this.MessageLabel.Size = new System.Drawing.Size(23, 12);
+			this.MessageLabel.TabIndex = 0;
+			this.MessageLabel.Text = "---";
 			// 
 			// LibbonDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 261);
-			this.Controls.Add(this.Message);
+			this.Controls.Add(this.MessageLabel);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Location = new System.Drawing.Point(-400, -400);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "LibbonDialog";
@@ -64,6 +65,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.Label Message;
+		private System.Windows.Forms.Label MessageLabel;
 	}
 }

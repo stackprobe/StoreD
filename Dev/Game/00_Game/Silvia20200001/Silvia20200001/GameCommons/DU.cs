@@ -409,13 +409,13 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="tasks">タスクシーケンス</param>
 		/// <returns>ビジー状態か(タスクを実行したか)</returns>
-		public static bool ExecuteTaskSequence(List<Func<bool>> tasks)
+		public static bool ExecuteTaskSequence(LinkedList<Func<bool>> tasks)
 		{
 			if (1 <= tasks.Count)
 			{
-				if (!tasks[0]())
+				if (!tasks.First.Value())
 				{
-					tasks.RemoveAt(0); // HACK: ボトルネックになるかも。
+					tasks.RemoveFirst();
 				}
 				return true;
 			}

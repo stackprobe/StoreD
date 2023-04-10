@@ -19,7 +19,7 @@ namespace Charlotte.GameCommons
 	/// リボン
 	/// ゲーム画面より前面にリボン(横長の矩形領域)を表示してメッセージを表示する。
 	/// 以下から表示・非表示の制御を行うこと。
-	/// -- DD.SetLibbon()
+	/// -- SetMessage()
 	/// </summary>
 	public partial class LibbonDialog : Form
 	{
@@ -39,10 +39,82 @@ namespace Charlotte.GameCommons
 
 		#endregion
 
-		public I4Rect TargetMonitor;
-		public string P_Message;
+		public static Thread Th;
+		public static bool AliveFlag = true;
 
-		public bool CloseFlag = false;
+		private static object SYNCROOT = new object();
+		private static bool ChangeFlag = false;
+		private static I4Rect P_TargetMonitor;
+		private static string P_Message = null;
+
+		/// <summary>
+		/// メッセージの表示・非表示を行う。
+		/// 以下を経由して呼び出すこと。
+		/// -- DD.SetLibbon()
+		/// </summary>
+		/// <param name="message">メッセージ</param>
+		public static void SetMessage(string message)
+		{
+			lock (SYNCROOT)
+			{
+				ChangeFlag = true;
+				P_TargetMonitor = DD.TargetMonitor;
+				P_Message = message;
+			}
+		}
+
+		private static LibbonDialog Instance = null;
+
+		public static void MainTh()
+		{
+			while (AliveFlag)
+			{
+				if (ChangeFlag)
+				{
+					lock (SYNCROOT)
+					{
+						ChangeFlag = false;
+
+						DD.RunOnUIThread(() =>
+						{
+							P_Hide();
+
+							if (!string.IsNullOrEmpty(P_Message))
+							{
+								Instance = new LibbonDialog();
+								Instance.TargetMonitor = P_TargetMonitor;
+								Instance.Message = P_Message;
+								Instance.Show();
+							}
+						});
+					}
+					Thread.Sleep(500); // リボンの最短表示時間待ち
+				}
+				else
+				{
+					Thread.Sleep(100); // ループ待機待ち
+				}
+			}
+
+			DD.RunOnUIThread(() =>
+			{
+				P_Hide();
+			});
+
+			Thread.Sleep(100); // リボンが閉じるのを待つ // HACK: 同期していない。
+		}
+
+		private static void P_Hide()
+		{
+			if (Instance != null)
+			{
+				Instance.Close();
+				Instance = null;
+			}
+		}
+
+		private I4Rect TargetMonitor;
+		private string Message;
 
 		public LibbonDialog()
 		{
@@ -69,42 +141,18 @@ namespace Charlotte.GameCommons
 
 			this.BackColor = Color.FromArgb(0, 64, 64);
 			this.FormBorderStyle = FormBorderStyle.None;
-			this.Message.Font = new Font("メイリオ", fontSize);
-			this.Message.ForeColor = Color.FromArgb(255, 255, 255);
-			this.Message.Text = this.P_Message;
+			this.MessageLabel.Font = new Font("メイリオ", fontSize);
+			this.MessageLabel.ForeColor = Color.FromArgb(255, 255, 255);
+			this.MessageLabel.Text = this.Message;
 
 			const int MARGIN = 30;
 
 			this.Width = this.TargetMonitor.W;
-			this.Height = MARGIN + this.Message.Height + MARGIN;
+			this.Height = MARGIN + this.MessageLabel.Height + MARGIN;
 			this.Left = this.TargetMonitor.L;
 			this.Top = (this.TargetMonitor.H - this.Height) / 2;
-			this.Message.Left = (this.Width - this.Message.Width) / 2;
-			this.Message.Top = MARGIN;
-
-			this.WaitAndClose(500);
-		}
-
-		private void WaitAndClose(int millis)
-		{
-			Thread th = new Thread(() =>
-			{
-				Thread.Sleep(millis);
-
-				DD.RunOnUIThread(() =>
-				{
-					if (this.CloseFlag)
-					{
-						this.Close();
-					}
-					else
-					{
-						this.WaitAndClose(100); // HACK: 上位のスレッド(th)の終了を待たない。
-					}
-				});
-			});
-
-			th.Start();
+			this.MessageLabel.Left = (this.Width - this.MessageLabel.Width) / 2;
+			this.MessageLabel.Top = MARGIN;
 		}
 	}
 }

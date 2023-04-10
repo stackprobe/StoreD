@@ -29,8 +29,12 @@ namespace Charlotte.GameCommons
 		public static int ProcFrame;
 		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
-		public static List<Func<bool>> EL; // エフェクト -- 勝手にクリアしても良い。
-		public static List<Func<bool>> TL; // タスク処理 -- クリア禁止
+		public static List<Func<bool>> EL = new List<Func<bool>>();
+
+		public static void SetLibbon(string message)
+		{
+			LibbonDialog.SetMessage(message);
+		}
 
 		private static Func<string, byte[]> ResFileDataGetter = null;
 
@@ -58,33 +62,6 @@ namespace Charlotte.GameCommons
 			}
 			return getter;
 		}
-
-		#region Libbon
-
-		private static LibbonDialog P_LibbonDialog = null;
-
-		public static void SetLibbon(string message)
-		{
-			I4Rect targetMonitor = DD.TargetMonitor; // memo: 別スレッドなのでローカル変数に退避して参照する。
-
-			DD.RunOnUIThread(() =>
-			{
-				if (P_LibbonDialog != null)
-				{
-					P_LibbonDialog.CloseFlag = true;
-					P_LibbonDialog = null;
-				}
-				if (!string.IsNullOrEmpty(message))
-				{
-					P_LibbonDialog = new LibbonDialog();
-					P_LibbonDialog.TargetMonitor = targetMonitor;
-					P_LibbonDialog.P_Message = message;
-					P_LibbonDialog.Show();
-				}
-			});
-		}
-
-		#endregion
 
 		#region Draw
 
@@ -478,7 +455,6 @@ namespace Charlotte.GameCommons
 		public static void EachFrame()
 		{
 			DU.ExecuteTasks(DD.EL);
-			DU.ExecuteTasks(DD.TL);
 
 			DD.Curtain.EachFrame();
 			Music.EachFrame();
