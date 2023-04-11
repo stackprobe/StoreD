@@ -330,14 +330,15 @@ namespace Charlotte.GameCommons
 
 		public static class Hasher
 		{
-			private static byte[] MAGIC_HEADER = Encoding.ASCII.GetBytes("Gattonero-2023-04-05_MAGIC_HEADER_");
+			private static byte[] MAGIC_HEADER = Encoding.ASCII.GetBytes("Gattonero20230405_Hasher_MAGIC_HEADER_{59c1c8b8-f0db-4c11-8af6-1590b89342dc}_");
+			private const int HASH_SIZE = 20;
 
 			public static byte[] AddHash(byte[] data)
 			{
 				if (data == null)
 					throw new Exception("Bad data");
 
-				return SCommon.Join(new byte[][] { data, SCommon.GetSHA512(SCommon.Join(new byte[][] { MAGIC_HEADER, data })).Take(16).ToArray() });
+				return SCommon.Join(new byte[][] { data, GetHash(data) });
 			}
 
 			public static byte[] UnaddHash(byte[] data)
@@ -348,26 +349,31 @@ namespace Charlotte.GameCommons
 				}
 				catch (Exception e)
 				{
-					throw new Exception("読み込まれたデータは破損しているかバージョンが異なります。(" + e.Message + ")");
+					throw new Exception("読み込まれたデータは破損しているかバージョンが異なります。", e);
 				}
 			}
 
 			private static byte[] UnaddHash_Main(byte[] data)
 			{
 				if (data == null)
-					throw new Exception("data is null");
+					throw new Exception("Bad data");
 
-				if (data.Length < 16)
+				if (data.Length < HASH_SIZE)
 					throw new Exception("Bad Length");
 
-				byte[] ret = data.Take(data.Length - 16).ToArray();
-				byte[] hash = data.Skip(data.Length - 16).ToArray();
-				byte[] recalcedHash = SCommon.GetSHA512(SCommon.Join(new byte[][] { MAGIC_HEADER, ret })).Take(16).ToArray();
+				byte[] rDat = data.Take(data.Length - HASH_SIZE).ToArray();
+				byte[] hash = data.Skip(data.Length - HASH_SIZE).ToArray();
+				byte[] recalcedHash = GetHash(rDat);
 
 				if (SCommon.Comp(hash, recalcedHash) != 0)
-					throw new Exception("Hash does not match");
+					throw new Exception("Bad hash");
 
-				return ret;
+				return rDat;
+			}
+
+			private static byte[] GetHash(byte[] data)
+			{
+				return Encoding.ASCII.GetBytes(SCommon.Base64.I.Encode(SCommon.GetSHA512(new byte[][] { MAGIC_HEADER, data }).Take(15).ToArray()));
 			}
 		}
 
@@ -440,7 +446,7 @@ namespace Charlotte.GameCommons
 		/// <param name="tasks">タスクリスト</param>
 		public static void ExecuteTasks(List<Func<bool>> tasks)
 		{
-			for (int index = 0; index < tasks.Count; )
+			for (int index = 0; index < tasks.Count; index++)
 			{
 				if (!tasks[index]())
 				{

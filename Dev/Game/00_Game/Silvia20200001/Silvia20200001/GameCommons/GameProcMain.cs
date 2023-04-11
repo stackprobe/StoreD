@@ -133,16 +133,19 @@ namespace Charlotte.GameCommons
 		{
 			string logSaveDir;
 			string logFile;
+			string saveDataFile;
 
 			if (ProcMain.DEBUG)
 			{
 				logSaveDir = @"C:\temp";
 				logFile = @"C:\temp\Game.log";
+				saveDataFile = @"C:\temp\SaveData.dat";
 			}
 			else
 			{
 				logSaveDir = new WorkingDir().GetPath(".");
 				logFile = Path.Combine(ProcMain.SelfDir, "Game.log");
+				saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
 			}
 
 			File.WriteAllBytes(logFile, SCommon.EMPTY_BYTES);
@@ -154,9 +157,7 @@ namespace Charlotte.GameCommons
 
 			foreach (string requiredFileName in new string[] { "DxLib.dll", "DxLibDotNet.dll" })
 				if (!File.Exists(Path.Combine(ProcMain.SelfDir, requiredFileName)))
-					throw new Exception("no " + requiredFileName);
-
-			string saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+					throw new Exception("no file: " + requiredFileName);
 
 			if (File.Exists(saveDataFile))
 				GameSetting.Deserialize(Encoding.ASCII.GetString(DU.Hasher.UnaddHash(File.ReadAllBytes(saveDataFile))));
