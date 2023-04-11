@@ -41,11 +41,12 @@ namespace Charlotte.GameCommons
 
 		public static Thread Th;
 		public static bool AliveFlag = true;
+		public static EventWaitHandle MainThStandby = new EventWaitHandle(false, EventResetMode.AutoReset);
 
 		private static object SYNCROOT = new object();
 		private static bool ChangeFlag = false;
 		private static I4Rect P_TargetMonitor;
-		private static string P_Message = null;
+		private static string P_Message;
 
 		/// <summary>
 		/// メッセージの表示・非表示を行う。
@@ -61,9 +62,11 @@ namespace Charlotte.GameCommons
 				P_TargetMonitor = DD.TargetMonitor;
 				P_Message = message;
 			}
+
+			MainThStandby.Set();
 		}
 
-		private static LibbonDialog Instance = null;
+		private static LibbonDialog Instance = null; // 注意：参照・変更はメインスレッド内で行う。
 
 		public static void MainTh()
 		{
@@ -81,42 +84,48 @@ namespace Charlotte.GameCommons
 						message = P_Message;
 					}
 
-					DD.RunOnUIThread(() =>
-					{
-						P_Hide();
+					P_Close();
 
-						if (!string.IsNullOrEmpty(message))
+					if (!string.IsNullOrEmpty(message))
+					{
+						DD.RunOnUIThread(() =>
 						{
 							Instance = new LibbonDialog();
 							Instance.TargetMonitor = targetMonitor;
 							Instance.Message = message;
 							Instance.Show();
-						}
-					});
+						});
+					}
 
 					Thread.Sleep(500); // リボンの最短表示時間待ち
 				}
 				else
 				{
-					Thread.Sleep(100); // ループ待機待ち // HACK: Wait/Pulse -- 要検討
+					MainThStandby.WaitOne();
 				}
 			}
 
-			DD.RunOnUIThread(() =>
-			{
-				P_Hide();
-			});
-
-			Thread.Sleep(100); // リボンが閉じるのを待つ // HACK: 同期していない。
+			P_Close();
 		}
 
-		private static void P_Hide()
+		private static EventWaitHandle EvClosed = new EventWaitHandle(false, EventResetMode.AutoReset);
+
+		private static void P_Close()
 		{
-			if (Instance != null)
+			DD.RunOnUIThread(() =>
 			{
-				Instance.Close();
-				Instance = null;
-			}
+				if (Instance == null)
+				{
+					EvClosed.Set();
+				}
+				else
+				{
+					Instance.Close();
+					Instance = null;
+				}
+			});
+
+			EvClosed.WaitOne();
 		}
 
 		private I4Rect TargetMonitor;
@@ -159,6 +168,11 @@ namespace Charlotte.GameCommons
 			this.Top = (this.TargetMonitor.H - this.Height) / 2;
 			this.MessageLabel.Left = (this.Width - this.MessageLabel.Width) / 2;
 			this.MessageLabel.Top = MARGIN;
+		}
+
+		private void LibbonDialog_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			EvClosed.Set();
 		}
 	}
 }

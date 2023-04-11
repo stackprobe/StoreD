@@ -124,6 +124,7 @@ namespace Charlotte.GameCommons
 			finally
 			{
 				LibbonDialog.AliveFlag = false;
+				LibbonDialog.MainThStandby.Set();
 				LibbonDialog.Th.Join();
 			}
 		}

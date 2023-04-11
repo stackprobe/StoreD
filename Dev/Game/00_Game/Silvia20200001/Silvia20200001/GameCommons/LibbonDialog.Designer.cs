@@ -56,6 +56,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Gattonero20230405_Libbon";
 			this.TopMost = true;
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LibbonDialog_FormClosed);
 			this.Load += new System.EventHandler(this.LibbonDialog_Load);
 			this.Shown += new System.EventHandler(this.LibbonDialog_Shown);
 			this.ResumeLayout(false);
