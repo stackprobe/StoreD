@@ -42,6 +42,8 @@ namespace Charlotte.GameCommons
 
 				if (PrimaryPad == -1 && 10 < DD.ProcFrame && Statuses[pad] == 0u && status != 0u) // 最初にボタンを押下したパッドをプライマリーパッドとする。
 					PrimaryPad = pad;
+
+				Statuses[pad] = status;
 			}
 		}
 

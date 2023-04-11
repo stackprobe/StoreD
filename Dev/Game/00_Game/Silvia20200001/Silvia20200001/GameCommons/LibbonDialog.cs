@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
+using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {
@@ -66,6 +67,9 @@ namespace Charlotte.GameCommons
 			MainThStandby.Set();
 		}
 
+		private static EventWaitHandle EvShowed = new EventWaitHandle(false, EventResetMode.AutoReset);
+		private static EventWaitHandle EvClosed = new EventWaitHandle(false, EventResetMode.AutoReset);
+
 		private static LibbonDialog Instance = null; // 注意：参照・変更はメインスレッド内で行う。
 
 		public static void MainTh()
@@ -95,20 +99,18 @@ namespace Charlotte.GameCommons
 							Instance.Message = message;
 							Instance.Show();
 						});
-					}
 
-					Thread.Sleep(500); // リボンの最短表示時間待ち
+						EvShowed.WaitOne();
+
+						Thread.Sleep(500); // リボンの最短表示時間待ち
+					}
 				}
-				else
-				{
-					MainThStandby.WaitOne();
-				}
+
+				MainThStandby.WaitOne();
 			}
 
 			P_Close();
 		}
-
-		private static EventWaitHandle EvClosed = new EventWaitHandle(false, EventResetMode.AutoReset);
 
 		private static void P_Close()
 		{
@@ -154,10 +156,10 @@ namespace Charlotte.GameCommons
 			else
 				fontSize = 48f; // 想定フォントサイズ
 
-			this.BackColor = Color.FromArgb(0, 64, 64);
+			this.BackColor = GameConfig.LibbonBackColor;
 			this.FormBorderStyle = FormBorderStyle.None;
 			this.MessageLabel.Font = new Font("メイリオ", fontSize);
-			this.MessageLabel.ForeColor = Color.FromArgb(255, 255, 255);
+			this.MessageLabel.ForeColor = GameConfig.LibbonForeColor;
 			this.MessageLabel.Text = this.Message;
 
 			const int MARGIN = 30;
@@ -168,6 +170,8 @@ namespace Charlotte.GameCommons
 			this.Top = (this.TargetMonitor.H - this.Height) / 2;
 			this.MessageLabel.Left = (this.Width - this.MessageLabel.Width) / 2;
 			this.MessageLabel.Top = MARGIN;
+
+			EvShowed.Set();
 		}
 
 		private void LibbonDialog_FormClosed(object sender, FormClosedEventArgs e)

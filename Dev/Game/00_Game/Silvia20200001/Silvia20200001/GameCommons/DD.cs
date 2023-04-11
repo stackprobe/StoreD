@@ -29,7 +29,8 @@ namespace Charlotte.GameCommons
 		public static int ProcFrame;
 		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
-		public static List<Func<bool>> EL = new List<Func<bool>>();
+		public static List<Func<bool>> EL = new List<Func<bool>>(); // 主にエフェクトを入れる。いつクリアしても良い。
+		public static List<Func<bool>> TL = new List<Func<bool>>(); // 主にタスク・処理を入れる。クリア禁止
 
 		public static void SetLibbon(string message)
 		{
@@ -71,7 +72,6 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		private class DrawSettingInfo
 		{
-			public bool IgnoreDrawErrorFlag = false;
 			public bool MosaicFlag = false;
 			public int R = 255;
 			public int G = 255;
@@ -86,15 +86,6 @@ namespace Charlotte.GameCommons
 		/// 描画設定
 		/// </summary>
 		private static DrawSettingInfo DrawSetting = new DrawSettingInfo();
-
-		/// <summary>
-		/// 描画設定：
-		/// -- 描画関数がエラーを返しても例外を投げない。
-		/// </summary>
-		public static void SetIgnoreDrawError()
-		{
-			DrawSetting.IgnoreDrawErrorFlag = true;
-		}
 
 		/// <summary>
 		/// 描画設定：
@@ -255,8 +246,7 @@ namespace Charlotte.GameCommons
 
 			// 描画設定の適用ここまで
 
-			// ? 失敗
-			if (DX.DrawModiGraphF(
+			DX.DrawModiGraphF(
 				(float)poly.LT.X,
 				(float)poly.LT.Y,
 				(float)poly.RT.X,
@@ -267,13 +257,7 @@ namespace Charlotte.GameCommons
 				(float)poly.LB.Y,
 				picture.GetHandle(),
 				1
-				)
-				!= 0
-				)
-			{
-				if (!DrawSetting.IgnoreDrawErrorFlag)
-					throw new Exception("DrawModiGraphF failed");
-			}
+				);
 
 			// 描画設定の解除ここから
 
@@ -455,6 +439,7 @@ namespace Charlotte.GameCommons
 		public static void EachFrame()
 		{
 			DU.ExecuteTasks(DD.EL);
+			DU.ExecuteTasks(DD.TL);
 
 			DD.Curtain.EachFrame();
 			Music.EachFrame();

@@ -272,5 +272,56 @@ namespace Charlotte.GameCommons
 				aRect.L < bRect.R && bRect.L < aRect.R &&
 				aRect.T < bRect.B && bRect.T < aRect.B;
 		}
+
+		/// <summary>
+		/// この当たり判定を表示する。
+		/// </summary>
+		/// <param name="color">色</param>
+		public void Draw(D4Color color)
+		{
+			this.Draw(color, new D2Point(0, 0));
+		}
+
+		/// <summary>
+		/// この当たり判定を表示する。
+		/// </summary>
+		/// <param name="color">色</param>
+		/// <param name="camera">カメラ位置</param>
+		public void Draw(D4Color color, D2Point camera)
+		{
+			if (this.Kind == Kind_e.MULTI)
+			{
+				foreach (Crash crash in this.Crashes)
+					crash.Draw(color, camera);
+
+				return;
+			}
+
+			DD.SetAlpha(color.A);
+			DD.SetBright(color.WithoutAlpha());
+
+			switch (this.Kind)
+			{
+				case Kind_e.NONE:
+					break;
+
+				case Kind_e.POINT:
+					DD.SetZoom(8.0 / Pictures.WhiteCircle.W);
+					DD.Draw(Pictures.WhiteCircle, this.Pt - camera);
+					break;
+
+				case Kind_e.CIRCLE:
+					DD.SetZoom(this.R * 2.0 / Pictures.WhiteCircle.W);
+					DD.Draw(Pictures.WhiteCircle, this.Pt - camera);
+					break;
+
+				case Kind_e.RECT:
+					DD.Draw(Pictures.WhiteBox, new D4Rect(this.Rect.LT - camera, this.Rect.Size));
+					break;
+
+				default:
+					throw null; // never
+			}
+		}
 	}
 }

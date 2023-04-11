@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using Charlotte.Drawings;
 
 namespace Charlotte.GameConfigs
 {
 	/// <summary>
 	/// リリース後に変更不可能な設定
+	/// アプリケーション固有の項目を追加して良い。
 	/// </summary>
 	public static class GameConfig
 	{
@@ -21,5 +23,8 @@ namespace Charlotte.GameConfigs
 			@"General\Font\K Gothic\K Gothic.ttf",
 			@"General\Font\木漏れ日ゴシック\komorebi-gothic.ttf",
 		};
+
+		public static Color LibbonBackColor = Color.DarkSlateGray;
+		public static Color LibbonForeColor = Color.White;
 	}
 }

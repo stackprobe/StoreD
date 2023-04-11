@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Charlotte.Commons;
 using Charlotte.Games;
 
 namespace Charlotte
@@ -10,11 +11,22 @@ namespace Charlotte
 	{
 		public static void GameMain()
 		{
-			// -- choose one --
+			if (ProcMain.DEBUG)
+			{
+				// -- choose one --
 
-			Logo.Run();
+				Logo.Run();
+				//TitleMenu.Run();
+				//new Test0001().Test01();
+				//new Test0001().Test02();
+				//new Test0001().Test03();
 
-			// --
+				// --
+			}
+			else
+			{
+				Logo.Run();
+			}
 		}
 	}
 }

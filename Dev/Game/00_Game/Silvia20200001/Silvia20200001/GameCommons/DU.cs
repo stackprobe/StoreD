@@ -328,6 +328,49 @@ namespace Charlotte.GameCommons
 			return count == 1 || POUND_FIRST_DELAY < count && (count - POUND_FIRST_DELAY) % POUND_DELAY == 1;
 		}
 
+		public static class Hasher
+		{
+			private static byte[] MAGIC_HEADER = Encoding.ASCII.GetBytes("Gattonero-2023-04-05_MAGIC_HEADER_");
+
+			public static byte[] AddHash(byte[] data)
+			{
+				if (data == null)
+					throw new Exception("Bad data");
+
+				return SCommon.Join(new byte[][] { data, SCommon.GetSHA512(SCommon.Join(new byte[][] { MAGIC_HEADER, data })).Take(16).ToArray() });
+			}
+
+			public static byte[] UnaddHash(byte[] data)
+			{
+				try
+				{
+					return UnaddHash_Main(data);
+				}
+				catch (Exception e)
+				{
+					throw new Exception("読み込まれたデータは破損しているかバージョンが異なります。(" + e.Message + ")");
+				}
+			}
+
+			private static byte[] UnaddHash_Main(byte[] data)
+			{
+				if (data == null)
+					throw new Exception("data is null");
+
+				if (data.Length < 16)
+					throw new Exception("Bad Length");
+
+				byte[] ret = data.Take(data.Length - 16).ToArray();
+				byte[] hash = data.Skip(data.Length - 16).ToArray();
+				byte[] recalcedHash = SCommon.GetSHA512(SCommon.Join(new byte[][] { MAGIC_HEADER, ret })).Take(16).ToArray();
+
+				if (SCommon.Comp(hash, recalcedHash) != 0)
+					throw new Exception("Hash does not match");
+
+				return ret;
+			}
+		}
+
 		// TODO: 以下DDへ移動するかもしれない。
 
 		public static IEnumerable<T> Reverse<T>(IList<T> list)
