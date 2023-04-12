@@ -10,7 +10,6 @@ using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GUICommons;
-using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {

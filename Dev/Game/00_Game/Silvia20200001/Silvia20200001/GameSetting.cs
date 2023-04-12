@@ -6,12 +6,8 @@ using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
 
-namespace Charlotte.GameConfigs
+namespace Charlotte
 {
-	/// <summary>
-	/// リリース後に変更可能な設定
-	/// アプリケーション固有の項目を追加しても良い。
-	/// </summary>
 	public static class GameSetting
 	{
 		public static I2Size UserScreenSize;

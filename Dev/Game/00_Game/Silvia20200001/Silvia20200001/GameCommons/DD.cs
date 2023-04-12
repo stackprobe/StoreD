@@ -7,7 +7,6 @@ using System.IO;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {

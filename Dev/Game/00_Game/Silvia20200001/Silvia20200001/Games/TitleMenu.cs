@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Charlotte.Games
 {
-	public class TitleMenu
+	public static class TitleMenu
 	{
 		// TODO
 		// TODO

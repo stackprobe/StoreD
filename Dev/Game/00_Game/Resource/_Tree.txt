@@ -1,5 +1,7 @@
 ﻿General
 	-> Directory
+General\Copyright.png
+	-> File 2023/04/13 (木) 00:54:26 / 2021/01/13 (水) 13:32:41 / 5,134
 General\Dummy.png
 	-> File 2023/04/05 (水) 13:19:23 / 2021/01/13 (水) 13:32:40 / 188
 General\Font

@@ -5,7 +5,6 @@ using System.Text;
 using DxLibDLL;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
-using Charlotte.GameConfigs;
 
 namespace Charlotte.Games
 {

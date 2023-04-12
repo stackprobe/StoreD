@@ -61,6 +61,7 @@
     <Compile Include="Commons\SCommon.cs" />
     <Compile Include="Commons\WorkingDir.cs" />
     <Compile Include="Consts.cs" />
+    <Compile Include="GameConfig.cs" />
     <Compile Include="Drawings\D2Point.cs" />
     <Compile Include="Drawings\D2Size.cs" />
     <Compile Include="Drawings\D3Color.cs" />
@@ -93,11 +94,9 @@
     <Compile Include="GameCommons\Picture.cs" />
     <Compile Include="GameCommons\ResourceCluster.cs" />
     <Compile Include="GameCommons\SubScreen.cs" />
-    <Compile Include="GameConfigs\GameSetting.cs" />
-    <Compile Include="GameConfigs\GameConfig.cs" />
     <Compile Include="Games\SimpleMenu.cs" />
     <Compile Include="Games\TitleMenu.cs" />
-    <Compile Include="Ground.cs" />
+    <Compile Include="GameSetting.cs" />
     <Compile Include="GUICommons\GUICommon.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
     <Compile Include="Inputs.cs" />

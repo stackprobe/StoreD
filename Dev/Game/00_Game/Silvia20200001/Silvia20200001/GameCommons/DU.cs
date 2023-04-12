@@ -12,7 +12,7 @@ using Charlotte.Drawings;
 namespace Charlotte.GameCommons
 {
 	/// <summary>
-	/// この名前空間の配下から呼び出される機能をこのクラスに集約する。
+	/// この名前空間内で使用される共通機能・便利機能をこのクラスに集約する。
 	/// </summary>
 	public class DU
 	{
@@ -377,7 +377,7 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		// TODO: 以下DDへ移動するかもしれない。
+		// HACK: ここから先のメソッドはDDへ移動するかもしれない。
 
 		public static IEnumerable<T> Reverse<T>(IList<T> list)
 		{
@@ -442,36 +442,44 @@ namespace Charlotte.GameCommons
 
 		/// <summary>
 		/// タスクリストを実行する。
+		/// -- リスト内全てのタスクを実行する。
+		/// -- 終了したタスクはリストから削除する。
+		/// タスクが偽を返したら終了と見なす。
+		/// このメソッド自体もタスクにできるよ。
 		/// </summary>
 		/// <param name="tasks">タスクリスト</param>
-		public static void ExecuteTasks(List<Func<bool>> tasks)
+		/// <returns>タスクがあったか(タスクを実行したか)</returns>
+		public static bool ExecuteTasks(List<Func<bool>> tasks)
 		{
+			if (tasks.Count == 0)
+				return false;
+
 			for (int index = 0; index < tasks.Count; index++)
-			{
 				if (!tasks[index]())
-				{
 					tasks[index] = null;
-				}
-			}
+
 			tasks.RemoveAll(v => v == null);
+			return true;
 		}
 
 		/// <summary>
 		/// タスクシーケンスを実行する。
+		/// -- リストの先頭のタスクのみ実行する。
+		/// -- 終了したタスクはリストから削除する。
+		/// タスクが偽を返したら終了と見なす。
+		/// このメソッド自体もタスクにできるよ。
 		/// </summary>
 		/// <param name="tasks">タスクシーケンス</param>
-		/// <returns>ビジー状態か(タスクを実行したか)</returns>
+		/// <returns>タスクがあったか(タスクを実行したか)</returns>
 		public static bool ExecuteTaskSequence(LinkedList<Func<bool>> tasks)
 		{
-			if (1 <= tasks.Count)
-			{
-				if (!tasks.First.Value())
-				{
-					tasks.RemoveFirst();
-				}
-				return true;
-			}
-			return false;
+			if (tasks.Count == 0)
+				return false;
+
+			if (!tasks.First.Value())
+				tasks.RemoveFirst();
+
+			return true;
 		}
 	}
 }

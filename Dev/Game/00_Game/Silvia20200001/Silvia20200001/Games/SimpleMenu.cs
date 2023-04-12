@@ -5,10 +5,8 @@ using System.Text;
 
 namespace Charlotte.Games
 {
-	public class SimpleMenu
+	public static class SimpleMenu
 	{
-		// TODO
-		// TODO
-		// TODO
+
 	}
 }

@@ -5,12 +5,8 @@ using System.Text;
 using System.Drawing;
 using Charlotte.Drawings;
 
-namespace Charlotte.GameConfigs
+namespace Charlotte
 {
-	/// <summary>
-	/// リリース後に変更不可能な設定
-	/// アプリケーション固有の項目を追加しても良い。
-	/// </summary>
 	public static class GameConfig
 	{
 		public static I2Size ScreenSize = new I2Size(960, 540);

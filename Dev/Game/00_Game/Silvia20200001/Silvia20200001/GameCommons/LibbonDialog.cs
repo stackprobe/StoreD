@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
-using Charlotte.GameConfigs;
 
 namespace Charlotte.GameCommons
 {

@@ -7,7 +7,7 @@ using Charlotte.Games;
 
 namespace Charlotte
 {
-	public class TarutoGameMain
+	public static class TarutoGameMain
 	{
 		public static void GameMain()
 		{
