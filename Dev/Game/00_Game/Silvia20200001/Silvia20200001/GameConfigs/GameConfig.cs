@@ -9,7 +9,7 @@ namespace Charlotte.GameConfigs
 {
 	/// <summary>
 	/// リリース後に変更不可能な設定
-	/// アプリケーション固有の項目を追加して良い。
+	/// アプリケーション固有の項目を追加しても良い。
 	/// </summary>
 	public static class GameConfig
 	{
