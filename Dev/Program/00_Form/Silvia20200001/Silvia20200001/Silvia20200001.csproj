@@ -60,6 +60,7 @@
     <Compile Include="Consts.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Ground.cs" />
+    <Compile Include="GUICommons\GUICommon.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
     <Compile Include="MainWin.cs">
       <SubType>Form</SubType>

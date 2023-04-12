@@ -98,6 +98,7 @@
     <Compile Include="Games\SimpleMenu.cs" />
     <Compile Include="Games\TitleMenu.cs" />
     <Compile Include="Ground.cs" />
+    <Compile Include="GUICommons\GUICommon.cs" />
     <Compile Include="GUICommons\GUIProcMain.cs" />
     <Compile Include="Inputs.cs" />
     <Compile Include="MainWin.cs">
