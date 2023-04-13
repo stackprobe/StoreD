@@ -8,6 +8,8 @@ namespace Charlotte
 {
 	public static class Pictures
 	{
+		public static object TOUCH_HANDLE = new object();
+
 		public static Picture Dummy = new Picture(@"General\Dummy.png");
 		public static Picture WhiteBox = new Picture(@"General\WhiteBox.png");
 		public static Picture WhiteCircle = new Picture(@"General\WhiteCircle.png");

@@ -11,6 +11,12 @@ namespace Charlotte.GameCommons
 	{
 		private static List<Music> Instances = new List<Music>();
 
+		public static void TouchAll()
+		{
+			foreach (Music instance in Instances)
+				instance.GetHandle();
+		}
+
 		/// <summary>
 		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
 		/// </summary>

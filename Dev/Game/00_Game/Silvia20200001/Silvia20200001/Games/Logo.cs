@@ -79,7 +79,13 @@ namespace Charlotte.Games
 
 		private static void Touch()
 		{
-			// none
+			Musics.TOUCH_HANDLE.GetType();
+			Pictures.TOUCH_HANDLE.GetType();
+			SoundEffects.TOUCH_HANDLE.GetType();
+
+			Music.TouchAll();
+			Picture.TouchAll();
+			SoundEffect.TouchAll();
 		}
 	}
 }
