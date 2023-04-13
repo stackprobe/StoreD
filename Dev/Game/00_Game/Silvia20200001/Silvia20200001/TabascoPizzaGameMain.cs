@@ -7,7 +7,7 @@ using Charlotte.Games;
 
 namespace Charlotte
 {
-	public static class TabascoFireGameMain
+	public static class TabascoPizzaGameMain
 	{
 		public static void Run()
 		{

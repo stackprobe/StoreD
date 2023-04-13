@@ -100,16 +100,6 @@ namespace Charlotte.GameCommons
 		/// -- 明度をセットする。
 		/// </summary>
 		/// <param name="color">明度</param>
-		public static void SetBright(I3Color color)
-		{
-			SetBright(color.ToD3Color());
-		}
-
-		/// <summary>
-		/// 描画設定：
-		/// -- 明度をセットする。
-		/// </summary>
-		/// <param name="color">明度</param>
 		public static void SetBright(D3Color color)
 		{
 			DrawSetting.R = DU.RateToByte(color.R);
@@ -157,17 +147,6 @@ namespace Charlotte.GameCommons
 		{
 			DrawSetting.XZoom = xZoom;
 			DrawSetting.YZoom = yZoom;
-		}
-
-		/// <summary>
-		/// 描画する。
-		/// </summary>
-		/// <param name="picture">画像</param>
-		/// <param name="x">描画する位置の中心座標(X位置)</param>
-		/// <param name="y">描画する位置の中心座標(Y位置)</param>
-		public static void Draw(Picture picture, double x, double y)
-		{
-			Draw(picture, new D2Point(x, y));
 		}
 
 		/// <summary>
@@ -435,7 +414,7 @@ namespace Charlotte.GameCommons
 
 			SubScreen.ChangeDrawScreenToBack();
 
-			DD.SetBright(new I3Color(0, 0, 0));
+			DD.SetBright(new I3Color(0, 0, 0).ToD3Color());
 			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H).ToD4Rect());
 
 			int mag = DD.MainScreenDrawRect.W / GameConfig.ScreenSize.W;
@@ -547,7 +526,7 @@ namespace Charlotte.GameCommons
 			if (whiteLevel < 0.0)
 			{
 				DD.SetAlpha(-whiteLevel);
-				DD.SetBright(new I3Color(0, 0, 0));
+				DD.SetBright(new I3Color(0, 0, 0).ToD3Color());
 			}
 			else
 			{
@@ -847,6 +826,13 @@ namespace Charlotte.GameCommons
 			exterior.T = rect.T - (exterior.H - rect.H) * (1.0 - slideRate);
 
 			return exterior;
+		}
+
+		public static void Approach(ref double value, double target, double rate)
+		{
+			value -= target;
+			value *= rate;
+			value += target;
 		}
 	}
 }
