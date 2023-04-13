@@ -54,7 +54,7 @@
 			this.Name = "LibbonDialog";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "Gattonero20230405_Libbon";
+			this.Text = "Gattonero-2023-04-05_Libbon";
 			this.TopMost = true;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LibbonDialog_FormClosed);
 			this.Load += new System.EventHandler(this.LibbonDialog_Load);

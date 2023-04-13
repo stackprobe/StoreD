@@ -9,6 +9,8 @@ namespace Charlotte
 {
 	public static class GameConfig
 	{
+		public static string GameTitle = "Gattonero-2023-04-05";
+
 		public static I2Size ScreenSize = new I2Size(960, 540);
 
 		public static double DefaultMusicVolume = 0.45;

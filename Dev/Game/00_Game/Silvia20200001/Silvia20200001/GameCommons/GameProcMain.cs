@@ -171,7 +171,7 @@ namespace Charlotte.GameCommons
 			DD.Finalizers.Add(DD.Save);
 
 			DD.MainWindowTitle =
-				Path.GetFileNameWithoutExtension(ProcMain.SelfFile)
+				GameConfig.GameTitle
 				+ " / "
 				+ GUIProcMain.BuiltDateTime.ToString("yyyy-MM-dd-HH-mm-ss");
 

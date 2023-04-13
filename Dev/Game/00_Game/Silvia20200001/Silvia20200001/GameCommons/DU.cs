@@ -330,7 +330,7 @@ namespace Charlotte.GameCommons
 
 		public static class Hasher
 		{
-			private static byte[] MAGIC_HEADER = Encoding.ASCII.GetBytes("Gattonero20230405_Hasher_MAGIC_HEADER_{59c1c8b8-f0db-4c11-8af6-1590b89342dc}_");
+			private static byte[] COUNTER_SHUFFLE = Encoding.ASCII.GetBytes("Gattonero20230405_COUNTER_SHUFFLE_{5acb89ed-9230-407f-9c88-689d71230bfa}_");
 			private const int HASH_SIZE = 20;
 
 			public static byte[] AddHash(byte[] data)
@@ -373,7 +373,7 @@ namespace Charlotte.GameCommons
 
 			private static byte[] GetHash(byte[] data)
 			{
-				return Encoding.ASCII.GetBytes(SCommon.Base64.I.Encode(SCommon.GetSHA512(new byte[][] { MAGIC_HEADER, data }).Take(15).ToArray()));
+				return Encoding.ASCII.GetBytes(SCommon.Base64.I.Encode(SCommon.GetSHA512(new byte[][] { COUNTER_SHUFFLE, data }).Take(15).ToArray()));
 			}
 		}
 
