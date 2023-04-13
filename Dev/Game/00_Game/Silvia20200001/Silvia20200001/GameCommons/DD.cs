@@ -204,17 +204,6 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="picture">画像</param>
 		/// <param name="rect">描画する領域</param>
-		public static void Draw(Picture picture, I4Rect rect)
-		{
-			Draw(picture, rect.ToD4Rect());
-		}
-
-		/// <summary>
-		/// 描画する。
-		/// 描画設定の回転・拡大率は適用されない。
-		/// </summary>
-		/// <param name="picture">画像</param>
-		/// <param name="rect">描画する領域</param>
 		public static void Draw(Picture picture, D4Rect rect)
 		{
 			Draw(picture, rect.Poly);
@@ -447,7 +436,7 @@ namespace Charlotte.GameCommons
 			SubScreen.ChangeDrawScreenToBack();
 
 			DD.SetBright(new I3Color(0, 0, 0));
-			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, DD.RealScreenSize.W, DD.RealScreenSize.H));
+			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H).ToD4Rect());
 
 			int mag = DD.MainScreenDrawRect.W / GameConfig.ScreenSize.W;
 
@@ -521,7 +510,7 @@ namespace Charlotte.GameCommons
 			long currentTime = DU.GetCurrentTime();
 
 			HzChaserTime += 16L;
-			HzChaserTime = SCommon.ToRange(HzChaserTime, currentTime - 100L, currentTime + 100L);
+			HzChaserTime = SCommon.ToRange(HzChaserTime, currentTime - 80L, currentTime + 80L); // 前後5フレームに収める。
 
 			while (currentTime < HzChaserTime)
 			{
@@ -564,10 +553,16 @@ namespace Charlotte.GameCommons
 			{
 				DD.SetAlpha(whiteLevel);
 			}
-			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H));
+			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H).ToD4Rect());
 		}
 
-		public static void SetCurtain(double destWhiteLevel)
+		public static void SetCurtain(double whiteLevel)
+		{
+			Curtain.CurrWhiteLevel = whiteLevel;
+			Curtain.NextWhiteLevels.Clear();
+		}
+
+		public static void SetCurtainTarget(double destWhiteLevel)
 		{
 			Curtain.NextWhiteLevels.Clear();
 

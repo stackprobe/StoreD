@@ -17,7 +17,7 @@ namespace Charlotte.GameCommons
 	{
 		private static Action Initialized;
 
-		public static void GameMain(Form mainForm, Action tabascoFire)
+		public static void GameMain(Form mainForm)
 		{
 			DD.RunOnUIThread = GetRunOnUIThread(mainForm);
 
@@ -32,8 +32,6 @@ namespace Charlotte.GameCommons
 						if (aliving)
 							mainForm.Visible = false;
 					});
-
-					tabascoFire();
 				};
 
 				Main2();
@@ -232,6 +230,8 @@ namespace Charlotte.GameCommons
 			DD.SetLibbon(null);
 
 			Initialized();
+
+			TabascoFireGameMain.Run();
 		}
 
 		/// <summary>
@@ -241,7 +241,6 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		/// <param name="w">幅</param>
 		/// <param name="h">高さ</param>
-		/// <param name="onBoot">リボンを表示するか</param>
 		public static void SetRealScreenSize(int w, int h)
 		{
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);

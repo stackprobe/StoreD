@@ -330,7 +330,7 @@ namespace Charlotte.GameCommons
 
 		public static class Hasher
 		{
-			private static byte[] COUNTER_SHUFFLE = Encoding.ASCII.GetBytes("Gattonero20230405_COUNTER_SHUFFLE_{5acb89ed-9230-407f-9c88-689d71230bfa}_");
+			private static byte[] COUNTER_SHUFFLE = Encoding.ASCII.GetBytes("Gattonero-2023-04-05_COUNTER_SHUFFLE_{e43e01aa-ca4f-43d3-8be7-49cd60e9415e}_");
 			private const int HASH_SIZE = 20;
 
 			public static byte[] AddHash(byte[] data)

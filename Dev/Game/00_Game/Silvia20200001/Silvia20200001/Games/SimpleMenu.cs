@@ -7,6 +7,9 @@ namespace Charlotte.Games
 {
 	public static class SimpleMenu
 	{
-
+		public static void Draw()
+		{
+			// TODO
+		}
 	}
 }

@@ -42,7 +42,7 @@ namespace Charlotte.GameCommons
 		{
 			if (this.Handle == -1)
 			{
-				this.Handle = DX.MakeScreen(this.W, this.H, 1); // 幅, 高さ, 画像の透明度を有効にするか/1:有効/0:無効
+				this.Handle = DX.MakeScreen(this.W, this.H, 0); // 幅, 高さ, 画像の透明度を有効にするか/1:有効/0:無効
 
 				if (this.Handle == -1) // ? 失敗
 					throw new Exception("MakeScreen failed");
