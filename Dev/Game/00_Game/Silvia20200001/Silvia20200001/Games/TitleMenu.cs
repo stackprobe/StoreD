@@ -20,10 +20,10 @@ namespace Charlotte.Games
 
 			Musics.RemotestLibrary.Play();
 
-
-
 			for (; ; )
 			{
+				DD.Draw(Pictures.KAZUKIcghvbnkm, new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+
 				DD.SetRotate(DD.ProcFrame / 10.0);
 				DD.Draw(Pictures.Dummy, new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
 

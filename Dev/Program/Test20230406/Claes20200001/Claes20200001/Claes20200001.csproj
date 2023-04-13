@@ -54,11 +54,24 @@
     <Compile Include="Commons\SCommon.cs" />
     <Compile Include="Commons\WorkingDir.cs" />
     <Compile Include="Consts.cs" />
+    <Compile Include="Drawings\D2Point.cs" />
+    <Compile Include="Drawings\D2Size.cs" />
+    <Compile Include="Drawings\D3Color.cs" />
+    <Compile Include="Drawings\D4Color.cs" />
+    <Compile Include="Drawings\D4Rect.cs" />
+    <Compile Include="Drawings\I2Point.cs" />
+    <Compile Include="Drawings\I2Size.cs" />
+    <Compile Include="Drawings\I3Color.cs" />
+    <Compile Include="Drawings\I4Color.cs" />
+    <Compile Include="Drawings\I4Rect.cs" />
+    <Compile Include="Drawings\P4Poly.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Utilities\Canvas.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Test0001.cs" />
     <Compile Include="Tests\Test0002.cs" />
+    <Compile Include="Tests\Test0003.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

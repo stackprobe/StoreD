@@ -36,6 +36,14 @@ General\Music\ユーフルカ\Remotest-Liblary_loop\Remotest-Liblary_loop.txt
 	-> File 2017/08/08 (火) 00:01:04 / 2023/04/09 (日) 01:21:42 / 723
 General\Music\ユーフルカ\_source.txt
 	-> File 2023/04/09 (日) 01:22:21 / 2023/04/11 (火) 00:48:37 / 53
+General\Picture
+	-> Directory
+General\Picture\ぱくたそ
+	-> Directory
+General\Picture\ぱくたそ\KAZUKIcghvbnkm.png
+	-> File 2023/04/13 (木) 22:40:41 / 2023/04/13 (木) 22:40:41 / 1,087,219
+General\Picture\ぱくたそ\_source.txt
+	-> File 2023/04/13 (木) 22:42:03 / 2023/04/13 (木) 22:42:30 / 43
 General\SoundEffect
 	-> Directory
 General\SoundEffect\ユーフルカ
