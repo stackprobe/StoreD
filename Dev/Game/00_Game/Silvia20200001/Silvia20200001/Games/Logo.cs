@@ -16,7 +16,7 @@ namespace Charlotte.Games
 			double z2 = 2.0;
 			double z3 = 3.7;
 
-			foreach (DD.Scene scene in DD.CreateScene(60))
+			foreach (Scene scene in Scene.Create(60))
 			{
 				DD.DrawCurtain(-1.0);
 
@@ -52,7 +52,7 @@ namespace Charlotte.Games
 
 				DD.EachFrame();
 			}
-			foreach (DD.Scene scene in DD.CreateScene(60))
+			foreach (Scene scene in Scene.Create(60))
 			{
 				DD.DrawCurtain(-1.0);
 

@@ -542,7 +542,7 @@ namespace Charlotte.GameCommons
 		{
 			Curtain.NextWhiteLevels.Clear();
 
-			foreach (DD.Scene scene in DD.CreateScene(30))
+			foreach (Scene scene in Scene.Create(30))
 			{
 				Curtain.NextWhiteLevels.Enqueue(DD.AToBRate(Curtain.CurrWhiteLevel, destWhiteLevel, scene.Rate));
 			}
@@ -560,32 +560,6 @@ namespace Charlotte.GameCommons
 					CurrWhiteLevel = NextWhiteLevels.Dequeue();
 				}
 				DD.DrawCurtain(CurrWhiteLevel);
-			}
-		}
-
-		public class Scene
-		{
-			public int Numer;
-			public int Denom;
-
-			public double Rate
-			{
-				get
-				{
-					return (double)this.Numer / this.Denom;
-				}
-			}
-		}
-
-		public static IEnumerable<Scene> CreateScene(int denom)
-		{
-			for (int numer = 0; numer <= denom; numer++)
-			{
-				yield return new Scene()
-				{
-					Numer = numer,
-					Denom = denom,
-				};
 			}
 		}
 
