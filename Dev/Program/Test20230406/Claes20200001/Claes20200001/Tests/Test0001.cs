@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Charlotte.Commons;
+using System.Threading;
 
 namespace Charlotte.Tests
 {
@@ -72,6 +73,122 @@ namespace Charlotte.Tests
 			}
 
 			a(); // GHI
+		}
+
+		public void Test05()
+		{
+			for (DateTime dt = DateTime.Now; dt.Second == DateTime.Now.Second; )
+				Thread.Sleep(1);
+
+			DateTime stDt = DateTime.Now;
+
+			for (long count = 0L; ; count++)
+			{
+				Console.WriteLine(string.Join(", ", count, (DateTime.Now - stDt).TotalSeconds));
+				Thread.Sleep(1000);
+			}
+		}
+
+		public void Test06()
+		{
+			for (DateTime dt = DateTime.Now; dt.Second == DateTime.Now.Second; )
+				Thread.Sleep(1);
+
+			DateTime stDt = DateTime.Now;
+			int millis = 1000;
+
+			for (long count = 0L; ; count++)
+			{
+				Console.WriteLine(string.Join(", ", count, (DateTime.Now - stDt).TotalSeconds.ToString("F9"), millis));
+
+				if (count < (DateTime.Now - stDt).TotalSeconds)
+					millis--;
+				else
+					millis++;
+
+				Thread.Sleep(millis);
+			}
+		}
+
+		public void Test07()
+		{
+			for (DateTime dt = DateTime.Now; dt.Second == DateTime.Now.Second; )
+				Thread.Sleep(1);
+
+			DateTime stDt = DateTime.Now;
+			int millis = 1000;
+
+			for (long count = 0L; ; count++)
+			{
+				Console.WriteLine(string.Join(", ", count, (DateTime.Now - stDt).TotalSeconds.ToString("F9"), millis));
+
+				if (count < (DateTime.Now - stDt).TotalSeconds)
+				{
+					if (millis < 1000)
+						millis--;
+					else
+						millis -= 2;
+				}
+				else
+				{
+					if (1000 < millis)
+						millis++;
+					else
+						millis += 2;
+				}
+
+				Thread.Sleep(millis);
+			}
+		}
+
+		public void Test08()
+		{
+			for (DateTime dt = DateTime.Now; dt.Second == DateTime.Now.Second; )
+				Thread.Sleep(1);
+
+			DateTime stDt = DateTime.Now;
+			int millis = 1000;
+
+			for (long count = 0L; ; count++)
+			{
+				Console.WriteLine(string.Join(", ", count, (DateTime.Now - stDt).TotalSeconds.ToString("F9"), millis));
+
+				if (count < (DateTime.Now - stDt).TotalSeconds)
+				{
+					if (millis <= 1000)
+						millis--;
+					else
+						millis = 1000;
+				}
+				else
+				{
+					if (1000 <= millis)
+						millis++;
+					else
+						millis = 1000;
+				}
+
+				Thread.Sleep(millis);
+			}
+		}
+
+		public void Test09()
+		{
+			for (DateTime dt = DateTime.Now; dt.Second == DateTime.Now.Second; )
+				Thread.Sleep(1);
+
+			DateTime stDt = DateTime.Now;
+			int millis = -1;
+
+			for (long count = 0L; ; count++)
+			{
+				Console.WriteLine(string.Join(", ", count, (DateTime.Now - stDt).TotalSeconds.ToString("F9"), millis));
+
+				millis = (int)(((count + 1L) - (DateTime.Now - stDt).TotalSeconds) * 1000.0);
+				millis = Math.Max(1, millis);
+
+				Thread.Sleep(millis);
+			}
 		}
 	}
 }

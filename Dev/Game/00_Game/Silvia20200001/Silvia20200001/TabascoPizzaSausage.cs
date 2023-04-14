@@ -7,7 +7,7 @@ using Charlotte.Games;
 
 namespace Charlotte
 {
-	public static class TabascoPizzaGameMain
+	public static class TabascoPizzaSausage
 	{
 		public static void Run()
 		{
@@ -25,8 +25,8 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Logo.Run();
-			//TitleMenu.Run();
+			//Logo.Run();
+			TitleMenu.Run();
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();

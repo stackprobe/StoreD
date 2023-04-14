@@ -358,12 +358,9 @@ namespace Charlotte.GameCommons
 
 			public static void Print(string line)
 			{
-				int x = L + X;
-				int y = T + Y;
+				DrawString(line, L + X, T + Y);
 
-				DrawString(line, x, y);
-
-				x += GetWidth(line);
+				X += GetWidth(line);
 			}
 
 			private static void DrawString(string line, int x, int y)

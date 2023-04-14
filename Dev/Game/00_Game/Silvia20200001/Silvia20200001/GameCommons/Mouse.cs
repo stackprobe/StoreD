@@ -68,6 +68,9 @@ namespace Charlotte.GameCommons
 			Y -= DD.MainScreenDrawRect.T;
 			Y *= GameConfig.ScreenSize.H;
 			Y /= DD.MainScreenDrawRect.H;
+
+			X = SCommon.ToRange(X, 0, GameConfig.ScreenSize.W - 1);
+			Y = SCommon.ToRange(Y, 0, GameConfig.ScreenSize.H - 1);
 		}
 
 		/// <summary>
@@ -77,15 +80,15 @@ namespace Charlotte.GameCommons
 		/// <param name="y">Y座標</param>
 		public static void SetMousePosition(int x, int y)
 		{
-			x = SCommon.ToRange(x, 0, GameConfig.ScreenSize.W - 1);
-			y = SCommon.ToRange(y, 0, GameConfig.ScreenSize.H - 1);
-
 			x *= DD.MainScreenDrawRect.W;
 			x /= GameConfig.ScreenSize.W;
 			x += DD.MainScreenDrawRect.L;
 			y *= DD.MainScreenDrawRect.H;
 			y /= GameConfig.ScreenSize.H;
 			y += DD.MainScreenDrawRect.T;
+
+			x = SCommon.ToRange(x, 0, DD.RealScreenSize.W - 1);
+			y = SCommon.ToRange(y, 0, DD.RealScreenSize.H - 1);
 
 			if (DX.SetMousePoint(x, y) != 0) // ? 失敗
 				throw new Exception("SetMousePoint failed");

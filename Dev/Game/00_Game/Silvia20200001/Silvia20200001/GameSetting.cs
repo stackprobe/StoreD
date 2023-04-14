@@ -12,6 +12,7 @@ namespace Charlotte
 	{
 		public static I2Size UserScreenSize;
 		public static bool FullScreen = false;
+		public static bool MouseEnabled = true;
 		public static double MusicVolume;
 		public static double SEVolume;
 
@@ -31,6 +32,7 @@ namespace Charlotte
 			dest.Add(UserScreenSize.W);
 			dest.Add(UserScreenSize.H);
 			dest.Add(FullScreen);
+			dest.Add(MouseEnabled);
 			dest.Add(DU.RateToPPB(MusicVolume));
 			dest.Add(DU.RateToPPB(SEVolume));
 
@@ -64,6 +66,7 @@ namespace Charlotte
 			UserScreenSize.W = SCommon.ToRange(int.Parse(src[c++]), 1, SCommon.IMAX);
 			UserScreenSize.H = SCommon.ToRange(int.Parse(src[c++]), 1, SCommon.IMAX);
 			FullScreen = bool.Parse(src[c++]);
+			MouseEnabled = bool.Parse(src[c++]);
 			MusicVolume = DU.PPBToRate(int.Parse(src[c++]));
 			SEVolume = DU.PPBToRate(int.Parse(src[c++]));
 
