@@ -28,6 +28,7 @@ namespace Charlotte.Games
 		private int Item_H;
 		private int Item_YStep;
 		private int Menu_W;
+		private int MousePointMargin;
 		private string Title; // "" == タイトル無し
 		private string[] Items;
 
@@ -60,6 +61,7 @@ namespace Charlotte.Games
 			this.Item_H = item_h;
 			this.Item_YStep = item_yStep;
 			this.Menu_W = menu_w;
+			this.MousePointMargin = itemYSpan / 3;
 			this.Title = title;
 			this.Items = items;
 
@@ -135,9 +137,10 @@ namespace Charlotte.Games
 
 				for (int index = 0; index < this.Items.Length; index++)
 				{
-					if (Crash.IsCrashed_Rect_Point(
-						new I4Rect(0, this.FirstItem_T + index * this.Item_YStep, this.Menu_W, this.Item_H).ToD4Rect(),
-						new I2Point(Mouse.X, Mouse.Y).ToD2Point()
+					if (Crash.IsCrashed_Circle_Rect(
+						new I2Point(Mouse.X, Mouse.Y).ToD2Point(),
+						(double)this.MousePointMargin,
+						new I4Rect(0, this.FirstItem_T + index * this.Item_YStep, this.Menu_W, this.Item_H).ToD4Rect()
 						))
 					{
 						this.SelectedIndex = index;
