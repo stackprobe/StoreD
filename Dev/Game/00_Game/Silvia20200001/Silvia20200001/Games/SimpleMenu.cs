@@ -17,6 +17,9 @@ namespace Charlotte.Games
 		private static int LastDrawProcFrame = -1;
 		private static double Shadow_W = 0.0;
 
+		private int ThisLastDrawProcFrame = -1;
+		private bool FirstTimeDraw = true;
+
 		public int SelectedIndex = 0;
 
 		private int FontSize;
@@ -25,10 +28,10 @@ namespace Charlotte.Games
 		private int Item_H;
 		private int Item_YStep;
 		private int Menu_W;
+		private string Title; // "" == タイトル無し
 		private string[] Items;
-		private bool FirstTimeDraw = true;
 
-		public SimpleMenu(int fontSize, int item_l, int itemYSpan, int menu_w, string[] items)
+		public SimpleMenu(int fontSize, int item_l, int itemYSpan, int menu_w, string title, string[] items)
 		{
 			if (fontSize < 20 || SCommon.IMAX < fontSize)
 				throw new Exception("Bad fontSize");
@@ -42,6 +45,9 @@ namespace Charlotte.Games
 			if (menu_w < 20 || GameConfig.ScreenSize.W < menu_w)
 				throw new Exception("Bad menu_w");
 
+			if (title == null)
+				throw new Exception("Bad title");
+
 			if (items == null || items.Length < 1 || items.Any(v => string.IsNullOrEmpty(v)))
 				throw new Exception("Bad items");
 
@@ -54,7 +60,11 @@ namespace Charlotte.Games
 			this.Item_H = item_h;
 			this.Item_YStep = item_yStep;
 			this.Menu_W = menu_w;
+			this.Title = title;
 			this.Items = items;
+
+			if (title != "") // ? タイトルあり -> タイトルの分アイテムを下へずらす。
+				this.FirstItem_T += item_yStep / 2;
 		}
 
 		/// <summary>
@@ -63,9 +73,6 @@ namespace Charlotte.Games
 		/// <returns>決定したか</returns>
 		public bool Draw()
 		{
-			bool firstTime = this.FirstTimeDraw;
-			this.FirstTimeDraw = false;
-
 			// メニュー離脱チェック
 			{
 				if (LastDrawProcFrame + 30 < DD.ProcFrame)
@@ -74,9 +81,21 @@ namespace Charlotte.Games
 				LastDrawProcFrame = DD.ProcFrame;
 			}
 
+			// このメニューからの離脱チェック
+			{
+				if (this.ThisLastDrawProcFrame + 30 < DD.ProcFrame)
+					this.FirstTimeDraw = true;
+
+				this.ThisLastDrawProcFrame = DD.ProcFrame;
+			}
+
 			DD.Approach(ref Shadow_W, this.Menu_W, 0.9);
 
+			bool firstTime = this.FirstTimeDraw;
+			this.FirstTimeDraw = false;
+
 			bool inputtedFlag = false;
+			bool mouseHoveringFlag = false;
 
 			if (Inputs.DIR_8.IsPound())
 			{
@@ -103,33 +122,32 @@ namespace Charlotte.Games
 
 			if (GameSetting.MouseEnabled)
 			{
-				if (inputtedFlag || firstTime) // ? キー・ボタン入力有り || 初回
+				if (inputtedFlag || firstTime)
 				{
-					const int MARGIN_L = 10;
-					const int MARGIN_B = 10;
+					const int BTN_RB_X = -10;
+					const int BTN_RB_Y = -10;
 
-					Mouse.SetMousePosition(
-						this.Menu_W - MARGIN_L,
-						this.FirstItem_T + this.SelectedIndex * this.Item_YStep + this.Item_H - MARGIN_B
-						);
+					Mouse.SetMousePosition(new I2Point(
+						this.Menu_W + BTN_RB_X,
+						this.FirstItem_T + this.SelectedIndex * this.Item_YStep + this.Item_H + BTN_RB_Y
+						));
 				}
-				else // ? キー・ボタン入力無し
-				{
-					for (int index = 0; index < this.Items.Length; index++)
-					{
-						if (Crash.IsCrashed_Rect_Point(
-							new I4Rect(0, this.FirstItem_T + index * this.Item_YStep, this.Menu_W, this.Item_H).ToD4Rect(),
-							new I2Point(Mouse.X, Mouse.Y).ToD2Point()
-							))
-						{
-							this.SelectedIndex = index;
 
-							if (Mouse.L.GetInput() == -1)
-							{
-								return true;
-							}
-							break;
+				for (int index = 0; index < this.Items.Length; index++)
+				{
+					if (Crash.IsCrashed_Rect_Point(
+						new I4Rect(0, this.FirstItem_T + index * this.Item_YStep, this.Menu_W, this.Item_H).ToD4Rect(),
+						new I2Point(Mouse.X, Mouse.Y).ToD2Point()
+						))
+					{
+						this.SelectedIndex = index;
+						mouseHoveringFlag = true;
+
+						if (Mouse.L.GetInput() == -1)
+						{
+							return true;
 						}
+						break;
 					}
 				}
 			}
@@ -140,14 +158,21 @@ namespace Charlotte.Games
 			DD.SetBright(BACK_COLOR.WithoutAlpha().ToD3Color());
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, Shadow_W, (double)GameConfig.ScreenSize.H));
 
+			if (this.Title != "") // ? タイトルあり
+			{
+				DD.SetPrint(this.Item_L, this.FirstItem_T - this.Item_YStep, 0, FONT_NAME, this.FontSize);
+				DD.Print(this.Title);
+			}
 			DD.SetPrint(this.Item_L, this.FirstItem_T, this.Item_YStep, FONT_NAME, this.FontSize);
 
 			for (int index = 0; index < this.Items.Length; index++)
 			{
-				if (index == this.SelectedIndex)
-					DD.Print("[>] ");
-				else
+				if (index != this.SelectedIndex)
 					DD.Print("[ ] ");
+				else if (GameSetting.MouseEnabled && !mouseHoveringFlag)
+					DD.Print("[-] ");
+				else
+					DD.Print("[>] ");
 
 				DD.PrintLine(this.Items[index]);
 			}

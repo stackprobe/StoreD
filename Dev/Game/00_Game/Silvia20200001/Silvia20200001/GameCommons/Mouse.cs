@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DxLibDLL;
 using Charlotte.Commons;
+using Charlotte.Drawings;
 
 namespace Charlotte.GameCommons
 {
@@ -76,21 +77,23 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// マウスカーソルの位置を強制的に移動する。
 		/// </summary>
-		/// <param name="x">X座標</param>
-		/// <param name="y">Y座標</param>
-		public static void SetMousePosition(int x, int y)
+		/// <param name="pt">新しい座標</param>
+		public static void SetMousePosition(I2Point pt)
 		{
-			x *= DD.MainScreenDrawRect.W;
-			x /= GameConfig.ScreenSize.W;
-			x += DD.MainScreenDrawRect.L;
-			y *= DD.MainScreenDrawRect.H;
-			y /= GameConfig.ScreenSize.H;
-			y += DD.MainScreenDrawRect.T;
+			X = pt.X;
+			Y = pt.Y;
 
-			x = SCommon.ToRange(x, 0, DD.RealScreenSize.W - 1);
-			y = SCommon.ToRange(y, 0, DD.RealScreenSize.H - 1);
+			X *= DD.MainScreenDrawRect.W;
+			X /= GameConfig.ScreenSize.W;
+			X += DD.MainScreenDrawRect.L;
+			Y *= DD.MainScreenDrawRect.H;
+			Y /= GameConfig.ScreenSize.H;
+			Y += DD.MainScreenDrawRect.T;
 
-			if (DX.SetMousePoint(x, y) != 0) // ? 失敗
+			X = SCommon.ToRange(X, 0, DD.RealScreenSize.W - 1);
+			Y = SCommon.ToRange(Y, 0, DD.RealScreenSize.H - 1);
+
+			if (DX.SetMousePoint(X, Y) != 0) // ? 失敗
 				throw new Exception("SetMousePoint failed");
 		}
 	}

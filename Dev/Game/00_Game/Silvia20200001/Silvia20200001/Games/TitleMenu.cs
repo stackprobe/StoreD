@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DxLibDLL;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
 
@@ -28,7 +29,7 @@ namespace Charlotte.Games
 				DD.Draw(Pictures.KAZUKIcghvbnkm, new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
 			};
 
-			SimpleMenu menu = new SimpleMenu(40, 40, 40, 440, new string[]
+			SimpleMenu menu = new SimpleMenu(40, 40, 40, 440, "", new string[]
 			{
 				"スタート",
 				"コンテニュー",
@@ -62,27 +63,97 @@ namespace Charlotte.Games
 						break;
 
 					case 2:
-						Run_Setting();
+						Setting();
 						break;
 
 					case 3:
-						return;
+						goto endOfMenu;
 
 					default:
-						throw new Exception("Bad SelectedIndex");
+						throw null; // never
 				}
+			}
+		endOfMenu:
+
+			DD.SetCurtainTarget(-1.0);
+			Music.Fadeout();
+
+			foreach (DD.Scene scene in DD.CreateScene(70))
+			{
+				DrawWall();
+				DD.EachFrame();
 			}
 		}
 
-		private static void Run_Setting()
+		private static void Setting()
 		{
-			SimpleMenu menu = new SimpleMenu(30, 30, 30, 550, new string[]
+			SimpleMenu menu = new SimpleMenu(30, 30, 30, 550, "設定", new string[]
 			{
 				"ゲームパッドのボタン設定",
 				"キーボードのキー設定",
 				"ウィンドウサイズ変更",
 				"ＢＭＧ音量",
 				"ＳＥ音量",
+				"マウスの使用／不使用",
+				"戻る",
+			});
+
+			for (; ; )
+			{
+				DD.FreezeInput();
+
+				for (; ; )
+				{
+					DrawWall();
+
+					if (menu.Draw())
+						break;
+
+					DD.EachFrame();
+				}
+				DD.FreezeInput();
+
+				switch (menu.SelectedIndex)
+				{
+					case 0:
+						throw null; // TODO
+						break;
+
+					case 1:
+						throw null; // TODO
+						break;
+
+					case 2:
+						throw null; // TODO
+						break;
+
+					case 3:
+						throw null; // TODO
+						break;
+
+					case 4:
+						throw null; // TODO
+						break;
+
+					case 5:
+						ChangeMouseEnabled();
+						break;
+
+					case 6:
+						return;
+
+					default:
+						throw null; // never
+				}
+			}
+		}
+
+		private static void ChangeMouseEnabled()
+		{
+			SimpleMenu menu = new SimpleMenu(30, 30, 30, 570, "マウスの使用／不使用の切り替え", new string[]
+			{
+				"マウスを使用する",
+				"マウスを使用しない",
 				"戻る",
 			});
 
@@ -102,30 +173,20 @@ namespace Charlotte.Games
 			switch (menu.SelectedIndex)
 			{
 				case 0:
-					throw null; // TODO
+					GameSetting.MouseEnabled = true;
+					DX.SetMouseDispFlag(1);
 					break;
 
 				case 1:
-					throw null; // TODO
+					GameSetting.MouseEnabled = false;
+					DX.SetMouseDispFlag(0);
 					break;
 
 				case 2:
-					throw null; // TODO
-					break;
-
-				case 3:
-					throw null; // TODO
-					break;
-
-				case 4:
-					throw null; // TODO
-					break;
-
-				case 5:
 					break;
 
 				default:
-					throw new Exception("Bad SelectedIndex");
+					throw null; // never
 			}
 		}
 	}

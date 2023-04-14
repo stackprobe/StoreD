@@ -158,7 +158,7 @@ namespace Charlotte.GameCommons
 
 		private IEnumerable<bool> E_Fadeout()
 		{
-			foreach (DD.Scene scene in DD.CreateScene(30))
+			foreach (DD.Scene scene in DD.CreateScene(60))
 			{
 				if (DX.ChangeVolumeSoundMem(DU.RateToByte(GameSetting.MusicVolume * (1.0 - scene.Rate)), this.GetHandle()) != 0) // ? 失敗
 					throw new Exception("ChangeVolumeSoundMem failed");
