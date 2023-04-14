@@ -129,16 +129,16 @@ namespace Charlotte.Games
 					const int BTN_RB_X = -10;
 					const int BTN_RB_Y = -10;
 
-					Mouse.SetMousePosition(new I2Point(
+					Mouse.Position = new I2Point(
 						this.Menu_W + BTN_RB_X,
 						this.FirstItem_T + this.SelectedIndex * this.Item_YStep + this.Item_H + BTN_RB_Y
-						));
+						);
 				}
 
 				for (int index = 0; index < this.Items.Length; index++)
 				{
 					if (Crash.IsCrashed_Circle_Rect(
-						new I2Point(Mouse.X, Mouse.Y).ToD2Point(),
+						Mouse.Position.ToD2Point(),
 						(double)this.MousePointMargin,
 						new I4Rect(0, this.FirstItem_T + index * this.Item_YStep, this.Menu_W, this.Item_H).ToD4Rect()
 						))

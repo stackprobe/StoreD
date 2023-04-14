@@ -36,8 +36,21 @@ namespace Charlotte.GameCommons
 		public static Button R = new Button();
 		public static Button M = new Button();
 
-		public static int X = 0;
-		public static int Y = 0;
+		private static int X = 0;
+		private static int Y = 0;
+
+		public static I2Point Position
+		{
+			get
+			{
+				return new I2Point(X, Y);
+			}
+
+			set
+			{
+				SetMousePosition(value);
+			}
+		}
 
 		public static void EachFrame()
 		{
@@ -74,11 +87,7 @@ namespace Charlotte.GameCommons
 			Y = SCommon.ToRange(Y, 0, GameConfig.ScreenSize.H - 1);
 		}
 
-		/// <summary>
-		/// マウスカーソルの位置を強制的に移動する。
-		/// </summary>
-		/// <param name="pt">新しい座標</param>
-		public static void SetMousePosition(I2Point pt)
+		private static void SetMousePosition(I2Point pt)
 		{
 			X = pt.X;
 			Y = pt.Y;
