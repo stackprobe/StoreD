@@ -124,7 +124,9 @@ namespace Charlotte.Games
 
 			if (GameSetting.MouseEnabled)
 			{
-				if (inputtedFlag || firstTime)
+				bool mouseIdling = 30 < Mouse.LastClickFrame;
+
+				if (inputtedFlag || (firstTime && mouseIdling))
 				{
 					const int BTN_RB_X = -10;
 					const int BTN_RB_Y = -10;
