@@ -102,9 +102,9 @@ namespace Charlotte.GameCommons
 		/// <param name="color">明度</param>
 		public static void SetBright(D3Color color)
 		{
-			DrawSetting.R = DU.RateToByte(color.R);
-			DrawSetting.G = DU.RateToByte(color.G);
-			DrawSetting.B = DU.RateToByte(color.B);
+			DrawSetting.R = DD.RateToByte(color.R);
+			DrawSetting.G = DD.RateToByte(color.G);
+			DrawSetting.B = DD.RateToByte(color.B);
 		}
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace Charlotte.GameCommons
 		/// <param name="a">不透明度</param>
 		public static void SetAlpha(double a)
 		{
-			DrawSetting.A = DU.RateToByte(a);
+			DrawSetting.A = DD.RateToByte(a);
 		}
 
 		/// <summary>
@@ -377,9 +377,9 @@ namespace Charlotte.GameCommons
 			private static void DrawString_Main(string line, int x, int y, I3Color color)
 			{
 				if (FontSize == -1)
-					DX.DrawString(x, y, line, DU.ToDXColor(color));
+					DX.DrawString(x, y, line, DD.ToDXColor(color));
 				else
-					DX.DrawStringToHandle(x, y, line, DU.ToDXColor(color), DU.GetFontHandle(FontName, FontSize), 0u, 0);
+					DX.DrawStringToHandle(x, y, line, DD.ToDXColor(color), DU.GetFontHandle(FontName, FontSize), 0u, 0);
 			}
 
 			private static int GetWidth(string line)
@@ -402,8 +402,8 @@ namespace Charlotte.GameCommons
 
 		public static void EachFrame()
 		{
-			DU.ExecuteTasks(DD.EL);
-			DU.ExecuteTasks(DD.TL);
+			DD.ExecuteTasks(DD.EL);
+			DD.ExecuteTasks(DD.TL);
 
 			DD.Curtain.EachFrame();
 			Music.EachFrame();
@@ -461,7 +461,7 @@ namespace Charlotte.GameCommons
 			DD.MainScreen.ChangeDrawScreenToThis();
 
 			ProcFrame++;
-			DU.Countdown(ref FreezeInputFrame);
+			DD.Countdown(ref FreezeInputFrame);
 			WindowIsActive = DX.GetActiveFlag() != 0;
 
 			if (SCommon.IMAX < ProcFrame) // 192.9 days limit
@@ -825,11 +825,114 @@ namespace Charlotte.GameCommons
 			return exterior;
 		}
 
+		public static IEnumerable<T> Reverse<T>(IList<T> list)
+		{
+			for (int index = list.Count - 1; 0 <= index; index--)
+			{
+				yield return list[index];
+			}
+		}
+
+		/// <summary>
+		/// レートを十億分率に変換する。
+		/// </summary>
+		/// <param name="rate">レート</param>
+		/// <returns>十億分率</returns>
+		public static int RateToPPB(double rate)
+		{
+			return SCommon.ToRange(SCommon.ToInt(rate * SCommon.IMAX), 0, SCommon.IMAX);
+		}
+
+		/// <summary>
+		/// 十億分率をレートに変換する。
+		/// </summary>
+		/// <param name="ppb">十億分率</param>
+		/// <returns>レート</returns>
+		public static double PPBToRate(int ppb)
+		{
+			return SCommon.ToRange((double)ppb / SCommon.IMAX, 0.0, 1.0);
+		}
+
+		/// <summary>
+		/// レートをバイト値(0～255)に変換する。
+		/// </summary>
+		/// <param name="rate">レート</param>
+		/// <returns>バイト値</returns>
+		public static int RateToByte(double rate)
+		{
+			return SCommon.ToRange(SCommon.ToInt(rate * 255.0), 0, 255);
+		}
+
+		/// <summary>
+		/// バイト値(0～255)をレートに変換する。
+		/// </summary>
+		/// <param name="value">バイト値</param>
+		/// <returns>レート</returns>
+		public static double ByteToRate(int value)
+		{
+			return SCommon.ToRange((double)value / 255.0, 0.0, 1.0);
+		}
+
+		public static uint ToDXColor(I3Color color)
+		{
+			return DX.GetColor(color.R, color.G, color.B);
+		}
+
 		public static void Approach(ref double value, double target, double rate)
 		{
 			value -= target;
 			value *= rate;
 			value += target;
+		}
+
+		public static void Countdown(ref int counter)
+		{
+			if (0 < counter)
+				counter--;
+			else if (counter < 0)
+				counter++;
+		}
+
+		/// <summary>
+		/// タスクリストを実行する。
+		/// -- リスト内全てのタスクを実行する。
+		/// -- 終了したタスクはリストから削除する。
+		/// タスクが偽を返したら終了と見なす。
+		/// このメソッド自体もタスクにできるよ。
+		/// </summary>
+		/// <param name="tasks">タスクリスト</param>
+		/// <returns>タスクがあったか(タスクを実行したか)</returns>
+		public static bool ExecuteTasks(List<Func<bool>> tasks)
+		{
+			if (tasks.Count == 0)
+				return false;
+
+			for (int index = 0; index < tasks.Count; index++)
+				if (!tasks[index]())
+					tasks[index] = null;
+
+			tasks.RemoveAll(v => v == null);
+			return true;
+		}
+
+		/// <summary>
+		/// タスクシーケンスを実行する。
+		/// -- リストの先頭のタスクのみ実行する。
+		/// -- 終了したタスクはリストから削除する。
+		/// タスクが偽を返したら終了と見なす。
+		/// このメソッド自体もタスクにできるよ。
+		/// </summary>
+		/// <param name="tasks">タスクシーケンス</param>
+		/// <returns>タスクがあったか(タスクを実行したか)</returns>
+		public static bool ExecuteTaskSequence(LinkedList<Func<bool>> tasks)
+		{
+			if (tasks.Count == 0)
+				return false;
+
+			if (!tasks.First.Value())
+				tasks.RemoveFirst();
+
+			return true;
 		}
 	}
 }

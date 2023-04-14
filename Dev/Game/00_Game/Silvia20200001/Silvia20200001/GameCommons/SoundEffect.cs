@@ -81,7 +81,7 @@ namespace Charlotte.GameCommons
 			{
 				// HACK: 再生中にアンロードされることを想定していない。
 
-				foreach (HandleInfo handle in DU.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
+				foreach (HandleInfo handle in DD.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
 					if (DX.DeleteSoundMem(handle.Value) != 0) // ? 失敗
 						throw new Exception("DeleteSoundMem failed");
 
@@ -168,7 +168,7 @@ namespace Charlotte.GameCommons
 
 		private static void ChangeVolumeIfNeeded(HandleInfo handle)
 		{
-			int volume = DU.RateToByte(GameSetting.SEVolume);
+			int volume = DD.RateToByte(GameSetting.SEVolume);
 
 			if (handle.LastVolume != volume) // ? 前回の音量と違う -> 音量が変更されたので、新しい音量を適用する。
 			{

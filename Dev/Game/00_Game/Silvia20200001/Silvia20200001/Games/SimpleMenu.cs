@@ -173,7 +173,7 @@ namespace Charlotte.Games
 				if (index != this.SelectedIndex)
 					DD.Print("[ ] ");
 				else if (GameSetting.MouseEnabled && !mouseHoveringFlag)
-					DD.Print("[-] ");
+					DD.Print("[=] ");
 				else
 					DD.Print("[>] ");
 

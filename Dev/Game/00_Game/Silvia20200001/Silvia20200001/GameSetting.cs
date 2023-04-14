@@ -33,8 +33,8 @@ namespace Charlotte
 			dest.Add(UserScreenSize.H);
 			dest.Add(FullScreen);
 			dest.Add(MouseEnabled);
-			dest.Add(DU.RateToPPB(MusicVolume));
-			dest.Add(DU.RateToPPB(SEVolume));
+			dest.Add(DD.RateToPPB(MusicVolume));
+			dest.Add(DD.RateToPPB(SEVolume));
 
 			// ---- このクラス内の項目ここまで ----
 
@@ -67,8 +67,8 @@ namespace Charlotte
 			UserScreenSize.H = SCommon.ToRange(int.Parse(src[c++]), 1, SCommon.IMAX);
 			FullScreen = bool.Parse(src[c++]);
 			MouseEnabled = bool.Parse(src[c++]);
-			MusicVolume = DU.PPBToRate(int.Parse(src[c++]));
-			SEVolume = DU.PPBToRate(int.Parse(src[c++]));
+			MusicVolume = DD.PPBToRate(int.Parse(src[c++]));
+			SEVolume = DD.PPBToRate(int.Parse(src[c++]));
 
 			// ---- このクラス内の項目ここまで ----
 
