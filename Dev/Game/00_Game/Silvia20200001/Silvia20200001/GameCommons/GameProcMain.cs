@@ -205,7 +205,7 @@ namespace Charlotte.GameCommons
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0); // ウィンドウの右下をドラッグでサイズ変更/1:する/0:しない
-			DX.SetMouseDispFlag(GameSetting.MouseEnabled ? 1 : 0); // マウスカーソルを表示/1:する/0:しない
+			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0); // マウスカーソルを表示/1:する/0:しない
 
 			// DXLib 初期化 ここまで
 
@@ -255,7 +255,7 @@ namespace Charlotte.GameCommons
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0);
-			DX.SetMouseDispFlag(GameSetting.MouseEnabled ? 1 : 0);
+			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0);
 
 			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
 			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;

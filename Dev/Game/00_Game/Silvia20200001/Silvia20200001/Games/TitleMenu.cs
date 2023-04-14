@@ -154,6 +154,7 @@ namespace Charlotte.Games
 			{
 				"マウスを使用する",
 				"マウスを使用しない",
+				"マウスカーソルを表示しない",
 				"戻る",
 			});
 
@@ -173,21 +174,28 @@ namespace Charlotte.Games
 			switch (menu.SelectedIndex)
 			{
 				case 0:
+					GameSetting.MouseCursorShow = true;
 					GameSetting.MouseEnabled = true;
-					DX.SetMouseDispFlag(1);
 					break;
 
 				case 1:
+					GameSetting.MouseCursorShow = true;
 					GameSetting.MouseEnabled = false;
-					DX.SetMouseDispFlag(0);
 					break;
 
 				case 2:
+					GameSetting.MouseCursorShow = false;
+					GameSetting.MouseEnabled = false;
+					break;
+
+				case 3:
 					break;
 
 				default:
 					throw null; // never
 			}
+
+			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0);
 		}
 	}
 }
