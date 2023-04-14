@@ -36,11 +36,14 @@ namespace Charlotte.GameCommons
 		private PictureDataInfo PictureData = null;
 
 		/// <summary>
-		/// リソースから画像をロードする。
+		/// リソースから画像を作成する。
 		/// </summary>
 		/// <param name="resPath">リソースのパス</param>
 		public Picture(string resPath)
 		{
+			if (string.IsNullOrEmpty(resPath))
+				throw new Exception("Bad resPath");
+
 			this.PictureDataGetter = () => DU.GetPictureData(DD.GetResFileData(resPath));
 			this.HandleUnloader = handle =>
 			{
@@ -52,7 +55,26 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
-		/// アンロード不要な画像をロードする。
+		/// ローダーを指定して画像を作成する。
+		/// </summary>
+		/// <param name="loader">ローダー</param>
+		public Picture(Func<PictureDataInfo> loader)
+		{
+			if (loader == null)
+				throw new Exception("Bad loader");
+
+			this.PictureDataGetter = loader;
+			this.HandleUnloader = handle =>
+			{
+				if (DX.DeleteGraph(handle) != 0) // ? 失敗
+					throw new Exception("DeleteGraph failed");
+			};
+
+			Instances.Add(this);
+		}
+
+		/// <summary>
+		/// アンロード不要な画像を作成する。
 		/// </summary>
 		/// <param name="w">幅</param>
 		/// <param name="h">高さ</param>
