@@ -63,6 +63,9 @@ namespace Charlotte.GameCommons
 					throw new Exception("DeleteGraph failed");
 
 				this.Handle = -1;
+
+				if (this.Picture != null)
+					this.Picture.Unload();
 			}
 		}
 

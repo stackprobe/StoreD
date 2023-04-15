@@ -22,6 +22,9 @@ namespace Charlotte.Games
 
 		public int SelectedIndex = 0;
 
+		public bool NoPound = false;
+		public bool CancelByPause = false;
+
 		private int FontSize;
 		private int Item_L;
 		private int FirstItem_T;
@@ -29,7 +32,7 @@ namespace Charlotte.Games
 		private int Item_YStep;
 		private int Menu_W;
 		private int MousePointMargin;
-		private string Title; // "" == タイトル無し
+		private string Title; // null == タイトル無し
 		private string[] Items;
 
 		public SimpleMenu(int fontSize, int item_l, int itemYSpan, int menu_w, string title, string[] items)
@@ -46,7 +49,7 @@ namespace Charlotte.Games
 			if (menu_w < 20 || GameConfig.ScreenSize.W < menu_w)
 				throw new Exception("Bad menu_w");
 
-			if (title == null)
+			if (title == "")
 				throw new Exception("Bad title");
 
 			if (items == null || items.Length < 1 || items.Any(v => string.IsNullOrEmpty(v)))
@@ -65,7 +68,7 @@ namespace Charlotte.Games
 			this.Title = title;
 			this.Items = items;
 
-			if (title != "") // ? タイトル有り -> タイトルの分アイテムを下へずらす。
+			if (title != null) // ? タイトル有り -> タイトルの分アイテムを下へずらす。
 				this.FirstItem_T += item_yStep / 2;
 		}
 
@@ -99,12 +102,12 @@ namespace Charlotte.Games
 			bool inputtedFlag = false;
 			bool mouseHoveringFlag = false;
 
-			if (Inputs.DIR_8.IsPound())
+			if (this.NoPound ? Inputs.DIR_8.GetInput() == 1 : Inputs.DIR_8.IsPound())
 			{
 				this.SelectedIndex = (this.SelectedIndex + this.Items.Length - 1) % this.Items.Length;
 				inputtedFlag = true;
 			}
-			if (Inputs.DIR_2.IsPound())
+			if (this.NoPound ? Inputs.DIR_2.GetInput() == 1 : Inputs.DIR_2.IsPound())
 			{
 				this.SelectedIndex = (this.SelectedIndex + 1) % this.Items.Length;
 				inputtedFlag = true;
@@ -120,6 +123,11 @@ namespace Charlotte.Games
 
 				this.SelectedIndex = this.Items.Length - 1;
 				inputtedFlag = true;
+			}
+			if (this.CancelByPause && Inputs.PAUSE.GetInput() == 1)
+			{
+				this.SelectedIndex = this.Items.Length - 1;
+				return true;
 			}
 
 			if (GameSetting.MouseEnabled)
@@ -163,7 +171,7 @@ namespace Charlotte.Games
 			DD.SetBright(BACK_COLOR.WithoutAlpha().ToD3Color());
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, Shadow_W, (double)GameConfig.ScreenSize.H));
 
-			if (this.Title != "") // ? タイトル有り
+			if (this.Title != null) // ? タイトル有り
 			{
 				DD.SetPrint(this.Item_L, this.FirstItem_T - this.Item_YStep, 0, FONT_NAME, this.FontSize);
 				DD.Print(this.Title);

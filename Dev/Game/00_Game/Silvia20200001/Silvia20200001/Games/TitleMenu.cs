@@ -29,7 +29,7 @@ namespace Charlotte.Games
 				DD.Draw(Pictures.KAZUKIcghvbnkm, new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
 			};
 
-			SimpleMenu menu = new SimpleMenu(40, 40, 40, 440, "", new string[]
+			SimpleMenu menu = new SimpleMenu(40, 40, 40, 440, null, new string[]
 			{
 				"スタート",
 				"コンテニュー",
