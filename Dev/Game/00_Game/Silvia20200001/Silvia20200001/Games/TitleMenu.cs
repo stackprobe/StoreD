@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DxLibDLL;
+using Charlotte.Commons;
 using Charlotte.Drawings;
 using Charlotte.GameCommons;
 
@@ -172,7 +173,12 @@ namespace Charlotte.Games
 
 		private static void CustomizeKeyboard()
 		{
-			throw new NotImplementedException();
+			// TODO
+			// TODO
+			// TODO
+
+			foreach (string name in DU.GetKeyboardKeyNames())
+				ProcMain.WriteLog(name);
 		}
 
 		private static void ChangeWindowSize()

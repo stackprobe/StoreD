@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
+using System.Reflection;
 
 namespace Charlotte.GameCommons
 {
@@ -428,6 +429,33 @@ namespace Charlotte.GameCommons
 				}
 			}
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+		}
+
+		private class KeyboardKeyInfo
+		{
+			public string Name;
+			public int Value;
+		}
+
+		private static KeyboardKeyInfo[] GetKeyboardKeys()
+		{
+			return typeof(DX).GetFields(BindingFlags.Public | BindingFlags.Static)
+				.Where(field => field.IsLiteral && !field.IsInitOnly && field.Name.StartsWith("KEY_INPUT_"))
+				.Select(field => new KeyboardKeyInfo() { Name = field.Name.Substring(10), Value = (int)field.GetValue(null) })
+				.ToArray();
+		}
+
+		public static string[] GetKeyboardKeyNames()
+		{
+			string[] names = new string[Keyboard.KEY_MAX];
+
+			for (int index = 0; index < Keyboard.KEY_MAX; index++)
+				names[index] = "KEYCODE(" + index + ")";
+
+			foreach (KeyboardKeyInfo info in GetKeyboardKeys())
+				names[info.Value] = info.Name;
+
+			return names;
 		}
 	}
 }
