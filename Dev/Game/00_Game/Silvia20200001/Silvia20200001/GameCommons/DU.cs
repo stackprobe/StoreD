@@ -14,7 +14,7 @@ namespace Charlotte.GameCommons
 	/// <summary>
 	/// この名前空間内で使用される共通機能・便利機能をこのクラスに集約する。
 	/// </summary>
-	public class DU
+	public static class DU
 	{
 		public class CoffeeBreak : Exception
 		{ }

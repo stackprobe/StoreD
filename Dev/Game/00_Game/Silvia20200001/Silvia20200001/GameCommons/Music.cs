@@ -7,15 +7,15 @@ using Charlotte.Commons;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// 音楽リソース
+	/// このクラスのインスタンスはプロセスで有限個であること。
+	/// 原則的に以下のクラスの静的フィールドとして植え込むこと。
+	/// -- Musics
+	/// </summary>
 	public class Music
 	{
 		private static List<Music> Instances = new List<Music>();
-
-		public static void TouchAll()
-		{
-			foreach (Music instance in Instances)
-				instance.GetHandle();
-		}
 
 		/// <summary>
 		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。

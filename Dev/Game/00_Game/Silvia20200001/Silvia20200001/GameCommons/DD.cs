@@ -505,6 +505,9 @@ namespace Charlotte.GameCommons
 
 		public static void SetRealScreenSize(int w, int h)
 		{
+			if (DD.RealScreenSize.W == w && DD.RealScreenSize.H == h) // ? 今のサイズと同じ
+				return;
+
 			DD.TargetMonitor = DU.GetTargetMonitor();
 			DD.SetLibbon("ゲーム画面のサイズと位置を調整しています...");
 

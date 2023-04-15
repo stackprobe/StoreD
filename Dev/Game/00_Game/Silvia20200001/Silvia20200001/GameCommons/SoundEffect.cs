@@ -7,15 +7,15 @@ using Charlotte.Commons;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// 効果音リソース
+	/// このクラスのインスタンスはプロセスで有限個であること。
+	/// 原則的に以下のクラスの静的フィールドとして植え込むこと。
+	/// -- SoundEffects
+	/// </summary>
 	public class SoundEffect
 	{
 		private static List<SoundEffect> Instances = new List<SoundEffect>();
-
-		public static void TouchAll()
-		{
-			foreach (SoundEffect instance in Instances)
-				instance.LoadIfNeeded();
-		}
 
 		/// <summary>
 		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。

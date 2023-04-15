@@ -236,7 +236,7 @@ namespace Charlotte.GameCommons
 
 		/// <summary>
 		/// ゲーム画面サイズを変更する。
-		/// 以下を経由して呼び出すこと。
+		/// このクラス以外からは以下を経由して呼び出すこと。
 		/// -- DD.SetRealScreenSize()
 		/// </summary>
 		/// <param name="w">幅</param>

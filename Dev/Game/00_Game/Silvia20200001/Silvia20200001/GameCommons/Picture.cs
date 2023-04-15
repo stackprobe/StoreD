@@ -7,15 +7,15 @@ using Charlotte.Commons;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// 画像リソース
+	/// このクラスのインスタンスはプロセスで有限個であること。
+	/// 原則的に以下のクラスの静的フィールドとして植え込むこと。
+	/// -- Pictures
+	/// </summary>
 	public class Picture
 	{
 		private static List<Picture> Instances = new List<Picture>();
-
-		public static void TouchAll()
-		{
-			foreach (Picture instance in Instances)
-				instance.GetHandle();
-		}
 
 		public static void UnloadAll()
 		{
@@ -41,9 +41,6 @@ namespace Charlotte.GameCommons
 		/// <param name="resPath">リソースのパス</param>
 		public Picture(string resPath)
 		{
-			if (string.IsNullOrEmpty(resPath))
-				throw new Exception("Bad resPath");
-
 			this.PictureDataGetter = () => DU.GetPictureData(DD.GetResFileData(resPath));
 			this.HandleUnloader = handle =>
 			{
@@ -60,9 +57,6 @@ namespace Charlotte.GameCommons
 		/// <param name="loader">ローダー</param>
 		public Picture(Func<PictureDataInfo> loader)
 		{
-			if (loader == null)
-				throw new Exception("Bad loader");
-
 			this.PictureDataGetter = loader;
 			this.HandleUnloader = handle =>
 			{

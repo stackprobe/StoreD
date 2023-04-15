@@ -36,12 +36,31 @@ namespace Charlotte.GameCommons
 			if (value == 0 && Pad.PrimaryPad != -1)
 				value = Pad.GetInput(Pad.PrimaryPad, this.Button);
 
-			return value;
+			if (this.FreezeInputUntilReleaseFlag)
+			{
+				if (value == 0)
+					this.FreezeInputUntilReleaseFlag = false;
+				else
+					value = 0;
+			}
+			return 1 <= DD.FreezeInputFrame ? 0 : value;
 		}
 
 		public bool IsPound()
 		{
 			return DU.IsPound(this.GetInput());
+		}
+
+		private bool FreezeInputUntilReleaseFlag = false;
+
+		public void FreezeInputUntilRelease()
+		{
+			this.FreezeInputUntilReleaseFlag = true;
+		}
+
+		public void UnfreezeInputUntilRelease()
+		{
+			this.FreezeInputUntilReleaseFlag = false;
 		}
 	}
 }

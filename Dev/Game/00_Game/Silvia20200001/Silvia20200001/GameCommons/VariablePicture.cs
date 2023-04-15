@@ -11,18 +11,23 @@ using Charlotte.Drawings;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// 編集可能な画像リソース
+	/// このクラスのインスタンスはプロセスで有限個であること。
+	/// 原則的に任意のクラスの静的フィールドとして植え込むこと。
+	/// </summary>
 	public class VariablePicture
 	{
-		private string _imageFile = null;
+		private string P_ImageFile = null;
 
 		private string ImageFile
 		{
 			get
 			{
-				if (_imageFile == null)
-					_imageFile = new WorkingDir().MakePath() + ".png";
+				if (this.P_ImageFile == null)
+					this.P_ImageFile = new WorkingDir().MakePath() + ".png";
 
-				return _imageFile;
+				return this.P_ImageFile;
 			}
 		}
 

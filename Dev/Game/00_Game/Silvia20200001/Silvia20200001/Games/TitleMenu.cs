@@ -55,11 +55,11 @@ namespace Charlotte.Games
 				switch (menu.SelectedIndex)
 				{
 					case 0:
-						throw null; // TODO
+						StartTheGame();
 						break;
 
 					case 1:
-						throw null; // TODO
+						ContinueTheGame();
 						break;
 
 					case 2:
@@ -85,9 +85,19 @@ namespace Charlotte.Games
 			}
 		}
 
+		private static void StartTheGame()
+		{
+			// none
+		}
+
+		private static void ContinueTheGame()
+		{
+			// none
+		}
+
 		private static void Setting()
 		{
-			SimpleMenu menu = new SimpleMenu(30, 40, 30, 550, "設定", new string[]
+			SimpleMenu menu = new SimpleMenu(30, 40, 30, 540, "設定", new string[]
 			{
 				"ゲームパッドのボタン設定",
 				"キーボードのキー設定",
@@ -116,11 +126,11 @@ namespace Charlotte.Games
 				switch (menu.SelectedIndex)
 				{
 					case 0:
-						throw null; // TODO
+						CustomizePad();
 						break;
 
 					case 1:
-						throw null; // TODO
+						CustomizeKeyboard();
 						break;
 
 					case 2:
@@ -128,11 +138,11 @@ namespace Charlotte.Games
 						break;
 
 					case 3:
-						throw null; // TODO
+						ChangeMusicVolume();
 						break;
 
 					case 4:
-						throw null; // TODO
+						ChangeSEVolume();
 						break;
 
 					case 5:
@@ -146,6 +156,16 @@ namespace Charlotte.Games
 						throw null; // never
 				}
 			}
+		}
+
+		private static void CustomizePad()
+		{
+			throw new NotImplementedException();
+		}
+
+		private static void CustomizeKeyboard()
+		{
+			throw new NotImplementedException();
 		}
 
 		private static void ChangeWindowSize()
@@ -211,6 +231,16 @@ namespace Charlotte.Games
 					throw null; // never
 				}
 			}
+		}
+
+		private static void ChangeMusicVolume()
+		{
+			throw new NotImplementedException();
+		}
+
+		private static void ChangeSEVolume()
+		{
+			throw new NotImplementedException();
 		}
 
 		private static void ChangeMouseEnabled()

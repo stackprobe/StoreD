@@ -65,7 +65,7 @@ namespace Charlotte.Games
 			this.Title = title;
 			this.Items = items;
 
-			if (title != "") // ? タイトルあり -> タイトルの分アイテムを下へずらす。
+			if (title != "") // ? タイトル有り -> タイトルの分アイテムを下へずらす。
 				this.FirstItem_T += item_yStep / 2;
 		}
 
@@ -163,7 +163,7 @@ namespace Charlotte.Games
 			DD.SetBright(BACK_COLOR.WithoutAlpha().ToD3Color());
 			DD.Draw(Pictures.WhiteBox, new D4Rect(0.0, 0.0, Shadow_W, (double)GameConfig.ScreenSize.H));
 
-			if (this.Title != "") // ? タイトルあり
+			if (this.Title != "") // ? タイトル有り
 			{
 				DD.SetPrint(this.Item_L, this.FirstItem_T - this.Item_YStep, 0, FONT_NAME, this.FontSize);
 				DD.Print(this.Title);
@@ -175,7 +175,7 @@ namespace Charlotte.Games
 				if (index != this.SelectedIndex)
 					DD.Print("[ ] ");
 				else if (GameSetting.MouseEnabled && !mouseHoveringFlag)
-					DD.Print("[=] ");
+					DD.Print("[-] ");
 				else
 					DD.Print("[>] ");
 

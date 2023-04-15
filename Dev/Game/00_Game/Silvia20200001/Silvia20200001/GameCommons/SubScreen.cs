@@ -8,6 +8,11 @@ using Charlotte.Drawings;
 
 namespace Charlotte.GameCommons
 {
+	/// <summary>
+	/// スクリーン
+	/// このクラスのインスタンスはプロセスで有限個であること。
+	/// 原則的に任意のクラスの静的フィールドとして植え込むこと。
+	/// </summary>
 	public class SubScreen
 	{
 		private static List<SubScreen> Instances = new List<SubScreen>();
