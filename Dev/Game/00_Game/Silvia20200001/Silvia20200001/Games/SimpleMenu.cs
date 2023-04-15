@@ -20,9 +20,22 @@ namespace Charlotte.Games
 		private int ThisLastDrawProcFrame = -1;
 		private bool FirstTimeDraw = true;
 
+		/// <summary>
+		/// 選択中の項目のインデックス
+		/// 設定・参照用
+		/// </summary>
 		public int SelectedIndex = 0;
 
+		/// <summary>
+		/// ポーズ画面向け
+		/// 設定用
+		/// </summary>
 		public bool NoPound = false;
+
+		/// <summary>
+		/// ポーズ画面向け
+		/// 設定用
+		/// </summary>
 		public bool CancelByPause = false;
 
 		private int FontSize;
@@ -35,6 +48,15 @@ namespace Charlotte.Games
 		private string Title; // null == タイトル無し
 		private string[] Items;
 
+		/// <summary>
+		/// メニューを作成する。
+		/// </summary>
+		/// <param name="fontSize">フォントサイズ</param>
+		/// <param name="item_l">項目の表示位置(左座標)</param>
+		/// <param name="itemYSpan">項目の縦間隔</param>
+		/// <param name="menu_w">メニューの幅</param>
+		/// <param name="title">タイトル(null:タイトル無し)</param>
+		/// <param name="items">項目の配列</param>
 		public SimpleMenu(int fontSize, int item_l, int itemYSpan, int menu_w, string title, string[] items)
 		{
 			if (fontSize < 20 || SCommon.IMAX < fontSize)
@@ -73,7 +95,7 @@ namespace Charlotte.Games
 		}
 
 		/// <summary>
-		/// メニューを描画する。
+		/// メニューの処理と描画をする。
 		/// </summary>
 		/// <returns>決定したか</returns>
 		public bool Draw()
@@ -124,7 +146,7 @@ namespace Charlotte.Games
 				this.SelectedIndex = this.Items.Length - 1;
 				inputtedFlag = true;
 			}
-			if (this.CancelByPause && Inputs.PAUSE.GetInput() == 1)
+			if (Inputs.PAUSE.GetInput() == 1 && this.CancelByPause)
 			{
 				this.SelectedIndex = this.Items.Length - 1;
 				return true;
