@@ -435,9 +435,9 @@ namespace Charlotte.GameCommons
 				throw new DU.CoffeeBreak();
 			}
 
-			// ALT + ENTER -> フルスクリーンの切り替え
+			// F11キー押下 -> フルスクリーンの切り替え
 			//
-			if ((1 <= Keyboard.GetInput(DX.KEY_INPUT_LALT) || 1 <= Keyboard.GetInput(DX.KEY_INPUT_RALT)) && Keyboard.GetInput(DX.KEY_INPUT_RETURN) == 1)
+			if (Keyboard.GetInput(DX.KEY_INPUT_F11) == 1)
 			{
 				// ? 現在フルスクリーン -> フルスクリーン解除
 				if (
@@ -453,7 +453,6 @@ namespace Charlotte.GameCommons
 					DD.SetRealScreenSize(DD.TargetMonitor.W, DD.TargetMonitor.H);
 					GameSetting.FullScreen = true;
 				}
-				DD.FreezeInput(30); // エンターキー押下がゲームに影響しないように
 			}
 
 			SCommon.Swap(ref DD.MainScreen, ref DD.LastMainScreen);
