@@ -534,11 +534,11 @@ namespace Charlotte.GameCommons
 			Curtain.NextWhiteLevels.Clear();
 		}
 
-		public static void SetCurtainTarget(double destWhiteLevel)
+		public static void SetCurtainTarget(double destWhiteLevel, int frameMax = 30)
 		{
 			Curtain.NextWhiteLevels.Clear();
 
-			foreach (Scene scene in Scene.Create(30))
+			foreach (Scene scene in Scene.Create(frameMax))
 			{
 				Curtain.NextWhiteLevels.Enqueue(DD.AToBRate(Curtain.CurrWhiteLevel, destWhiteLevel, scene.Rate));
 			}

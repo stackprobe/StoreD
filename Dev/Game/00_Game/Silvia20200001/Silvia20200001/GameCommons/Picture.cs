@@ -17,6 +17,12 @@ namespace Charlotte.GameCommons
 	{
 		private static List<Picture> Instances = new List<Picture>();
 
+		public static void TouchAll()
+		{
+			foreach (Picture instance in Instances)
+				instance.GetHandle();
+		}
+
 		public static void UnloadAll()
 		{
 			foreach (Picture instance in Instances)

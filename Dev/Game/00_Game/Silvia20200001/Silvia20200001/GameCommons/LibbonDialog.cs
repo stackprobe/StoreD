@@ -48,6 +48,8 @@ namespace Charlotte.GameCommons
 		private static I4Rect P_TargetMonitor;
 		private static string P_Message;
 
+		public static bool ShowingFlag = false;
+
 		/// <summary>
 		/// メッセージの表示・非表示を行う。
 		/// 以下を経由して呼び出すこと。
@@ -64,6 +66,11 @@ namespace Charlotte.GameCommons
 			}
 
 			MainThStandby.Set();
+
+			if (!string.IsNullOrEmpty(message)) // ? メッセージ有り -> 表示処理を行う想定
+			{
+				ShowingFlag = true;
+			}
 		}
 
 		private static EventWaitHandle EvShowed = new EventWaitHandle(false, EventResetMode.AutoReset);
@@ -89,7 +96,7 @@ namespace Charlotte.GameCommons
 
 					P_Close();
 
-					if (!string.IsNullOrEmpty(message))
+					if (!string.IsNullOrEmpty(message)) // ? メッセージ有り -> 表示処理を行う。
 					{
 						DD.RunOnUIThread(() =>
 						{
@@ -101,7 +108,11 @@ namespace Charlotte.GameCommons
 
 						EvShowed.WaitOne();
 
-						Thread.Sleep(500); // リボンの最短表示時間待ち
+						Thread.Sleep(1000); // リボンの最短表示時間待ち
+					}
+					else // ? メッセージ無し -> 非表示のまま
+					{
+						ShowingFlag = false;
 					}
 				}
 

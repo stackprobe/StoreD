@@ -17,6 +17,12 @@ namespace Charlotte.GameCommons
 	{
 		private static List<SoundEffect> Instances = new List<SoundEffect>();
 
+		public static void TouchAll()
+		{
+			foreach (SoundEffect instance in Instances)
+				instance.LoadIfNeeded();
+		}
+
 		/// <summary>
 		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
 		/// </summary>

@@ -18,14 +18,14 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static IEnumerable<Scene> Create(int denom)
+		public static IEnumerable<Scene> Create(int frameMax)
 		{
-			for (int numer = 0; numer <= denom; numer++)
+			for (int frame = 0; frame <= frameMax; frame++)
 			{
 				yield return new Scene()
 				{
-					Numer = numer,
-					Denom = denom,
+					Numer = frame,
+					Denom = frameMax,
 				};
 			}
 		}

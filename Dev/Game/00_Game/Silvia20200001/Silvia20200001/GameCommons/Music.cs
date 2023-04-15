@@ -17,6 +17,12 @@ namespace Charlotte.GameCommons
 	{
 		private static List<Music> Instances = new List<Music>();
 
+		public static void TouchAll()
+		{
+			foreach (Music instance in Instances)
+				instance.GetHandle();
+		}
+
 		/// <summary>
 		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
 		/// </summary>
@@ -129,11 +135,11 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static void Fadeout()
+		public static void Fadeout(int frameMax = 60)
 		{
 			if (Playing != null)
 			{
-				TaskSequence.AddLast(SCommon.Supplier(Playing.E_Fadeout()));
+				TaskSequence.AddLast(SCommon.Supplier(Playing.E_Fadeout(frameMax)));
 				Playing = null;
 			}
 		}
@@ -156,9 +162,9 @@ namespace Charlotte.GameCommons
 				throw new Exception("ChangeVolumeSoundMem failed");
 		}
 
-		private IEnumerable<bool> E_Fadeout()
+		private IEnumerable<bool> E_Fadeout(int frameMax)
 		{
-			foreach (Scene scene in Scene.Create(60))
+			foreach (Scene scene in Scene.Create(frameMax))
 			{
 				if (DX.ChangeVolumeSoundMem(DD.RateToByte(GameSetting.MusicVolume * (1.0 - scene.Rate)), this.GetHandle()) != 0) // ? 失敗
 					throw new Exception("ChangeVolumeSoundMem failed");

@@ -76,9 +76,9 @@ namespace Charlotte.Games
 		endOfMenu:
 
 			DD.SetCurtainTarget(-1.0);
-			Music.Fadeout();
+			Music.Fadeout(30);
 
-			foreach (Scene scene in Scene.Create(70))
+			foreach (Scene scene in Scene.Create(40))
 			{
 				DrawWall();
 				DD.EachFrame();

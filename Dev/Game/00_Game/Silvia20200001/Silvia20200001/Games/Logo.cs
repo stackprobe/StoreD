@@ -12,6 +12,16 @@ namespace Charlotte.Games
 	{
 		public static void Run()
 		{
+			while (LibbonDialog.ShowingFlag)
+			{
+				DD.DrawCurtain(-1.0);
+				DD.EachFrame();
+			}
+			foreach (Scene scene in Scene.Create(30))
+			{
+				DD.DrawCurtain(-1.0);
+				DD.EachFrame();
+			}
 			double z1 = 0.3;
 			double z2 = 2.0;
 			double z3 = 3.7;
@@ -79,7 +89,13 @@ namespace Charlotte.Games
 
 		private static void Touch()
 		{
-			// none
+			Musics.TOUCH_HANDLE.GetType();
+			Pictures.TOUCH_HANDLE.GetType();
+			SoundEffects.TOUCH_HANDLE.GetType();
+
+			Music.TouchAll();
+			Picture.TouchAll();
+			SoundEffect.TouchAll();
 		}
 	}
 }
