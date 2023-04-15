@@ -140,7 +140,7 @@ namespace Charlotte.GameCommons
 			}
 			else
 			{
-				logSaveDir = new WorkingDir().GetPath(".");
+				logSaveDir = DU.WD.GetPath(".");
 				logFile = Path.Combine(ProcMain.SelfDir, "Game.log");
 				saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
 			}
@@ -242,7 +242,7 @@ namespace Charlotte.GameCommons
 		/// <param name="h">高さ</param>
 		public static void SetRealScreenSize(int w, int h)
 		{
-			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+			DU.StoreAllSubScreen();
 
 			Picture.UnloadAll();
 			SubScreen.UnloadAll();
@@ -255,6 +255,8 @@ namespace Charlotte.GameCommons
 			DX.SetDrawMode(DX.DX_DRAWMODE_ANISOTROPIC);
 			DX.SetWindowSizeChangeEnableFlag(0);
 			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0);
+
+			DU.RestoreAllSubScreen();
 
 			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
 			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;

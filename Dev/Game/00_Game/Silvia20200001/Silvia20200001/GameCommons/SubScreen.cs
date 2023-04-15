@@ -90,5 +90,17 @@ namespace Charlotte.GameCommons
 
 			return this.Picture;
 		}
+
+		public bool IsLoaded()
+		{
+			return this.Handle != -1;
+		}
+
+		public static IEnumerable<SubScreen> GetAllSubScreen()
+		{
+			return Instances;
+		}
+
+		public object StoredData = null;
 	}
 }

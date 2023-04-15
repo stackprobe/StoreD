@@ -18,16 +18,16 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public class VariablePicture
 	{
-		private string P_ImageFile = null;
+		private string _imageFile = null;
 
 		private string ImageFile
 		{
 			get
 			{
-				if (this.P_ImageFile == null)
-					this.P_ImageFile = new WorkingDir().MakePath() + ".png";
+				if (_imageFile == null)
+					_imageFile = DU.WD.MakePath() + ".png";
 
-				return this.P_ImageFile;
+				return _imageFile;
 			}
 		}
 
@@ -68,17 +68,15 @@ namespace Charlotte.GameCommons
 		/// <param name="rect">指定領域</param>
 		public void ToImageData(I4Rect rect)
 		{
-			using (WorkingDir wd = new WorkingDir())
+			string bmpFile = DU.WD.MakePath() + ".bmp";
+
+			DX.SaveDrawScreenToBMP(rect.L, rect.T, rect.R, rect.B, bmpFile);
+
+			using (Bitmap bmp = (Bitmap)Bitmap.FromFile(bmpFile))
 			{
-				string bmpFile = wd.MakePath() + ".bmp";
-
-				DX.SaveDrawScreenToBMP(rect.L, rect.T, rect.R, rect.B, bmpFile);
-
-				using (Bitmap bmp = (Bitmap)Bitmap.FromFile(bmpFile))
-				{
-					bmp.Save(this.ImageFile, ImageFormat.Png);
-				}
+				bmp.Save(this.ImageFile, ImageFormat.Png);
 			}
+			SCommon.DeletePath(bmpFile);
 
 			if (this.Picture != null)
 				this.Picture.Unload();

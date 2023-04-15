@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
+using System.Drawing.Imaging;
 
 namespace Charlotte.GameCommons
 {
@@ -18,6 +20,19 @@ namespace Charlotte.GameCommons
 	{
 		public class CoffeeBreak : Exception
 		{ }
+
+		private static WorkingDir _wd = null;
+
+		public static WorkingDir WD
+		{
+			get
+			{
+				if (_wd == null)
+					_wd = new WorkingDir();
+
+				return _wd;
+			}
+		}
 
 		public static void Pin<T>(T data)
 		{
@@ -203,7 +218,7 @@ namespace Charlotte.GameCommons
 
 		public static void AddFontFile(string resPath)
 		{
-			string file = new WorkingDir().GetPath(Path.GetFileName(resPath));
+			string file = DU.WD.GetPath(Path.GetFileName(resPath));
 			byte[] fileData = DD.GetResFileData(resPath);
 
 			File.WriteAllBytes(file, fileData);
@@ -375,6 +390,44 @@ namespace Charlotte.GameCommons
 			{
 				return Encoding.ASCII.GetBytes(SCommon.Base64.I.Encode(SCommon.GetSHA512(new byte[][] { COUNTER_SHUFFLE, data }).Take(15).ToArray()));
 			}
+		}
+
+		public static void StoreAllSubScreen()
+		{
+			foreach (SubScreen screen in SubScreen.GetAllSubScreen())
+			{
+				if (screen.IsLoaded())
+				{
+					string bmpFile = WD.MakePath() + ".bmp";
+
+					DX.SetDrawScreen(screen.GetHandle());
+					DX.SaveDrawScreenToBMP(0, 0, screen.W, screen.H, bmpFile);
+
+					screen.StoredData = bmpFile;
+				}
+			}
+			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
+		}
+
+		public static void RestoreAllSubScreen()
+		{
+			foreach (SubScreen screen in SubScreen.GetAllSubScreen())
+			{
+				if (screen.StoredData != null)
+				{
+					string bmpFile = (string)screen.StoredData;
+
+					screen.StoredData = null;
+
+					int handle = DU.GetPictureData(File.ReadAllBytes(bmpFile)).Handle;
+					DX.SetDrawScreen(screen.GetHandle());
+					DX.DrawExtendGraph(0, 0, screen.W, screen.H, handle, 0);
+					DX.DeleteGraph(handle);
+
+					SCommon.DeletePath(bmpFile);
+				}
+			}
+			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 		}
 	}
 }

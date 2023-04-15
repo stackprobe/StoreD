@@ -72,6 +72,14 @@ namespace Charlotte.Games
 					{
 						plPos.Y -= SPEED;
 					}
+					else
+					{
+						plPos.X = (double)SCommon.ToInt(plPos.X);
+						plPos.Y = (double)SCommon.ToInt(plPos.Y);
+					}
+
+					plPos.X = SCommon.ToRange(plPos.X, 0.0, (double)GameConfig.ScreenSize.W);
+					plPos.Y = SCommon.ToRange(plPos.Y, 0.0, (double)GameConfig.ScreenSize.H);
 				}
 
 				if (1 <= Inputs.B.GetInput() && Inputs.B.GetInput() % 10 == 1)
