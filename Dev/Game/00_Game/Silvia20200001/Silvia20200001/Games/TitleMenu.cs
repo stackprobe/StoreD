@@ -154,12 +154,15 @@ namespace Charlotte.Games
 						break;
 
 					case 6:
-						return;
+						goto endOfMenu;
 
 					default:
 						throw null; // never
 				}
 			}
+		endOfMenu:
+
+			DD.Save();
 		}
 
 		private static void CustomizePad()
