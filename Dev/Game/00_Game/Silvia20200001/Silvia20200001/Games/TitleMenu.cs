@@ -87,12 +87,16 @@ namespace Charlotte.Games
 
 		private static void StartTheGame()
 		{
-			// none
+			Game.Run();
+
+			Musics.RemotestLibrary.Play();
 		}
 
 		private static void ContinueTheGame()
 		{
-			// none
+			Game.Run();
+
+			Musics.RemotestLibrary.Play();
 		}
 
 		private static void Setting()

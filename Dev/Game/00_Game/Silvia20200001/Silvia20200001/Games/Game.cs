@@ -14,13 +14,22 @@ namespace Charlotte.Games
 		{
 			DD.FreezeInput();
 
-			D2Point plPos = new D2Point(GameConfig.ScreenSize.W / 2.0, GameConfig.ScreenSize.H / 2.0);
+			Musics.SunBeams.Play();
+
+			D2Point plPos = new D2Point(GameConfig.ScreenSize.W / 4.0, GameConfig.ScreenSize.H / 2.0);
+			List<Func<bool>> shots = new List<Func<bool>>();
 
 			for (; ; )
 			{
 				{
-					const double SPEED = 2.0;
-					const double NANAME_SPEED = 1.4;
+					double SPEED = 4.0;
+
+					if (1 <= Inputs.A.GetInput())
+					{
+						SPEED = 2.0;
+					}
+
+					double NANAME_SPEED = SPEED * 0.7;
 
 					bool dir2 = 1 <= Inputs.DIR_2.GetInput();
 					bool dir4 = 1 <= Inputs.DIR_4.GetInput();
@@ -65,69 +74,24 @@ namespace Charlotte.Games
 					}
 				}
 
-				if (1 <= Inputs.A.GetInput() && Inputs.A.GetInput() % 10 == 1)
-				{
-					const double SPEED = 3.5;
-
-					foreach (int xa in new int[] { -1, 1 })
-					{
-						foreach (int ya in new int[] { -1, 1 })
-						{
-							double x = plPos.X;
-							double y = plPos.Y;
-
-							double xSpeed = xa * SPEED;
-							double ySpeed = ya * SPEED;
-
-							DD.EL.Add(() =>
-							{
-								x += xSpeed;
-								y += ySpeed;
-
-								DD.SetZoom(0.2);
-								DD.Draw(Pictures.Dummy, new D2Point(x, y));
-
-								return Crash.IsCrashed_Circle_Rect(
-									new D2Point(x, y),
-									10.0,
-									new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H).ToD4Rect()
-									);
-							});
-						}
-					}
-				}
 				if (1 <= Inputs.B.GetInput() && Inputs.B.GetInput() % 10 == 1)
 				{
-					const double SPEED = 5.0;
+					double x = plPos.X;
+					double y = plPos.Y;
 
-					Action<int, int> r = (xa, ya) =>
+					shots.Add(() =>
 					{
-						double x = plPos.X;
-						double y = plPos.Y;
+						x += 7.0;
 
-						double xSpeed = xa * SPEED;
-						double ySpeed = ya * SPEED;
+						DD.SetZoom(0.2);
+						DD.Draw(Pictures.Dummy, new D2Point(x, y));
 
-						DD.EL.Add(() =>
-						{
-							x += xSpeed;
-							y += ySpeed;
-
-							DD.SetZoom(0.2);
-							DD.Draw(Pictures.Dummy, new D2Point(x, y));
-
-							return Crash.IsCrashed_Circle_Rect(
-								new D2Point(x, y),
-								10.0,
-								new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H).ToD4Rect()
-								);
-						});
-					};
-
-					r(-1, 0);
-					r(0, -1);
-					r(1, 0);
-					r(0, 1);
+						return Crash.IsCrashed_Circle_Rect(
+							new D2Point(x, y),
+							10.0,
+							new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H).ToD4Rect()
+							);
+					});
 				}
 
 				if (Inputs.PAUSE.GetInput() == 1)
@@ -141,6 +105,8 @@ namespace Charlotte.Games
 
 				DD.SetBright(new I3Color(0, 128, 0).ToD3Color());
 				DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, GameConfig.ScreenSize.W, GameConfig.ScreenSize.H).ToD4Rect());
+
+				DD.ExecuteTasks(shots);
 
 				DD.SetRotate(DD.ProcFrame / 10.0);
 				DD.Draw(Pictures.Dummy, plPos);
@@ -158,11 +124,11 @@ namespace Charlotte.Games
 			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
 			DD.MainScreen.ChangeDrawScreenToThis();
 
-			SimpleMenu menu = new SimpleMenu(24, 30, 16, 300, "PAUSE", new string[]
+			SimpleMenu menu = new SimpleMenu(24, 30, 16, 200, "PAUSE", new string[]
  			{
-				"ITEM-01",
-				"ITEM-02",
-				"ITEM-03",
+				"Save",
+				"Load",
+				"Buy",
 				"RETURN",
 			});
 

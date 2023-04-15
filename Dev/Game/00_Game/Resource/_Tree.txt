@@ -36,6 +36,12 @@ General\Music\ユーフルカ\Remotest-Liblary_loop\Remotest-Liblary_loop.txt
 	-> File 2017/08/08 (火) 00:01:04 / 2023/04/09 (日) 01:21:42 / 723
 General\Music\ユーフルカ\_source.txt
 	-> File 2023/04/09 (日) 01:22:21 / 2023/04/11 (火) 00:48:37 / 53
+General\Music\ユーフルカ\sunbeams_loop
+	-> Directory
+General\Music\ユーフルカ\sunbeams_loop\sunbeams_loop.m4a
+	-> File 2023/04/15 (土) 22:47:06 / 2015/12/29 (火) 23:08:04 / 3,069,986
+General\Music\ユーフルカ\sunbeams_loop\sunbeams_loop.txt
+	-> File 2023/04/15 (土) 22:47:06 / 2015/12/29 (火) 23:08:08 / 716
 General\Picture
 	-> Directory
 General\Picture\ぱくたそ

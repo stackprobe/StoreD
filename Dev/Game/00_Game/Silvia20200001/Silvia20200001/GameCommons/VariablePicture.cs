@@ -32,25 +32,6 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
-		/// 現在の描画先スクリーンの指定領域をイメージデータとして設定する。
-		/// </summary>
-		/// <param name="rect">指定領域</param>
-		public void ToImageData(I4Rect rect)
-		{
-			using (WorkingDir wd = new WorkingDir())
-			{
-				string bmpFile = wd.MakePath() + ".bmp";
-
-				DX.SaveDrawScreenToBMP(rect.L, rect.T, rect.R, rect.B, bmpFile);
-
-				using (Bitmap bmp = (Bitmap)Bitmap.FromFile(bmpFile))
-				{
-					bmp.Save(this.ImageFile, ImageFormat.Png);
-				}
-			}
-		}
-
-		/// <summary>
 		/// イメージデータを取得する。
 		/// </summary>
 		/// <returns>イメージデータ</returns>
@@ -76,6 +57,28 @@ namespace Charlotte.GameCommons
 				throw new Exception("Bad imageData");
 
 			File.WriteAllBytes(this.ImageFile, imageData);
+
+			if (this.Picture != null)
+				this.Picture.Unload();
+		}
+
+		/// <summary>
+		/// 現在の描画先スクリーンの指定領域をイメージデータとして設定する。
+		/// </summary>
+		/// <param name="rect">指定領域</param>
+		public void ToImageData(I4Rect rect)
+		{
+			using (WorkingDir wd = new WorkingDir())
+			{
+				string bmpFile = wd.MakePath() + ".bmp";
+
+				DX.SaveDrawScreenToBMP(rect.L, rect.T, rect.R, rect.B, bmpFile);
+
+				using (Bitmap bmp = (Bitmap)Bitmap.FromFile(bmpFile))
+				{
+					bmp.Save(this.ImageFile, ImageFormat.Png);
+				}
+			}
 
 			if (this.Picture != null)
 				this.Picture.Unload();
