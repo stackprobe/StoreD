@@ -24,7 +24,6 @@ namespace Charlotte.GameCommons
 		public static I4Rect MainScreenDrawRect;
 		public static SubScreen MainScreen;
 		public static SubScreen LastMainScreen;
-		public static SubScreen KeptMainScreen;
 		public static int ProcFrame;
 		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
@@ -472,11 +471,6 @@ namespace Charlotte.GameCommons
 			Pad.EachFrame();
 
 			DX.ClearDrawScreen();
-		}
-
-		public static void KeepLastMainScreen()
-		{
-			SCommon.Swap(ref DD.LastMainScreen, ref DD.KeptMainScreen);
 		}
 
 		private static long HzChaserTime;
