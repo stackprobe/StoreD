@@ -150,9 +150,14 @@ namespace Charlotte.Games
 			{
 				DD.FreezeInput();
 
+				double frostRate = 0.0;
+
 				for (; ; )
 				{
+					DD.Approach(ref frostRate, 0.5, 0.98);
+
 					DD.Draw(PauseWall.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+					DD.Frosting(frostRate);
 
 					if (menu.Draw())
 						break;

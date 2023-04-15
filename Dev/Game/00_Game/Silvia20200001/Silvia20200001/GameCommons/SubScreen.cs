@@ -69,16 +69,22 @@ namespace Charlotte.GameCommons
 			}
 		}
 
+		public static SubScreen CurrentDrawScreen = null; // null == DX.DX_SCREEN_BACK
+
 		public void ChangeDrawScreenToThis()
 		{
 			if (DX.SetDrawScreen(this.GetHandle()) != 0) // ? 失敗
 				throw new Exception("SetDrawScreen failed");
+
+			CurrentDrawScreen = this;
 		}
 
 		public static void ChangeDrawScreenToBack()
 		{
 			if (DX.SetDrawScreen(DX.DX_SCREEN_BACK) != 0) // ? 失敗
 				throw new Exception("SetDrawScreen failed");
+
+			CurrentDrawScreen = null;
 		}
 
 		private Picture Picture = null;

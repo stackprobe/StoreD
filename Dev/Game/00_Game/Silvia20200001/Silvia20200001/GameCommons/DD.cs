@@ -904,5 +904,19 @@ namespace Charlotte.GameCommons
 
 			return true;
 		}
+
+		/// <summary>
+		/// 描画先スクリーンをぼかす。
+		/// </summary>
+		/// <param name="rate">ぼかしレート</param>
+		public static void Frosting(double rate)
+		{
+			DX.GraphFilter(
+				SubScreen.CurrentDrawScreen == null ? DX.DX_SCREEN_BACK : SubScreen.CurrentDrawScreen.GetHandle(),
+				DX.DX_GRAPH_FILTER_GAUSS,
+				16,
+				SCommon.ToInt(5000.0 * rate)
+				);
+		}
 	}
 }
