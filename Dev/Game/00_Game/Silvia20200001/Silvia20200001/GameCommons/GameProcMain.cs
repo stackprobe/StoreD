@@ -140,9 +140,11 @@ namespace Charlotte.GameCommons
 			}
 			else
 			{
-				logSaveDir = DU.WD.GetPath(".");
+				logSaveDir = DU.WD.MakePath();
 				logFile = Path.Combine(ProcMain.SelfDir, "Game.log");
 				saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+
+				SCommon.CreateDir(logSaveDir);
 			}
 
 			File.WriteAllBytes(logFile, SCommon.EMPTY_BYTES);

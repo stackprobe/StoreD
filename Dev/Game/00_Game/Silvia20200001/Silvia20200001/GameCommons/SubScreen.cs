@@ -98,9 +98,9 @@ namespace Charlotte.GameCommons
 
 		public static IEnumerable<SubScreen> GetAllSubScreen()
 		{
-			return Instances;
+			return Instances.ToArray(); // 念のためリストの複製を返す。
 		}
 
-		public object StoredData = null;
+		public object StoredObject = null;
 	}
 }

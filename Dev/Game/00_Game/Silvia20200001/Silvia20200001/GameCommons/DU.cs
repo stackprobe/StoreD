@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using System.Drawing.Imaging;
 
 namespace Charlotte.GameCommons
 {
@@ -398,12 +398,12 @@ namespace Charlotte.GameCommons
 			{
 				if (screen.IsLoaded())
 				{
-					string bmpFile = WD.MakePath() + ".bmp";
+					string bmpFile = WD.MakePath();
 
 					DX.SetDrawScreen(screen.GetHandle());
 					DX.SaveDrawScreenToBMP(0, 0, screen.W, screen.H, bmpFile);
 
-					screen.StoredData = bmpFile;
+					screen.StoredObject = bmpFile;
 				}
 			}
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
@@ -413,11 +413,11 @@ namespace Charlotte.GameCommons
 		{
 			foreach (SubScreen screen in SubScreen.GetAllSubScreen())
 			{
-				if (screen.StoredData != null)
+				if (screen.StoredObject != null)
 				{
-					string bmpFile = (string)screen.StoredData;
+					string bmpFile = (string)screen.StoredObject;
 
-					screen.StoredData = null;
+					screen.StoredObject = null;
 
 					int handle = DU.GetPictureData(File.ReadAllBytes(bmpFile)).Handle;
 					DX.SetDrawScreen(screen.GetHandle());

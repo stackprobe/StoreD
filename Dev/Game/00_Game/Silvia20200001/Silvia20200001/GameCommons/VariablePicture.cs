@@ -25,7 +25,7 @@ namespace Charlotte.GameCommons
 			get
 			{
 				if (_imageFile == null)
-					_imageFile = DU.WD.MakePath() + ".png";
+					_imageFile = DU.WD.MakePath();
 
 				return _imageFile;
 			}
@@ -68,7 +68,7 @@ namespace Charlotte.GameCommons
 		/// <param name="rect">指定領域</param>
 		public void ToImageData(I4Rect rect)
 		{
-			string bmpFile = DU.WD.MakePath() + ".bmp";
+			string bmpFile = DU.WD.MakePath();
 
 			DX.SaveDrawScreenToBMP(rect.L, rect.T, rect.R, rect.B, bmpFile);
 
@@ -76,6 +76,7 @@ namespace Charlotte.GameCommons
 			{
 				bmp.Save(this.ImageFile, ImageFormat.Png);
 			}
+
 			SCommon.DeletePath(bmpFile);
 
 			if (this.Picture != null)
