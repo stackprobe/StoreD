@@ -56,7 +56,7 @@ namespace Charlotte.Utilities
 
 		public IEnumerable<bool> Iterate()
 		{
-			this.P_Trim();
+			this.Trim();
 
 			for (int index = 0; index < this.Inner.Count; index++)
 			{
@@ -67,7 +67,7 @@ namespace Charlotte.Utilities
 			}
 		}
 
-		private void P_Trim()
+		private void Trim()
 		{
 			while (1 <= this.Inner.Count && this.Inner[this.Inner.Count - 1] == 0u)
 			{
