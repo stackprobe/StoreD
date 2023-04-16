@@ -76,9 +76,9 @@ namespace Charlotte
 			else
 				destFile = SCommon.MakeFullPath(destFile);
 
-			ProcMain.WriteLog("R " + resourceDir);
-			ProcMain.WriteLog("< " + manualFile);
-			ProcMain.WriteLog("> " + destFile);
+			Console.WriteLine("R " + resourceDir);
+			Console.WriteLine("< " + manualFile);
+			Console.WriteLine("> " + destFile);
 
 			if (!Directory.Exists(resourceDir))
 				throw new Exception("no resourceDir");
@@ -96,7 +96,7 @@ namespace Charlotte
 
 			File.WriteAllLines(destFile, lines, SCommon.ENCODING_SJIS);
 
-			ProcMain.WriteLog("done!");
+			Console.WriteLine("done!");
 		}
 
 		private string[] GetSourceOfResourceLines(string resourceDir)
