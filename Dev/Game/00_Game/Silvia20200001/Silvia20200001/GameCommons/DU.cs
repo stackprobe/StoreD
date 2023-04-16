@@ -5,12 +5,12 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using System.Reflection;
 
 namespace Charlotte.GameCommons
 {
