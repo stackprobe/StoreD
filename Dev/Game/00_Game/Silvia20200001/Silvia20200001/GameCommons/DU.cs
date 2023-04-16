@@ -461,7 +461,7 @@ namespace Charlotte.GameCommons
 				string[] names = new string[Keyboard.KEY_MAX];
 
 				for (int index = 0; index < Keyboard.KEY_MAX; index++)
-					names[index] = "CODE(" + index + ")";
+					names[index] = "(" + index + ")";
 
 				foreach (KeyInfo info in GetKeys())
 					names[info.Value] = info.Name;

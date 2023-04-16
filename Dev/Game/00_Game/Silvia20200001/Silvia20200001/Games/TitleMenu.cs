@@ -402,12 +402,119 @@ namespace Charlotte.Games
 
 		private static void ChangeMusicVolume()
 		{
-			throw new NotImplementedException();
+			ChangeVolume(
+				"ＢＧＭ音量",
+				GameSetting.MusicVolume,
+				GameConfig.DefaultMusicVolume,
+				volume => GameSetting.MusicVolume = volume,
+				() =>
+				{
+					// noop
+				}
+				);
 		}
 
 		private static void ChangeSEVolume()
 		{
-			throw new NotImplementedException();
+			SoundEffect[] testSounds = new SoundEffect[]
+			{
+				SoundEffects.Save,
+				SoundEffects.Load,
+				SoundEffects.Buy,
+			};
+
+			ChangeVolume(
+				"ＳＥ音量",
+				GameSetting.SEVolume,
+				GameConfig.DefaultSEVolume,
+				volume => GameSetting.SEVolume = volume,
+				() =>
+				{
+					SCommon.CRandom.ChooseOne(testSounds).Play();
+				}
+				);
+		}
+
+		private static void ChangeVolume(string title, double volume, double defaultVolume, Action<double> volumeSetter, Action pulse)
+		{
+			const int PULSE_FRAME = 60;
+
+			DD.FreezeInput();
+
+			for (; ; )
+			{
+				if (Inputs.A.GetInput() == 1 || (GameSetting.MouseEnabled && Mouse.L.GetInput() == -1))
+				{
+					break;
+				}
+				if (Inputs.B.GetInput() == 1 || (GameSetting.MouseEnabled && Mouse.R.GetInput() == -1))
+				{
+					if (volume == defaultVolume)
+						break;
+
+					volume = defaultVolume;
+				}
+				if (Inputs.DIR_8.IsPound())
+				{
+					volume += 0.03;
+				}
+				if (Inputs.DIR_2.IsPound())
+				{
+					volume -= 0.03;
+				}
+				if (Inputs.DIR_4.IsPound())
+				{
+					volume -= 0.01;
+				}
+				if (Inputs.DIR_6.IsPound())
+				{
+					volume += 0.01;
+				}
+				volume += Mouse.Rot * 0.01;
+				volume = SCommon.ToRange(volume, 0.0, 1.0);
+				volumeSetter(volume);
+
+				if (DD.ProcFrame % PULSE_FRAME == 0)
+				{
+					pulse();
+				}
+
+				// ここから描画
+
+				DrawWall();
+				DD.DrawCurtain(-0.5);
+
+				DD.SetPrint(40, 40, 40, FONT_NAME, 30);
+				DD.PrintLine(title);
+				DD.SetPrint(40, 170, 40, FONT_NAME, 20);
+				DD.PrintLine(GetMeterString(volume, 80));
+				DD.SetPrint(280, 320, 40, FONT_NAME, 20); ;
+				DD.PrintLine("/// ＴＩＰＳ ///");
+				DD.PrintLine("右・上キーまたはホイール上　⇒　上げる");
+				DD.PrintLine("左・下キーまたはホイール下　⇒　下げる");
+				DD.PrintLine("調整が終わったら左クリックまたは決定ボタンを押して下さい。");
+				DD.PrintLine("右クリックまたはキャンセルボタンを押すと変更をキャンセルします。");
+
+				DD.EachFrame();
+			}
+			DD.FreezeInput();
+		}
+
+		private static string GetMeterString(double volume, int length)
+		{
+			int indicator = SCommon.ToInt(volume * (length - 1));
+
+			StringBuilder buff = new StringBuilder();
+
+			buff.Append("[");
+
+			for (int index = 0; index < length; index++)
+				buff.Append(index == indicator ? "■" : "-");
+
+			buff.Append("] ");
+			buff.Append(volume.ToString("F2"));
+
+			return buff.ToString();
 		}
 
 		private static void ChangeMouseEnabled()
