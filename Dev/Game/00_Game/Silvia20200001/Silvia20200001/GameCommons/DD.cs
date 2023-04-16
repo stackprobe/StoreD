@@ -341,8 +341,8 @@ namespace Charlotte.GameCommons
 
 		private static class Prints
 		{
-			public static readonly I3Color DEFAULT_COLOR = new I3Color(255, 255, 255);
-			public static readonly I3Color DEFAULT_BORDER_COLOR = new I3Color(64, 64, 64);
+			public static I3Color DEFAULT_COLOR = new I3Color(255, 255, 255);
+			public static I3Color DEFAULT_BORDER_COLOR = new I3Color(64, 64, 64);
 
 			public static int L = 0;
 			public static int T = 0;

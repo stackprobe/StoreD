@@ -11,7 +11,13 @@ namespace Charlotte.Games
 {
 	public static class TitleMenu
 	{
-		private const string FONT_NAME = "木漏れ日ゴシック";
+		private static string FONT_NAME = "木漏れ日ゴシック";
+		private static SoundEffect[] TEST_SOUND_EFFECTS = new SoundEffect[]
+		{
+			SoundEffects.Save,
+			SoundEffects.Load,
+			SoundEffects.Buy,
+		};
 
 		private static Action DrawWall;
 
@@ -406,7 +412,7 @@ namespace Charlotte.Games
 				"ＢＧＭ音量",
 				GameSetting.MusicVolume,
 				GameConfig.DefaultMusicVolume,
-				volume => GameSetting.MusicVolume = volume,
+				value => GameSetting.MusicVolume = value,
 				() =>
 				{
 					// noop
@@ -416,26 +422,30 @@ namespace Charlotte.Games
 
 		private static void ChangeSEVolume()
 		{
-			SoundEffect[] testSounds = new SoundEffect[]
-			{
-				SoundEffects.Save,
-				SoundEffects.Load,
-				SoundEffects.Buy,
-			};
-
 			ChangeVolume(
 				"ＳＥ音量",
 				GameSetting.SEVolume,
 				GameConfig.DefaultSEVolume,
-				volume => GameSetting.SEVolume = volume,
+				value => GameSetting.SEVolume = value,
 				() =>
 				{
-					SCommon.CRandom.ChooseOne(testSounds).Play();
+					SCommon.CRandom.ChooseOne(TEST_SOUND_EFFECTS).Play();
 				}
 				);
 		}
 
 		private static void ChangeVolume(string title, double volume, double defaultVolume, Action<double> volumeSetter, Action pulse)
+		{
+			ChangeVolumePercent(
+				title,
+				SCommon.ToInt(volume * 100.0),
+				SCommon.ToInt(defaultVolume * 100.0),
+				value => volumeSetter(value / 100.0),
+				pulse
+				);
+		}
+
+		private static void ChangeVolumePercent(string title, int volume, int defaultVolume, Action<int> volumeSetter, Action pulse)
 		{
 			const int PULSE_FRAME = 60;
 
@@ -456,22 +466,22 @@ namespace Charlotte.Games
 				}
 				if (Inputs.DIR_8.IsPound())
 				{
-					volume += 0.03;
+					volume += 3;
 				}
 				if (Inputs.DIR_2.IsPound())
 				{
-					volume -= 0.03;
+					volume -= 3;
 				}
 				if (Inputs.DIR_4.IsPound())
 				{
-					volume -= 0.01;
+					volume--;
 				}
 				if (Inputs.DIR_6.IsPound())
 				{
-					volume += 0.01;
+					volume++;
 				}
-				volume += Mouse.Rot * 0.01;
-				volume = SCommon.ToRange(volume, 0.0, 1.0);
+				volume += Mouse.Rot;
+				volume = SCommon.ToRange(volume, 0, 100);
 				volumeSetter(volume);
 
 				if (DD.ProcFrame % PULSE_FRAME == 0)
@@ -487,7 +497,7 @@ namespace Charlotte.Games
 				DD.SetPrint(40, 40, 40, FONT_NAME, 30);
 				DD.PrintLine(title);
 				DD.SetPrint(40, 170, 40, FONT_NAME, 20);
-				DD.PrintLine(GetMeterString(volume, 80));
+				DD.PrintLine(GetMeterString(volume / 100.0, 80));
 				DD.SetPrint(280, 320, 40, FONT_NAME, 20); ;
 				DD.PrintLine("/// ＴＩＰＳ ///");
 				DD.PrintLine("右・上キーまたはホイール上　⇒　上げる");

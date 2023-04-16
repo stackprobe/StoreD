@@ -10,9 +10,9 @@ namespace Charlotte.Games
 {
 	public class SimpleMenu
 	{
-		private const string FONT_NAME = "木漏れ日ゴシック";
-		private static readonly I3Color FORE_COLOR = new I3Color(255, 255, 255);
-		private static readonly I4Color BACK_COLOR = new I4Color(0, 0, 0, 128);
+		private static string FONT_NAME = "木漏れ日ゴシック";
+		private static I3Color FORE_COLOR = new I3Color(255, 255, 255);
+		private static I4Color BACK_COLOR = new I4Color(0, 0, 0, 128);
 
 		private static int LastDrawProcFrame = -1;
 		private static double Shadow_W = 0.0;
