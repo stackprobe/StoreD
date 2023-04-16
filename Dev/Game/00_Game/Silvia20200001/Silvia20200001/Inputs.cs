@@ -9,10 +9,10 @@ namespace Charlotte
 {
 	public static class Inputs
 	{
-		public static Input DIR_2 = new Input(DX.KEY_INPUT_DOWN, 0, "上");
-		public static Input DIR_4 = new Input(DX.KEY_INPUT_LEFT, 1, "下");
+		public static Input DIR_2 = new Input(DX.KEY_INPUT_DOWN, 0, "下");
+		public static Input DIR_4 = new Input(DX.KEY_INPUT_LEFT, 1, "左");
 		public static Input DIR_6 = new Input(DX.KEY_INPUT_RIGHT, 2, "右");
-		public static Input DIR_8 = new Input(DX.KEY_INPUT_UP, 3, "左");
+		public static Input DIR_8 = new Input(DX.KEY_INPUT_UP, 3, "上");
 		public static Input A = new Input(DX.KEY_INPUT_Z, 4, "効果Ⅰ・決定");
 		public static Input B = new Input(DX.KEY_INPUT_X, 7, "効果Ⅱ・キャンセル");
 		public static Input C = new Input(DX.KEY_INPUT_C, 5, "特殊Ⅰ");
@@ -32,10 +32,10 @@ namespace Charlotte
 		{
 			return new Input[]
 			{
+				DIR_8,
 				DIR_2,
 				DIR_4,
 				DIR_6,
-				DIR_8,
 				A,
 				B,
 				C,

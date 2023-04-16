@@ -36,7 +36,17 @@ namespace Charlotte.Games
 					bool dir6 = 1 <= Inputs.DIR_6.GetInput();
 					bool dir8 = 1 <= Inputs.DIR_8.GetInput();
 
-					if (dir2 && dir4)
+					if (dir8 && dir4)
+					{
+						plPos.X -= NANAME_SPEED;
+						plPos.Y -= NANAME_SPEED;
+					}
+					else if (dir8 && dir6)
+					{
+						plPos.X += NANAME_SPEED;
+						plPos.Y -= NANAME_SPEED;
+					}
+					else if (dir2 && dir4)
 					{
 						plPos.X -= NANAME_SPEED;
 						plPos.Y += NANAME_SPEED;
@@ -46,15 +56,9 @@ namespace Charlotte.Games
 						plPos.X += NANAME_SPEED;
 						plPos.Y += NANAME_SPEED;
 					}
-					else if (dir8 && dir4)
+					else if (dir8)
 					{
-						plPos.X -= NANAME_SPEED;
-						plPos.Y -= NANAME_SPEED;
-					}
-					else if (dir8 && dir6)
-					{
-						plPos.X += NANAME_SPEED;
-						plPos.Y -= NANAME_SPEED;
+						plPos.Y -= SPEED;
 					}
 					else if (dir2)
 					{
@@ -67,10 +71,6 @@ namespace Charlotte.Games
 					else if (dir6)
 					{
 						plPos.X += SPEED;
-					}
-					else if (dir8)
-					{
-						plPos.Y -= SPEED;
 					}
 					else
 					{

@@ -24,6 +24,9 @@ namespace Charlotte.GameCommons
 
 		private static WorkingDir _wd = null;
 
+		/// <summary>
+		/// 各機能自由に使ってよい作業フォルダ
+		/// </summary>
 		public static WorkingDir WD
 		{
 			get
@@ -34,6 +37,11 @@ namespace Charlotte.GameCommons
 				return _wd;
 			}
 		}
+
+		/// <summary>
+		/// 各機能自由に使ってよいスクリーン
+		/// </summary>
+		public static SubScreen FreeScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
 		public static void Pin<T>(T data)
 		{
@@ -431,31 +439,49 @@ namespace Charlotte.GameCommons
 			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
 		}
 
-		private class KeyboardKeyInfo
-		{
-			public string Name;
-			public int Value;
-		}
-
-		private static KeyboardKeyInfo[] GetKeyboardKeys()
-		{
-			return typeof(DX).GetFields(BindingFlags.Public | BindingFlags.Static)
-				.Where(field => field.IsLiteral && !field.IsInitOnly && field.Name.StartsWith("KEY_INPUT_"))
-				.Select(field => new KeyboardKeyInfo() { Name = field.Name.Substring(10), Value = (int)field.GetValue(null) })
-				.ToArray();
-		}
-
 		public static string[] GetKeyboardKeyNames()
 		{
-			string[] names = new string[Keyboard.KEY_MAX];
+			return KeyboardKeys.GetNames();
+		}
 
-			for (int index = 0; index < Keyboard.KEY_MAX; index++)
-				names[index] = "KEYCODE(" + index + ")";
+		private static class KeyboardKeys
+		{
+			private static string[] P_Names = null;
 
-			foreach (KeyboardKeyInfo info in GetKeyboardKeys())
-				names[info.Value] = info.Name;
+			public static string[] GetNames()
+			{
+				if (P_Names == null)
+					P_Names = P_GetNames();
 
-			return names;
+				return P_Names;
+			}
+
+			private static string[] P_GetNames()
+			{
+				string[] names = new string[Keyboard.KEY_MAX];
+
+				for (int index = 0; index < Keyboard.KEY_MAX; index++)
+					names[index] = "CODE(" + index + ")";
+
+				foreach (KeyInfo info in GetKeys())
+					names[info.Value] = info.Name;
+
+				return names;
+			}
+
+			private class KeyInfo
+			{
+				public string Name;
+				public int Value;
+			}
+
+			private static KeyInfo[] GetKeys()
+			{
+				return typeof(DX).GetFields(BindingFlags.Public | BindingFlags.Static)
+					.Where(field => field.IsLiteral && !field.IsInitOnly && field.Name.StartsWith("KEY_INPUT_"))
+					.Select(field => new KeyInfo() { Name = field.Name.Substring(10), Value = (int)field.GetValue(null) })
+					.ToArray();
+			}
 		}
 	}
 }

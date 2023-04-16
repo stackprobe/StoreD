@@ -11,6 +11,8 @@ namespace Charlotte.Games
 {
 	public static class TitleMenu
 	{
+		private const string FONT_NAME = "木漏れ日ゴシック";
+
 		private static Action DrawWall;
 
 		public static void Run()
@@ -168,17 +170,169 @@ namespace Charlotte.Games
 
 		private static void CustomizePad()
 		{
-			throw new NotImplementedException();
+			DD.FreezeInput();
+
+			Input[] inputs = Inputs.GetAllInput();
+			int[] dest = new int[inputs.Length];
+
+			for (int index = 0; index < inputs.Length; )
+			{
+				if (Keyboard.GetInput(DX.KEY_INPUT_SPACE) == 1)
+					goto cancelled;
+
+				int button = -1;
+
+				for (int c = 0; c < Pad.BUTTON_MAX; c++)
+					if (Pad.PrimaryPad != -1 && Pad.GetInput(Pad.PrimaryPad, c) == 1)
+						button = c;
+
+				for (int c = 0; c < index; c++)
+					if (dest[c] == button)
+						button = -1;
+
+				if (button != -1)
+				{
+					dest[index] = button;
+					index++;
+				}
+
+				// ここから描画
+
+				DrawWall();
+				DD.DrawCurtain(-0.5);
+
+				DD.SetPrint(24, 20, 34, FONT_NAME, 20);
+				DD.PrintLine("ゲームパッドのボタン設定");
+
+				for (int c = 0; c < inputs.Length; c++)
+				{
+					DD.Print(c == index ? "[>] " : "[ ] ");
+					DD.Print(inputs[c].Description);
+
+					if (c < index)
+					{
+						DD.Print("　>>>　(" + dest[c] + ")");
+					}
+					DD.PrintRet();
+				}
+
+				DD.SetPrint(428, 428, 34, FONT_NAME, 20);
+				DD.PrintLine("/// ＴＩＰＳ ///");
+				DD.PrintLine("カーソルの指す機能に割り当てるボタンを押して下さい。");
+				DD.SetPrintColor(new I3Color(255, 255, 0));
+				DD.PrintLine("スペースキーを押すとキャンセルします。");
+
+				DD.EachFrame();
+			}
+
+			DU.FreeScreen.ChangeDrawScreenToThis();
+			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+			DD.MainScreen.ChangeDrawScreenToThis();
+
+			foreach (Scene scene in Scene.Create(30))
+			{
+				DD.Draw(DU.FreeScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+				DD.EachFrame();
+			}
+
+			DU.FreeScreen.Unload();
+
+			for (int index = 0; index < inputs.Length; index++)
+			{
+				inputs[index].Button = dest[index];
+			}
+
+		cancelled:
+			DD.FreezeInput();
 		}
 
 		private static void CustomizeKeyboard()
 		{
-			// TODO
-			// TODO
-			// TODO
+			DD.FreezeInput();
+			DX.SetMouseDispFlag(1);
 
-			foreach (string name in DU.GetKeyboardKeyNames())
-				ProcMain.WriteLog(name);
+			string[] KEY_NAMES = DU.GetKeyboardKeyNames();
+
+			Input[] inputs = Inputs.GetAllInput();
+			int[] dest = new int[inputs.Length];
+
+			for (int index = 0; index < inputs.Length; )
+			{
+				if (Mouse.R.GetInput() == -1)
+					goto cancelled;
+
+				int key = -1;
+
+				for (int c = 0; c < Keyboard.KEY_MAX && key == -1; c++)
+					if (Keyboard.GetInput(c) == 1)
+						key = c;
+
+				if (key == DX.KEY_INPUT_F11) // F11 --> フルスクリーン切り替えに使用
+					key = -1;
+
+				if (key == DX.KEY_INPUT_ESCAPE) // エスケープ --> ゲーム終了に使用
+					key = -1;
+
+				for (int c = 0; c < index; c++)
+					if (dest[c] == key)
+						key = -1;
+
+				if (key != -1)
+				{
+					dest[index] = key;
+					index++;
+				}
+
+				// ここから描画
+
+				DrawWall();
+				DD.DrawCurtain(-0.5);
+
+				DD.SetPrint(24, 20, 34, FONT_NAME, 20);
+				DD.PrintLine("キーボードのキー設定");
+
+				for (int c = 0; c < inputs.Length; c++)
+				{
+					DD.Print(c == index ? "[>] " : "[ ] ");
+					DD.Print(inputs[c].Description);
+
+					if (c < index)
+					{
+						DD.Print("　>>>　");
+						DD.Print(KEY_NAMES[dest[c]]);
+					}
+					DD.PrintRet();
+				}
+
+				DD.SetPrint(428, 428, 34, FONT_NAME, 20);
+				DD.PrintLine("/// ＴＩＰＳ ///");
+				DD.PrintLine("カーソルの指す機能に割り当てるキーを押して下さい。");
+				DD.SetPrintColor(new I3Color(255, 255, 0));
+				DD.PrintLine("画面を右クリックするとキャンセルします。");
+
+				DD.EachFrame();
+			}
+
+			DU.FreeScreen.ChangeDrawScreenToThis();
+			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+			DD.MainScreen.ChangeDrawScreenToThis();
+
+			foreach (Scene scene in Scene.Create(30))
+			{
+				DD.Draw(DU.FreeScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+				DD.EachFrame();
+			}
+
+			DU.FreeScreen.Unload();
+
+			for (int index = 0; index < inputs.Length; index++)
+			{
+				inputs[index].Key = dest[index];
+			}
+
+		cancelled:
+			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0);
+			DD.FreezeInput();
 		}
 
 		private static void ChangeWindowSize()
