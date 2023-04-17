@@ -11,12 +11,16 @@ namespace Charlotte.GUICommons
 	/// </summary>
 	public static class GUICommon
 	{
+		/// <summary>
+		/// フォームを表示し終えたら任意でこれを呼ぶ。
+		/// </summary>
+		/// <param name="f">フォーム</param>
 		public static void PostShown(Form f)
 		{
 			SetDefaultContextMenu(f);
 		}
 
-		private static void SetDefaultContextMenu(Form f)
+		public static void SetDefaultContextMenu(Form f)
 		{
 			foreach (Control control in GetAllControl(f))
 			{
