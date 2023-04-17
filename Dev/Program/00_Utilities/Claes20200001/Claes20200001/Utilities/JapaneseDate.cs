@@ -75,11 +75,13 @@ namespace Charlotte.Utilities
 		{
 			public int FirstYMD;
 			public string Name;
+			public char? Alphabet;
 
-			public EraInfo(int firstYMD, string name)
+			public EraInfo(int firstYMD, string name, char? alphabet = null)
 			{
 				this.FirstYMD = firstYMD;
 				this.Name = name;
+				this.Alphabet = alphabet;
 			}
 		}
 
@@ -331,11 +333,11 @@ namespace Charlotte.Utilities
 			new EraInfo(18610329, "文久"),
 			new EraInfo(18640327, "元治"),
 			new EraInfo(18650501, "慶応"),
-			new EraInfo(18680101, "明治"),
-			new EraInfo(19120730, "大正"),
-			new EraInfo(19261225, "昭和"),
-			new EraInfo(19890108, "平成"),
-			new EraInfo(20190501, "令和"),
+			new EraInfo(18680101, "明治", 'M'),
+			new EraInfo(19120730, "大正", 'T'),
+			new EraInfo(19261225, "昭和", 'S'),
+			new EraInfo(19890108, "平成", 'H'),
+			new EraInfo(20190501, "令和", 'R'),
 		};
 
 		#endregion
@@ -498,17 +500,10 @@ namespace Charlotte.Utilities
 			// 元年の解消
 			str = str.Replace("元年", "1年"); // 元を含む元号があるため、年も含めて置き換える。
 
-			// アルファベット元号の解消
-			str = str.Replace("M", "明治");
-			str = str.Replace("T", "大正");
-			str = str.Replace("S", "昭和");
-			str = str.Replace("H", "平成");
-			str = str.Replace("R", "令和");
-
 			EraInfo era = EraInfos
 				.Reverse() // 直近の元号から探す。
 				.Concat(new EraInfo[] { new EraInfo(10101, "西暦") })
-				.FirstOrDefault(v => v.Name != null && str.Contains(v.Name));
+				.FirstOrDefault(v => v.Name != null && (str.Contains(v.Name) || v.Alphabet != null && str.Contains(v.Alphabet.Value)));
 
 			if (era == null)
 				throw new ArgumentException("和暦変換エラー：不明な元号");
@@ -516,6 +511,9 @@ namespace Charlotte.Utilities
 			string[] symd = SCommon.Tokenize(str, SCommon.DECIMAL, true, true);
 
 			if (symd.Length != 3)
+				throw new ArgumentException("和暦変換エラー：不明な年月日");
+
+			if (symd.Any(v => 9 < v.Length))
 				throw new ArgumentException("和暦変換エラー：不正な年月日");
 
 			int[] ymd = symd.Select(v => int.Parse(v)).ToArray();
