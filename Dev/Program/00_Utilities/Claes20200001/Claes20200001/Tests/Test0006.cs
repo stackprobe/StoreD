@@ -42,12 +42,28 @@ namespace Charlotte.Tests
 
 		public void Test02()
 		{
-			Test02_a(0);
-			Test02_a(1);
-			Test02_a(2);
-			Test02_a(3);
-			Test02_a(9999);
+			SCommon.ToThrowPrint(() => Test02_a(int.MinValue));
+			SCommon.ToThrowPrint(() => Test02_a(int.MinValue + 1));
+			SCommon.ToThrowPrint(() => Test02_a(int.MinValue + 2));
+			SCommon.ToThrowPrint(() => Test02_a(int.MinValue + 3));
+			SCommon.ToThrowPrint(() => Test02_a(-3));
+			SCommon.ToThrowPrint(() => Test02_a(-2));
+			SCommon.ToThrowPrint(() => Test02_a(-1));
+			SCommon.ToThrowPrint(() => Test02_a(0));
+			SCommon.ToThrowPrint(() => Test02_a(1));
+			SCommon.ToThrowPrint(() => Test02_a(2));
+			SCommon.ToThrowPrint(() => Test02_a(3));
+			SCommon.ToThrowPrint(() => Test02_a(9996));
+			SCommon.ToThrowPrint(() => Test02_a(9997));
+			SCommon.ToThrowPrint(() => Test02_a(9998));
+			SCommon.ToThrowPrint(() => Test02_a(9999));
+
+			// ----
+
 			Test02_a(10000);
+			Test02_a(10001);
+			Test02_a(10002);
+			Test02_a(10003);
 			Test02_a(10100);
 			Test02_a(10101);
 			Test02_a(19999);
@@ -76,7 +92,7 @@ namespace Charlotte.Tests
 				JapaneseDate date2 = JapaneseDate.Create(str);
 
 				if (date2.GetYMD() != ymd)
-					throw null; // bug !!!
+					throw new Exception("日付不一致");
 			}
 		}
 
