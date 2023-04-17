@@ -50,7 +50,7 @@ namespace Charlotte.Tests
 			string ans2;
 
 			{
-				ArraySpliceSequencer<char> asp = new ArraySpliceSequencer<char>(src.ToArray());
+				ArraySpliceSequencer<char> ars = new ArraySpliceSequencer<char>(src.ToArray());
 				int index = 0;
 
 				for (; ; )
@@ -60,10 +60,10 @@ namespace Charlotte.Tests
 					if (index == -1)
 						break;
 
-					asp.Splice(index, word1.Length, word2.ToArray());
+					ars.Splice(index, word1.Length, word2.ToArray());
 					index += word1.Length;
 				}
-				ans2 = new string(asp.GetArray());
+				ans2 = new string(ars.GetArray());
 			}
 
 			if (ans1 != ans2) // ? 不一致
@@ -109,7 +109,7 @@ namespace Charlotte.Tests
 			int index1 = 0;
 			int index2 = 0;
 
-			ArraySpliceSequencer<char> asp = new ArraySpliceSequencer<char>(src.ToArray());
+			ArraySpliceSequencer<char> ars = new ArraySpliceSequencer<char>(src.ToArray());
 
 			for (; ; )
 			{
@@ -129,12 +129,12 @@ namespace Charlotte.Tests
 					.ToArray());
 
 				ans1 = ans1.Substring(0, index1) + newPart + ans1.Substring(index1 + removeLength);
-				asp.Splice(index2, removeLength, newPart.ToArray());
+				ars.Splice(index2, removeLength, newPart.ToArray());
 
 				index1 += newPart.Length;
 				index2 += removeLength;
 			}
-			ans2 = new string(asp.GetArray());
+			ans2 = new string(ars.GetArray());
 
 			if (ans1 != ans2) // ? 不一致
 				throw null;
@@ -179,7 +179,7 @@ namespace Charlotte.Tests
 			int index1 = 0;
 			int index2 = 0;
 
-			ArraySpliceSequencer<char> asp = new ArraySpliceSequencer<char>(src.ToArray());
+			ArraySpliceSequencer<char> ars = new ArraySpliceSequencer<char>(src.ToArray());
 
 			for (; ; )
 			{
@@ -203,7 +203,7 @@ namespace Charlotte.Tests
 								.ToArray());
 
 							ans1 = ans1.Substring(0, index1) + newPart + ans1.Substring(index1 + removeLength);
-							asp.Splice(index2, removeLength, newPart.ToArray());
+							ars.Splice(index2, removeLength, newPart.ToArray());
 
 							index1 += newPart.Length;
 							index2 += removeLength;
@@ -220,7 +220,7 @@ namespace Charlotte.Tests
 								.ToArray());
 
 							ans1 = ans1.Substring(0, index1) + newPart.Substring(readStart) + ans1.Substring(index1 + removeLength);
-							asp.Splice(index2, removeLength, newPart.ToArray(), readStart);
+							ars.Splice(index2, removeLength, newPart.ToArray(), readStart);
 
 							index1 += newPart.Length - readStart;
 							index2 += removeLength;
@@ -238,7 +238,7 @@ namespace Charlotte.Tests
 								.ToArray());
 
 							ans1 = ans1.Substring(0, index1) + newPart.Substring(readStart, readLength) + ans1.Substring(index1 + removeLength);
-							asp.Splice(index2, removeLength, newPart.ToArray(), readStart, readLength);
+							ars.Splice(index2, removeLength, newPart.ToArray(), readStart, readLength);
 
 							index1 += readLength;
 							index2 += removeLength;
@@ -249,7 +249,7 @@ namespace Charlotte.Tests
 						throw null; // never
 				}
 			}
-			ans2 = new string(asp.GetArray());
+			ans2 = new string(ars.GetArray());
 
 			if (ans1 != ans2) // ? 不一致
 				throw null;

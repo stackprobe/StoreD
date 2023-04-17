@@ -12,6 +12,9 @@ namespace Charlotte.Utilities
 
 		/// <summary>
 		/// (西暦)年月日からインスタンスを生成する。
+		/// 日付の範囲
+		/// -- 最小 0/0/0
+		/// -- 最大 214748/36/47
 		/// </summary>
 		/// <param name="ymd">(西暦)年月日</param>
 		public JapaneseDate(int ymd)

@@ -42,14 +42,26 @@ namespace Charlotte.Tests
 
 		public void Test02()
 		{
-			Test02_a(int.MaxValue);
-			Test02_a(int.MaxValue - 1);
-			Test02_a(int.MaxValue - 2);
-			Test02_a(int.MaxValue - 3);
 			Test02_a(0);
 			Test02_a(1);
 			Test02_a(2);
 			Test02_a(3);
+			Test02_a(9999);
+			Test02_a(10000);
+			Test02_a(10100);
+			Test02_a(10101);
+			Test02_a(19999);
+			Test02_a(20000);
+			Test02_a(20100);
+			Test02_a(20101);
+			Test02_a(int.MaxValue - 3649);
+			Test02_a(int.MaxValue - 3648);
+			Test02_a(int.MaxValue - 3647);
+			Test02_a(int.MaxValue - 3646);
+			Test02_a(int.MaxValue - 3);
+			Test02_a(int.MaxValue - 2);
+			Test02_a(int.MaxValue - 1);
+			Test02_a(int.MaxValue);
 		}
 
 		private void Test02_a(int ymd)
