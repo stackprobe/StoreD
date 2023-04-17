@@ -449,7 +449,7 @@ namespace Charlotte.Utilities
 		/// <returns>和暦の文字列表現</returns>
 		public override string ToString()
 		{
-			return P_HanDigToZenDig(this.ToHalfString());
+			return HanDigToZenDig(this.ToHalfString());
 		}
 
 		/// <summary>
@@ -493,8 +493,8 @@ namespace Charlotte.Utilities
 				throw new ArgumentException("和暦変換エラー：空の日付");
 
 			// 正規化
-			str = P_RemoveBlank(str);
-			str = P_ZenDigAlpToHanDigAlp(str);
+			str = RemoveBlank(str);
+			str = ZenDigAlpToHanDigAlp(str);
 			str = str.ToUpper();
 
 			// 元年の解消
@@ -525,32 +525,41 @@ namespace Charlotte.Utilities
 			return new JapaneseDate((era.FirstYMD / 10000 - 1 + y) * 10000 + m * 100 + d);
 		}
 
-		private static string P_RemoveBlank(string str)
+		private static string RemoveBlank(string str)
 		{
 			return new string(str.Where(chr => ' ' < chr && chr != '　').ToArray());
 		}
 
-		private static string P_ZenDigAlpToHanDigAlp(string str)
+		private static char[] ZEN_DIG_ALP = (SCommon.MBC_DECIMAL + SCommon.MBC_ALPHA_UPPER + SCommon.MBC_ALPHA_LOWER).ToArray();
+		private static char[] HAN_DIG_ALP = (SCommon.DECIMAL + SCommon.ALPHA_UPPER + SCommon.ALPHA_LOWER).ToArray();
+
+		private static string ZenDigAlpToHanDigAlp(string str)
 		{
-			for (int num = 0; num <= 9; num++)
+			return new string(str.Select(chr =>
 			{
-				str = str.Replace(SCommon.MBC_DECIMAL[num], SCommon.DECIMAL[num]);
-			}
-			for (int index = 0; index < 26; index++)
-			{
-				str = str.Replace(SCommon.MBC_ALPHA_UPPER[index], SCommon.ALPHA_UPPER[index]);
-				str = str.Replace(SCommon.MBC_ALPHA_LOWER[index], SCommon.ALPHA_LOWER[index]);
-			}
-			return str;
+				for (int index = 0; index < ZEN_DIG_ALP.Length; index++)
+					if (chr == ZEN_DIG_ALP[index])
+						return HAN_DIG_ALP[index];
+
+				return chr;
+			})
+			.ToArray());
 		}
 
-		private static string P_HanDigToZenDig(string str)
+		private static char[] HAN_DIG = SCommon.DECIMAL.ToArray();
+		private static char[] ZEN_DIG = SCommon.MBC_DECIMAL.ToArray();
+
+		private static string HanDigToZenDig(string str)
 		{
-			for (int num = 0; num <= 9; num++)
+			return new string(str.Select(chr =>
 			{
-				str = str.Replace(SCommon.DECIMAL[num], SCommon.MBC_DECIMAL[num]);
-			}
-			return str;
+				for (int index = 0; index < HAN_DIG.Length; index++)
+					if (chr == HAN_DIG[index])
+						return ZEN_DIG[index];
+
+				return chr;
+			})
+			.ToArray());
 		}
 	}
 }
