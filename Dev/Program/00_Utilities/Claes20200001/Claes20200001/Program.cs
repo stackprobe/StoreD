@@ -61,7 +61,7 @@ namespace Charlotte
 			//new Test0004().Test01(); // HTTPClient
 			//new Test0005().Test01(); // HTTPServer
 			//new Test0005().Test02(); // HTTPServer
-			new Test0005().Test03(); // HTTPServer
+			//new Test0005().Test03(); // HTTPServer
 			//new Test0006().Test01(); // JapaneseDate
 			//new Test0006().Test02(); // JapaneseDate
 			//new Test0006().Test03(); // JapaneseDate
@@ -76,6 +76,9 @@ namespace Charlotte
 			//new Test0013().Test01(); // CtrCipher
 			//new Test0014().Test01(); // Canvas
 			//new Test0014().Test02(); // Canvas
+			//new Test0015().Test01(); // ArraySpliceSequencer
+			//new Test0015().Test02(); // ArraySpliceSequencer
+			new Test0015().Test03(); // ArraySpliceSequencer
 
 			// --
 		}

@@ -61,6 +61,7 @@
     <Compile Include="Drawings\I4Rect.cs" />
     <Compile Include="Drawings\P4Poly.cs" />
     <Compile Include="Tests\Test0014.cs" />
+    <Compile Include="Tests\Test0015.cs" />
     <Compile Include="Utilities\Canvas.cs" />
     <Compile Include="Utilities\CsvFileReader.cs" />
     <Compile Include="Utilities\CsvFileWriter.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Utilities\JapaneseDate.cs" />
     <Compile Include="Utilities\StringSpliceSequencer.cs" />
     <Compile Include="Utilities\XMLNode.cs" />
+    <Compile Include="Utilities\ArraySpliceSequencer.cs" />
     <Compile Include="WebServices\HTTPBodyOutputStream.cs" />
     <Compile Include="WebServices\HTTPServer.cs" />
     <Compile Include="WebServices\HTTPServerChannel.cs" />
