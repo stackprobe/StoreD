@@ -231,9 +231,10 @@ namespace Charlotte.Games
 				DD.EachFrame();
 			}
 
-			DU.FreeScreen.ChangeDrawScreenToThis();
-			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
-			DD.MainScreen.ChangeDrawScreenToThis();
+			using (DU.FreeScreen.Section())
+			{
+				DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+			}
 
 			foreach (Scene scene in Scene.Create(30))
 			{
@@ -319,9 +320,10 @@ namespace Charlotte.Games
 				DD.EachFrame();
 			}
 
-			DU.FreeScreen.ChangeDrawScreenToThis();
-			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
-			DD.MainScreen.ChangeDrawScreenToThis();
+			using (DU.FreeScreen.Section())
+			{
+				DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+			}
 
 			foreach (Scene scene in Scene.Create(30))
 			{

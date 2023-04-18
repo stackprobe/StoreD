@@ -128,9 +128,10 @@ namespace Charlotte.Games
 
 		private static void Pause()
 		{
-			PauseWall.ChangeDrawScreenToThis();
-			DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
-			DD.MainScreen.ChangeDrawScreenToThis();
+			using (PauseWall.Section())
+			{
+				DD.Draw(DD.LastMainScreen.GetPicture(), new I2Point(GameConfig.ScreenSize.W / 2, GameConfig.ScreenSize.H / 2).ToD2Point());
+			}
 
 			SimpleMenu menu = new SimpleMenu(24, 30, 16, 200, "PAUSE", new string[]
  			{

@@ -172,6 +172,9 @@ namespace Charlotte.GameCommons
 
 		public static Picture.PictureDataInfo GetPictureData(byte[] fileData)
 		{
+			if (fileData == null)
+				throw new Exception("Bad fileData");
+
 			int softImage = -1;
 
 			DU.PinOn(fileData, p => softImage = DX.LoadSoftImageToMem(p, fileData.Length));

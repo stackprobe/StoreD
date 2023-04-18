@@ -1,4 +1,6 @@
-ï»¿using System;
+----
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,9 @@ using Charlotte.Drawings;
 namespace Charlotte.GameCommons
 {
 	/// <summary>
-	/// ç·¨é›†å¯èƒ½ãªç”»åƒãƒªã‚½ãƒ¼ã‚¹
-	/// ã“ã®ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ãƒ—ãƒ­ã‚»ã‚¹ã§æœ‰é™å€‹ã§ã‚ã‚‹ã“ã¨ã€‚
-	/// åŸå‰‡çš„ã«ä»»æ„ã®ã‚¯ãƒ©ã‚¹ã®é™çš„ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¨ã—ã¦æ¤ãˆè¾¼ã‚€ã“ã¨ã€‚
+	/// •ÒW‰Â”\‚È‰æ‘œƒŠƒ\[ƒX
+	/// ‚±‚ÌƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ÍƒvƒƒZƒX‚Å—LŒÀŒÂ‚Å‚ ‚é‚±‚ÆB
+	/// Œ´‘¥“I‚É”CˆÓ‚ÌƒNƒ‰ƒX‚ÌÃ“IƒtƒB[ƒ‹ƒh‚Æ‚µ‚ÄA‚¦‚Ş‚±‚ÆB
 	/// </summary>
 	public class VariablePicture
 	{
@@ -32,9 +34,9 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
-		/// ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹ã€‚
+		/// ƒCƒ[ƒWƒf[ƒ^‚ğæ“¾‚·‚éB
 		/// </summary>
-		/// <returns>ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿</returns>
+		/// <returns>ƒCƒ[ƒWƒf[ƒ^</returns>
 		public byte[] GetImageData()
 		{
 			byte[] imageData;
@@ -42,15 +44,15 @@ namespace Charlotte.GameCommons
 			if (File.Exists(this.ImageFile))
 				imageData = File.ReadAllBytes(this.ImageFile);
 			else
-				imageData = DD.GetResFileData(@"General\Dummy.png"); // ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿æœªè¨­å®šã«ã¤ãã€é©å½“ãªç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™ã€‚
+				imageData = DD.GetResFileData(@"General\Dummy.png"); // ƒCƒ[ƒWƒf[ƒ^–¢İ’è‚É‚Â‚«A“K“–‚È‰æ‘œƒf[ƒ^‚ğ•Ô‚·B
 
 			return imageData;
 		}
 
 		/// <summary>
-		/// ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ã€‚
+		/// ƒCƒ[ƒWƒf[ƒ^‚ğİ’è‚·‚éB
 		/// </summary>
-		/// <param name="imageData">ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿</param>
+		/// <param name="imageData">ƒCƒ[ƒWƒf[ƒ^</param>
 		public void SetImageData(byte[] imageData)
 		{
 			if (imageData == null)
@@ -63,9 +65,9 @@ namespace Charlotte.GameCommons
 		}
 
 		/// <summary>
-		/// ç¾åœ¨ã®æç”»å…ˆã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®æŒ‡å®šé ˜åŸŸã‚’ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã¨ã—ã¦è¨­å®šã™ã‚‹ã€‚
+		/// Œ»İ‚Ì•`‰ææƒXƒNƒŠ[ƒ“‚Ìw’è—Ìˆæ‚ğƒCƒ[ƒWƒf[ƒ^‚Æ‚µ‚Äİ’è‚·‚éB
 		/// </summary>
-		/// <param name="rect">æŒ‡å®šé ˜åŸŸ</param>
+		/// <param name="rect">w’è—Ìˆæ</param>
 		public void ToImageData(I4Rect rect)
 		{
 			string bmpFile = DU.WD.MakePath();

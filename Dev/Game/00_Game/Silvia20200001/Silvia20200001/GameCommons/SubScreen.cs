@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
+using System.IO;
 
 namespace Charlotte.GameCommons
 {
@@ -87,6 +90,21 @@ namespace Charlotte.GameCommons
 			CurrentDrawScreen = null;
 		}
 
+		public IDisposable Section()
+		{
+			SubScreen homeDrawScreen = CurrentDrawScreen;
+			this.ChangeDrawScreenToThis();
+			return SCommon.GetAnonyDisposable(() => ChangeDrawScreenTo(homeDrawScreen));
+		}
+
+		private static void ChangeDrawScreenTo(SubScreen screen)
+		{
+			if (screen != null)
+				screen.ChangeDrawScreenToThis();
+			else
+				ChangeDrawScreenToBack();
+		}
+
 		private Picture Picture = null;
 
 		public Picture GetPicture()
@@ -107,6 +125,49 @@ namespace Charlotte.GameCommons
 			return Instances.ToArray(); // 念のためリストの複製を返す。
 		}
 
-		public object StoredObject = null;
+		public object StoredObject = null; // 外部のメソッドが使用する。
+
+		/// <summary>
+		/// このスクリーンの内容を画像データに変換する。
+		/// </summary>
+		/// <returns>画像データ</returns>
+		public byte[] GetImageData()
+		{
+			string bmpFile = DU.WD.MakePath() + ".bmp";
+			string pngFile = DU.WD.MakePath() + ".png";
+
+			using (this.Section())
+			{
+				DX.SaveDrawScreenToBMP(0, 0, this.W, this.H, bmpFile);
+			}
+
+			using (Bitmap bmp = (Bitmap)Bitmap.FromFile(bmpFile))
+			{
+				bmp.Save(pngFile, ImageFormat.Png);
+			}
+
+			byte[] imageData = File.ReadAllBytes(pngFile);
+
+			SCommon.DeletePath(bmpFile);
+			SCommon.DeletePath(pngFile);
+
+			return imageData;
+		}
+
+		/// <summary>
+		/// 画像データをこのスクリーンに描画する。
+		/// </summary>
+		/// <param name="imageData">画像データ</param>
+		public void SetImageData(byte[] imageData)
+		{
+			int handle = DU.GetPictureData(imageData).Handle;
+
+			using (this.Section())
+			{
+				DX.DrawExtendGraph(0, 0, this.W, this.H, handle, 0);
+			}
+
+			DX.DeleteGraph(handle);
+		}
 	}
 }
