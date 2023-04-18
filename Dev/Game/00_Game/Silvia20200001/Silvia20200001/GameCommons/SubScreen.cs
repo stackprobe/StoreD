@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using DxLibDLL;
 using Charlotte.Commons;
 using Charlotte.Drawings;
-using System.IO;
 
 namespace Charlotte.GameCommons
 {
