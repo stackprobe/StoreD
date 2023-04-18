@@ -11,8 +11,10 @@ namespace Charlotte.Games
 	public class SimpleMenu
 	{
 		private static string FONT_NAME = "木漏れ日ゴシック";
-		private static I3Color FORE_COLOR = new I3Color(255, 255, 255);
 		private static I4Color BACK_COLOR = new I4Color(0, 0, 0, 128);
+		private static I3Color TEXT_COLOR = new I3Color(255, 255, 255);
+		private static I3Color BORDER_COLOR = new I3Color(0, 0, 0);
+		private static int BORDER_SIZE = 0; // 0 == 輪郭無し
 
 		private static int LastDrawProcFrame = -1;
 		private static double Shadow_W = 0.0;
@@ -196,9 +198,18 @@ namespace Charlotte.Games
 			if (this.Title != null) // ? タイトル有り
 			{
 				DD.SetPrint(this.Item_L, this.FirstItem_T - this.Item_YStep, 0, FONT_NAME, this.FontSize);
+				DD.SetPrintColor(TEXT_COLOR);
+
+				if (BORDER_SIZE != 0)
+					DD.SetPrintBorder(BORDER_COLOR, BORDER_SIZE);
+
 				DD.Print(this.Title);
 			}
 			DD.SetPrint(this.Item_L, this.FirstItem_T, this.Item_YStep, FONT_NAME, this.FontSize);
+			DD.SetPrintColor(TEXT_COLOR);
+
+			if (BORDER_SIZE != 0)
+				DD.SetPrintBorder(BORDER_COLOR, BORDER_SIZE);
 
 			for (int index = 0; index < this.Items.Length; index++)
 			{
