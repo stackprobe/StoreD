@@ -47,11 +47,7 @@ namespace Charlotte.Tests
 
 				List<string> xmlPaths = new List<string>();
 
-				root.Search((node, xmlPath) =>
-				{
-					xmlPaths.Add(xmlPath);
-					return true;
-				});
+				root.Search((node, xmlPath) => xmlPaths.Add(xmlPath));
 
 				if (xmlPaths.Count != 3) throw null;
 				if (xmlPaths[0] != "Root") throw null;

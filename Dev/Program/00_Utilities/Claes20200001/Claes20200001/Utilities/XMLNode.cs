@@ -206,18 +206,15 @@ namespace Charlotte.Utilities
 		// ここから便利機能
 		// ====
 
-		public void Search(Func<XMLNode, string, bool> reaction, string xmlPath = "")
+		public void Search(Action<XMLNode, string> reaction, string xmlPath = "")
 		{
 			xmlPath += this.Name;
+			reaction(this, xmlPath);
+			xmlPath += "/";
 
-			if (reaction(this, xmlPath))
+			foreach (XMLNode child in this.Children)
 			{
-				xmlPath += "/";
-
-				foreach (XMLNode child in this.Children)
-				{
-					child.Search(reaction, xmlPath);
-				}
+				child.Search(reaction, xmlPath);
 			}
 		}
 	}

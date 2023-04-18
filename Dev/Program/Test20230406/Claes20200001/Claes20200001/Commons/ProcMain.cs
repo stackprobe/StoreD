@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Threading;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using Microsoft.Win32;
 
 namespace Charlotte.Commons
 {
