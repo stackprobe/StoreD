@@ -82,9 +82,25 @@ namespace Charlotte.GameCommons
 
 		private static void Main2()
 		{
+			LibbonDialog.Th = new Thread(LibbonDialog.MainTh);
+			LibbonDialog.Th.Start();
 			try
 			{
 				Main3();
+			}
+			finally
+			{
+				LibbonDialog.AliveFlag = false;
+				LibbonDialog.MainThStandby.Set();
+				LibbonDialog.Th.Join();
+			}
+		}
+
+		private static void Main3()
+		{
+			try
+			{
+				Main4();
 			}
 			catch (DU.CoffeeBreak)
 			{
@@ -110,22 +126,6 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		private static void Main3()
-		{
-			LibbonDialog.Th = new Thread(LibbonDialog.MainTh);
-			LibbonDialog.Th.Start();
-			try
-			{
-				Main4();
-			}
-			finally
-			{
-				LibbonDialog.AliveFlag = false;
-				LibbonDialog.MainThStandby.Set();
-				LibbonDialog.Th.Join();
-			}
-		}
-
 		private static void Main4()
 		{
 			string logSaveDir;
@@ -134,9 +134,13 @@ namespace Charlotte.GameCommons
 
 			if (ProcMain.DEBUG)
 			{
+#if DEBUG
 				logSaveDir = @"C:\temp";
 				logFile = @"C:\temp\Game.log";
 				saveDataFile = @"C:\temp\SaveData.dat";
+#else
+				throw new Exception("DEBUG is True");
+#endif
 			}
 			else
 			{

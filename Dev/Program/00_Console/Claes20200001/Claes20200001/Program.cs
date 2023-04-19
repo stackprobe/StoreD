@@ -68,7 +68,11 @@ namespace Charlotte
 		{
 			if (ProcMain.DEBUG)
 			{
+#if DEBUG
 				Main3();
+#else
+				throw new Exception("DEBUG is True");
+#endif
 			}
 			else
 			{
@@ -77,6 +81,7 @@ namespace Charlotte
 			SCommon.OpenOutputDirIfCreated();
 		}
 
+#if DEBUG
 		private void Main3()
 		{
 			// -- choose one --
@@ -90,6 +95,7 @@ namespace Charlotte
 
 			SCommon.Pause();
 		}
+#endif
 
 		private void Main4(ArgsReader ar)
 		{
