@@ -132,24 +132,17 @@ namespace Charlotte.GameCommons
 			string logFile;
 			string saveDataFile;
 
-			if (ProcMain.DEBUG)
-			{
 #if DEBUG
-				logSaveDir = @"C:\temp";
-				logFile = @"C:\temp\Game.log";
-				saveDataFile = @"C:\temp\SaveData.dat";
+			logSaveDir = @"C:\temp";
+			logFile = @"C:\temp\Game.log";
+			saveDataFile = @"C:\temp\SaveData.dat";
 #else
-				throw new Exception("DEBUG is True");
-#endif
-			}
-			else
-			{
-				logSaveDir = DU.WD.MakePath();
-				logFile = Path.Combine(ProcMain.SelfDir, "Game.log");
-				saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
+			logSaveDir = DU.WD.MakePath();
+			logFile = Path.Combine(ProcMain.SelfDir, "Game.log");
+			saveDataFile = Path.Combine(ProcMain.SelfDir, "SaveData.dat");
 
-				SCommon.CreateDir(logSaveDir);
-			}
+			SCommon.CreateDir(logSaveDir);
+#endif
 
 			File.WriteAllBytes(logFile, SCommon.EMPTY_BYTES);
 
