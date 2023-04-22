@@ -224,10 +224,10 @@ namespace Charlotte
 				if (
 					index + 4 < str.Length &&
 					chr == '$' &&
-					SCommon.hexadecimal.Contains(char.ToLower(str[index + 1])) &&
-					SCommon.hexadecimal.Contains(char.ToLower(str[index + 2])) &&
-					SCommon.hexadecimal.Contains(char.ToLower(str[index + 3])) &&
-					SCommon.hexadecimal.Contains(char.ToLower(str[index + 4]))
+					SCommon.HEXADECIMAL_LOWER.Contains(char.ToLower(str[index + 1])) &&
+					SCommon.HEXADECIMAL_LOWER.Contains(char.ToLower(str[index + 2])) &&
+					SCommon.HEXADECIMAL_LOWER.Contains(char.ToLower(str[index + 3])) &&
+					SCommon.HEXADECIMAL_LOWER.Contains(char.ToLower(str[index + 4]))
 					)
 				{
 					chr = (char)Convert.ToUInt16(str.Substring(index + 1, 4), 16);

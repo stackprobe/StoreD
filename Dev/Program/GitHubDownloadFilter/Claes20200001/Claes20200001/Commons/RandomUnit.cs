@@ -175,6 +175,8 @@ namespace Charlotte.Commons
 		/// <summary>
 		/// minval ～ maxval の乱数を返す。
 		/// </summary>
+		/// <param name="minval">最小値</param>
+		/// <param name="maxval">最大値</param>
 		/// <returns>乱数</returns>
 		public double GetReal3(double minval, double maxval)
 		{

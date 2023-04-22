@@ -49,19 +49,6 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Commons\ArgsReader.cs" />
-    <Compile Include="Commons\CsvFileReader.cs" />
-    <Compile Include="Commons\CsvFileWriter.cs" />
-    <Compile Include="Commons\D2Point.cs" />
-    <Compile Include="Commons\D2Size.cs" />
-    <Compile Include="Commons\D3Color.cs" />
-    <Compile Include="Commons\D4Color.cs" />
-    <Compile Include="Commons\D4Rect.cs" />
-    <Compile Include="Commons\I2Point.cs" />
-    <Compile Include="Commons\I2Size.cs" />
-    <Compile Include="Commons\I3Color.cs" />
-    <Compile Include="Commons\I4Color.cs" />
-    <Compile Include="Commons\I4Rect.cs" />
-    <Compile Include="Commons\P4Poly.cs" />
     <Compile Include="Commons\ProcMain.cs" />
     <Compile Include="Commons\RandomUnit.cs" />
     <Compile Include="Commons\SCommon.cs" />
