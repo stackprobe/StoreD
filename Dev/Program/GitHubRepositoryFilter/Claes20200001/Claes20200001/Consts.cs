@@ -7,6 +7,6 @@ namespace Charlotte
 {
 	public static class Consts
 	{
-		// none
+		public static string EMPRY_DIR_MARK_FILE_NAME = "$$GHRF_Empty";
 	}
 }

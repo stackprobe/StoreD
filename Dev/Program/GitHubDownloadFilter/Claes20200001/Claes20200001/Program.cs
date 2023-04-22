@@ -36,7 +36,7 @@ namespace Charlotte
 		{
 			// -- choose one --
 
-			Main4(new ArgsReader(new string[] { @"C:\temp\Store-main" }));
+			Main4(new ArgsReader(new string[] { @"C:\temp\StoreD-main" }));
 			//new Test0001().Test01();
 			//new Test0002().Test01();
 			//new Test0003().Test01();
@@ -67,6 +67,8 @@ namespace Charlotte
 		{
 			string rDir = SCommon.MakeFullPath(ar.NextArg());
 
+			ar.End();
+
 			if (!Directory.Exists(rDir))
 				throw new Exception("no rDir");
 
@@ -90,13 +92,13 @@ namespace Charlotte
 			{
 				string file = files[index];
 
-				if (SCommon.EqualsIgnoreCase(Path.GetFileName(file), "$$GHRF_Empty"))
+				if (SCommon.EqualsIgnoreCase(Path.GetFileName(file), Consts.EMPRY_DIR_MARK_FILE_NAME))
 				{
 					SCommon.DeletePath(file);
-					files[index] = null; // 削除マーク
+					files[index] = null;
 				}
 			}
-			files = files.Where(file => file != null).ToArray(); // 削除マーク除去
+			files = files.Where(file => file != null).ToArray();
 
 			foreach (string file in files) // ファイルの編集
 			{
@@ -114,41 +116,33 @@ namespace Charlotte
 			foreach (string file in files) // ファイル名の変更
 			{
 				string localName = Path.GetFileName(file);
-				string localNameNew = RestoreLocalName(localName);
+				string trueLocalName = RestoreLocalName(localName);
 
-				if (localName != localNameNew)
+				if (localName != trueLocalName)
 				{
-					string fileNew = Path.Combine(Path.GetDirectoryName(file), localNameNew);
+					string trueFile = Path.Combine(Path.GetDirectoryName(file), trueLocalName);
 
 					ProcMain.WriteLog("< " + file);
-					ProcMain.WriteLog("> " + fileNew);
+					ProcMain.WriteLog("> " + trueFile);
 
-					File.Move(file, fileNew);
+					File.Move(file, trueFile);
 				}
 			}
 			foreach (string dir in dirs) // ディレクトリ名の変更(配下のディレクトリから)
 			{
 				string localName = Path.GetFileName(dir);
-				string localNameNew = RestoreLocalName(localName);
+				string trueLocalName = RestoreLocalName(localName);
 
-				if (localName != localNameNew)
+				if (localName != trueLocalName)
 				{
-					string dirNew = Path.Combine(Path.GetDirectoryName(dir), localNameNew);
+					string trueDir = Path.Combine(Path.GetDirectoryName(dir), trueLocalName);
 
 					ProcMain.WriteLog("< " + dir);
-					ProcMain.WriteLog("> " + dirNew);
+					ProcMain.WriteLog("> " + trueDir);
 
-					Directory.Move(dir, dirNew);
+					Directory.Move(dir, trueDir);
 				}
 			}
-
-			// ---- 以下 2022.10 以降に追加
-
-			// ファイル名を変更したので再取得する。
-			files = Directory.GetFiles(rootDir, "*", SearchOption.AllDirectories);
-			Array.Sort(files, SCommon.Comp);
-
-			DecompressMapDataFiles(files); // 注意：パス名を変更するかもしれない。
 		}
 
 		private bool IsEncodingUTF8WithBOM(byte[] fileData)
@@ -240,48 +234,6 @@ namespace Charlotte
 				buff.Append(chr);
 			}
 			return buff.ToString();
-		}
-
-		// ---- 以下 2022.10 以降に追加
-
-		private void DecompressMapDataFiles(string[] files)
-		{
-			foreach (string file in files)
-			{
-				if (!SCommon.EndsWithIgnoreCase(file, ".txt_$$Compress.txt")) // ? 圧縮されたファイルではない。
-					continue;
-
-				string destFile = file.Substring(0, file.Length - 15); // "_$$Compress.txt" 除去
-
-				Console.WriteLine("< " + file);
-				Console.WriteLine("> " + destFile);
-
-				string[] lines = File.ReadAllLines(file, SCommon.ENCODING_SJIS);
-				string[] destLines = DecompressMapData(lines);
-
-				SCommon.DeletePath(file);
-				File.WriteAllLines(destFile, destLines, SCommon.ENCODING_SJIS);
-			}
-		}
-
-		private string[] DecompressMapData(string[] lines)
-		{
-			List<string> destLines = new List<string>();
-
-			for (int index = 0; index < lines.Length; )
-			{
-				if (lines[index] == ";;REPEAT;;")
-				{
-					destLines.AddRange(Enumerable.Range(1, int.Parse(lines[index + 1])).Select(dummy => lines[index + 2]));
-					index += 3;
-				}
-				else
-				{
-					destLines.Add(lines[index]);
-					index++;
-				}
-			}
-			return destLines.ToArray();
 		}
 	}
 }
