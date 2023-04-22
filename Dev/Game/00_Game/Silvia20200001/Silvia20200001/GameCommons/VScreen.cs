@@ -16,13 +16,13 @@ namespace Charlotte.GameCommons
 	/// このクラスのインスタンスはプロセスで有限個であること。
 	/// 原則的に任意のクラスの静的フィールドとして植え込むこと。
 	/// </summary>
-	public class SubScreen
+	public class VScreen
 	{
-		private static List<SubScreen> Instances = new List<SubScreen>();
+		private static DU.Collector<VScreen> Instances = new DU.Collector<VScreen>();
 
 		public static void UnloadAll()
 		{
-			foreach (SubScreen instance in Instances)
+			foreach (VScreen instance in Instances.Iterate())
 				instance.Unload();
 		}
 
@@ -31,7 +31,7 @@ namespace Charlotte.GameCommons
 
 		private int Handle; // -1 == 未ロード
 
-		public SubScreen(int w, int h)
+		public VScreen(int w, int h)
 		{
 			if (w < 1 || SCommon.IMAX < w)
 				throw new Exception("Bad w");
@@ -72,7 +72,7 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static SubScreen CurrentDrawScreen = null; // null == DX.DX_SCREEN_BACK
+		public static VScreen CurrentDrawScreen = null; // null == DX.DX_SCREEN_BACK
 
 		public void ChangeDrawScreenToThis()
 		{
@@ -92,12 +92,12 @@ namespace Charlotte.GameCommons
 
 		public IDisposable Section()
 		{
-			SubScreen homeDrawScreen = CurrentDrawScreen;
+			VScreen homeDrawScreen = CurrentDrawScreen;
 			this.ChangeDrawScreenToThis();
 			return SCommon.GetAnonyDisposable(() => ChangeDrawScreenTo(homeDrawScreen));
 		}
 
-		private static void ChangeDrawScreenTo(SubScreen screen)
+		private static void ChangeDrawScreenTo(VScreen screen)
 		{
 			if (screen != null)
 				screen.ChangeDrawScreenToThis();
@@ -114,18 +114,6 @@ namespace Charlotte.GameCommons
 
 			return this.Picture;
 		}
-
-		public bool IsLoaded()
-		{
-			return this.Handle != -1;
-		}
-
-		public static IEnumerable<SubScreen> GetAllSubScreen()
-		{
-			return Instances.ToArray(); // 念のためリストの複製を返す。
-		}
-
-		public object StoredObject = null; // 外部のメソッドが使用する。
 
 		/// <summary>
 		/// このスクリーンの内容を画像データに変換する。
@@ -168,6 +156,43 @@ namespace Charlotte.GameCommons
 			}
 
 			DX.DeleteGraph(handle);
+		}
+
+		private string StoredImageFile = null;
+
+		private void StoreImageDataIfLoaded()
+		{
+			if (this.Handle != -1)
+			{
+				this.StoredImageFile = DU.WD.MakePath();
+				File.WriteAllBytes(this.StoredImageFile, this.GetImageData());
+			}
+		}
+
+		private void RestoreImageDataIfStored()
+		{
+			if (this.StoredImageFile != null)
+			{
+				this.SetImageData(File.ReadAllBytes(this.StoredImageFile));
+				SCommon.DeletePath(this.StoredImageFile);
+				this.StoredImageFile = null;
+			}
+		}
+
+		public static void StoreImageDataIfLoadedForAll()
+		{
+			foreach (VScreen instance in Instances.Iterate())
+			{
+				instance.StoreImageDataIfLoaded();
+			}
+		}
+
+		public static void RestoreImageDataIfStoredForAll()
+		{
+			foreach (VScreen instance in Instances.Iterate())
+			{
+				instance.RestoreImageDataIfStored();
+			}
 		}
 	}
 }

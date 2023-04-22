@@ -15,20 +15,17 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public class Music
 	{
-		private static List<Music> Instances = new List<Music>();
+		private static DU.Collector<Music> Instances = new DU.Collector<Music>();
 
 		public static void TouchAll()
 		{
-			foreach (Music instance in Instances)
+			foreach (Music instance in Instances.Iterate())
 				instance.GetHandle();
 		}
 
-		/// <summary>
-		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
-		/// </summary>
 		public static void UnloadAll()
 		{
-			foreach (Music instance in Instances)
+			foreach (Music instance in Instances.Iterate())
 				instance.Unload();
 		}
 
@@ -88,9 +85,6 @@ namespace Charlotte.GameCommons
 			return this.Handle;
 		}
 
-		/// <summary>
-		/// このメソッド実行時、再生終了(未再生・停止)していること。
-		/// </summary>
 		public void Unload()
 		{
 			if (this.Handle != -1)

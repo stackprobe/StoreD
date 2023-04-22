@@ -22,8 +22,8 @@ namespace Charlotte.GameCommons
 		public static I4Rect TargetMonitor;
 		public static I2Size RealScreenSize;
 		public static I4Rect MainScreenDrawRect;
-		public static SubScreen MainScreen;
-		public static SubScreen LastMainScreen;
+		public static VScreen MainScreen;
+		public static VScreen LastMainScreen;
 		public static int ProcFrame;
 		public static int FreezeInputFrame;
 		public static bool WindowIsActive;
@@ -408,7 +408,7 @@ namespace Charlotte.GameCommons
 			Music.EachFrame();
 			SoundEffect.EachFrame();
 
-			SubScreen.ChangeDrawScreenToBack();
+			VScreen.ChangeDrawScreenToBack();
 
 			DD.SetBright(new I3Color(0, 0, 0).ToD3Color());
 			DD.Draw(Pictures.WhiteBox, new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H).ToD4Rect());
@@ -795,9 +795,15 @@ namespace Charlotte.GameCommons
 			return exterior;
 		}
 
-		public static IEnumerable<T> Reverse<T>(IList<T> list)
+		/// <summary>
+		/// 列挙中にリストを変更しても良いような列挙子を返す。
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list">リスト</param>
+		/// <returns>列挙子</returns>
+		public static IEnumerable<T> Iterate<T>(IList<T> list)
 		{
-			for (int index = list.Count - 1; 0 <= index; index--)
+			for (int index = 0; index < list.Count; index++)
 			{
 				yield return list[index];
 			}
@@ -912,7 +918,7 @@ namespace Charlotte.GameCommons
 		public static void Frosting(double rate)
 		{
 			DX.GraphFilter(
-				SubScreen.CurrentDrawScreen == null ? DX.DX_SCREEN_BACK : SubScreen.CurrentDrawScreen.GetHandle(),
+				VScreen.CurrentDrawScreen == null ? DX.DX_SCREEN_BACK : VScreen.CurrentDrawScreen.GetHandle(),
 				DX.DX_GRAPH_FILTER_GAUSS,
 				16,
 				SCommon.ToInt(5000.0 * rate)

@@ -94,7 +94,7 @@
     <Compile Include="GameCommons\GameProcMain.cs" />
     <Compile Include="GameCommons\Picture.cs" />
     <Compile Include="GameCommons\ResourceCluster.cs" />
-    <Compile Include="GameCommons\SubScreen.cs" />
+    <Compile Include="GameCommons\VScreen.cs" />
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\SimpleMenu.cs" />
     <Compile Include="Games\TitleMenu.cs" />

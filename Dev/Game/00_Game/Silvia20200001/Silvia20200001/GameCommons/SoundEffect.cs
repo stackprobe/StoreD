@@ -15,20 +15,17 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public class SoundEffect
 	{
-		private static List<SoundEffect> Instances = new List<SoundEffect>();
+		private static DU.Collector<SoundEffect> Instances = new DU.Collector<SoundEffect>();
 
 		public static void TouchAll()
 		{
-			foreach (SoundEffect instance in Instances)
+			foreach (SoundEffect instance in Instances.Iterate())
 				instance.LoadIfNeeded();
 		}
 
-		/// <summary>
-		/// このメソッド実行時、全てのインスタンスは再生終了(未再生・停止)していること。
-		/// </summary>
 		public static void UnloadAll()
 		{
-			foreach (SoundEffect instance in Instances)
+			foreach (SoundEffect instance in Instances.Iterate())
 				instance.Unload();
 		}
 
@@ -78,18 +75,20 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		/// <summary>
-		/// このメソッド実行時、再生終了(未再生・停止)していること。
-		/// </summary>
 		public void Unload()
 		{
 			if (this.Handles != null)
 			{
 				// HACK: 再生中にアンロードされることを想定していない。
 
-				foreach (HandleInfo handle in DD.Reverse(this.Handles)) // 拡張したハンドルから削除しなければならない。なので逆順
+				// 拡張したハンドルを先に解放
+				foreach (HandleInfo handle in this.Handles.Skip(1))
 					if (DX.DeleteSoundMem(handle.Value) != 0) // ? 失敗
 						throw new Exception("DeleteSoundMem failed");
+
+				// 本体のハンドルを解放
+				if (DX.DeleteSoundMem(this.Handles[0].Value) != 0) // ? 失敗
+					throw new Exception("DeleteSoundMem failed");
 
 				this.Handles = null;
 			}

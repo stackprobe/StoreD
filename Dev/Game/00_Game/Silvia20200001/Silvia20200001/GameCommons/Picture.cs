@@ -15,17 +15,17 @@ namespace Charlotte.GameCommons
 	/// </summary>
 	public class Picture
 	{
-		private static List<Picture> Instances = new List<Picture>();
+		private static DU.Collector<Picture> Instances = new DU.Collector<Picture>();
 
 		public static void TouchAll()
 		{
-			foreach (Picture instance in Instances)
+			foreach (Picture instance in Instances.Iterate())
 				instance.GetHandle();
 		}
 
 		public static void UnloadAll()
 		{
-			foreach (Picture instance in Instances)
+			foreach (Picture instance in Instances.Iterate())
 				instance.Unload();
 		}
 

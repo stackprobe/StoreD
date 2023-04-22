@@ -258,7 +258,7 @@ namespace Charlotte.Games
 			DD.FreezeInput();
 			DX.SetMouseDispFlag(1);
 
-			string[] KEY_NAMES = DU.GetKeyboardKeyNames();
+			string[] KEY_NAMES = DU.KeyboardKeys.GetNames();
 
 			Input[] inputs = Inputs.GetAllInput();
 			int[] dest = new int[inputs.Length];

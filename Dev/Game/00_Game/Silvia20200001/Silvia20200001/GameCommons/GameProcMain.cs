@@ -217,8 +217,8 @@ namespace Charlotte.GameCommons
 				DD.RealScreenSize = GameSetting.UserScreenSize;
 
 			DD.MainScreenDrawRect = new I4Rect(0, 0, DD.RealScreenSize.W, DD.RealScreenSize.H);
-			DD.MainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
-			DD.LastMainScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+			DD.MainScreen = new VScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+			DD.LastMainScreen = new VScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
 			foreach (string resPath in GameConfig.FontFileResPaths)
 				DU.AddFontFile(resPath);
@@ -241,10 +241,10 @@ namespace Charlotte.GameCommons
 		/// <param name="h">高さ</param>
 		public static void SetRealScreenSize(int w, int h)
 		{
-			DU.StoreAllSubScreen();
+			VScreen.StoreImageDataIfLoadedForAll();
 
 			Picture.UnloadAll();
-			SubScreen.UnloadAll();
+			VScreen.UnloadAll();
 			DU.UnloadAllFontHandle();
 			//Music.UnloadAll(); // アンロード不要
 			//SoundEffect.UnloadAll(); // アンロード不要
@@ -255,7 +255,7 @@ namespace Charlotte.GameCommons
 			DX.SetWindowSizeChangeEnableFlag(0);
 			DX.SetMouseDispFlag(GameSetting.MouseCursorShow ? 1 : 0);
 
-			DU.RestoreAllSubScreen();
+			VScreen.RestoreImageDataIfStoredForAll();
 
 			int l = DD.TargetMonitor.L + (DD.TargetMonitor.W - w) / 2;
 			int t = DD.TargetMonitor.T + (DD.TargetMonitor.H - h) / 2;

@@ -41,7 +41,7 @@ namespace Charlotte.GameCommons
 		/// <summary>
 		/// 各機能自由に使ってよいスクリーン
 		/// </summary>
-		public static SubScreen FreeScreen = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+		public static VScreen FreeScreen = new VScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
 		public static void Pin<T>(T data)
 		{
@@ -63,6 +63,21 @@ namespace Charlotte.GameCommons
 			finally
 			{
 				pinnedData.Free();
+			}
+		}
+
+		public class Collector<T>
+		{
+			private List<T> Inner = new List<T>();
+
+			public void Add(T element)
+			{
+				this.Inner.Add(element);
+			}
+
+			public IEnumerable<T> Iterate()
+			{
+				return DD.Iterate(this.Inner);
 			}
 		}
 
@@ -406,50 +421,7 @@ namespace Charlotte.GameCommons
 			}
 		}
 
-		public static void StoreAllSubScreen()
-		{
-			foreach (SubScreen screen in SubScreen.GetAllSubScreen())
-			{
-				if (screen.IsLoaded())
-				{
-					string bmpFile = WD.MakePath();
-
-					DX.SetDrawScreen(screen.GetHandle());
-					DX.SaveDrawScreenToBMP(0, 0, screen.W, screen.H, bmpFile);
-
-					screen.StoredObject = bmpFile;
-				}
-			}
-			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
-		}
-
-		public static void RestoreAllSubScreen()
-		{
-			foreach (SubScreen screen in SubScreen.GetAllSubScreen())
-			{
-				if (screen.StoredObject != null)
-				{
-					string bmpFile = (string)screen.StoredObject;
-
-					screen.StoredObject = null;
-
-					int handle = DU.GetPictureData(File.ReadAllBytes(bmpFile)).Handle;
-					DX.SetDrawScreen(screen.GetHandle());
-					DX.DrawExtendGraph(0, 0, screen.W, screen.H, handle, 0);
-					DX.DeleteGraph(handle);
-
-					SCommon.DeletePath(bmpFile);
-				}
-			}
-			DX.SetDrawScreen(DX.DX_SCREEN_BACK);
-		}
-
-		public static string[] GetKeyboardKeyNames()
-		{
-			return KeyboardKeys.GetNames();
-		}
-
-		private static class KeyboardKeys
+		public static class KeyboardKeys
 		{
 			private static string[] P_Names = null;
 

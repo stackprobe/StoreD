@@ -124,7 +124,7 @@ namespace Charlotte.Games
 			DD.FreezeInput();
 		}
 
-		private static SubScreen PauseWall = new SubScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
+		private static VScreen PauseWall = new VScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
 		private static void Pause()
 		{
